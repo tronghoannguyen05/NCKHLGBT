@@ -42,6 +42,8 @@
 - Dùng thuật ngữ nhất quán theo bảng dưới. Lần đầu xuất hiện thì ghi kèm tiếng Anh nếu cần.
 - Số thập phân dùng dấu phẩy (0,56); khoảng giá trị dùng gạch nối (0–12).
 - Trích dẫn theo APA 7, viết “và cộng sự” trong văn bản tiếng Việt.
+- Trong bài (cả bản tiếng Việt và tiếng Anh), không nêu nền tảng khảo sát (KoboToolbox), hình thức khảo sát (trực tuyến, ẩn danh) và thời gian thu dữ liệu. Vẫn nêu thiết kế cắt ngang (theo yêu cầu tác giả).
+- Hạn chế câu dùng dấu gạch ngang (—) để chen ý; viết lại thành câu riêng, dấu phẩy, dấu hai chấm hoặc ngoặc đơn. Nếu cần gạch thì dùng gạch ngắn (-). Khoảng số và số trang vẫn dùng gạch nối (0–12) theo APA 7.
 
 | Thuật ngữ | Tiếng Anh |
 |---|---|
