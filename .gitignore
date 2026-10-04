@@ -1,0 +1,27 @@
+# --- Dữ liệu cá nhân nhạy cảm: KHÔNG BAO GIỜ commit (Luật 91/2025/QH15; NĐ 356/2025/NĐ-CP) ---
+data/**
+!data/**/
+!data/README.md
+!data/**/.gitkeep
+*.dta
+*.sav
+*.xlsx
+*.xls
+*.parquet
+# CSV chỉ được phép trong config/ và output/tables/ (bảng đã ẩn ô nhỏ)
+*.csv
+!config/*.csv
+!output/tables/*.csv
+
+# --- Kết quả sinh tự động ---
+output/logs/**
+!output/**/.gitkeep
+
+# --- Tệp tạm ---
+*.stswp
+*.smcl
+*.tmp
+~$*
+.DS_Store
+Thumbs.db
+__pycache__/

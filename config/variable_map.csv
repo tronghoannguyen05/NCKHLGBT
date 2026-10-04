@@ -1,0 +1,41 @@
+std_name,raw_name,description
+resp_id,,Mã phiếu do Kobo sinh (_id hoặc _uuid)
+submit_time,,Thời điểm nộp phiếu (_submission_time)
+age18,,Sàng lọc: từ 18 tuổi trở lên (1/0)
+has_job,,Sàng lọc: có công việc chính tạo thu nhập (1/0)
+lgbt_self,,Câu tự nhận diện LGBT (1/0/8/9)
+orient,,Xu hướng tính dục
+gender_id,,Bản dạng giới
+sex_birth,,Giới tính khi sinh
+agegrp,,Nhóm tuổi
+educ,,Học vấn
+relstat,,Tình trạng quan hệ
+region,,Địa bàn làm việc
+exper,,Kinh nghiệm
+industry,,Ngành
+position,,Vị trí
+emptype,,Quan hệ việc làm
+orgtype,,Loại hình nơi làm việc
+orgsize,,Quy mô nơi làm việc
+socins,,Bảo hiểm xã hội
+hours,,Số giờ làm việc
+phqi1,,PHQ-4 câu 1 (lo âu)
+phqi2,,PHQ-4 câu 2 (lo âu)
+phqi3,,PHQ-4 câu 3 (trầm cảm)
+phqi4,,PHQ-4 câu 4 (trầm cảm)
+stig1,,Kỳ thị: nói đùa/bình luận xúc phạm
+stig2,,Kỳ thị: câu hỏi riêng tư không mong muốn
+stig3,,Kỳ thị: bị tiết lộ/đe dọa tiết lộ
+stig4,,Kỳ thị: bị loại khỏi đào tạo/phát triển
+stig5,,Kỳ thị: đánh giá/lương/thăng tiến không công bằng
+stig6,,Kỳ thị: phân công bất lợi
+stig7,,Kỳ thị: áp lực khuôn mẫu giới
+stig8,,Kỳ thị: tên gọi/đại từ/trang phục/nhà vệ sinh
+conc1,,Che giấu danh tính 1
+conc2,,Che giấu danh tính 2
+conc3,,Che giấu danh tính 3
+conc4,,Che giấu danh tính 4 (mệt mỏi do kiểm soát thông tin)
+dei1,,DEI: an toàn khi phản ánh
+dei2,,DEI: quản lý tôn trọng
+dei3,,DEI: hành vi xúc phạm bị xử lý
+dei4,,DEI: được dùng tên gọi/đại từ/trang phục phù hợp
