@@ -24,6 +24,7 @@
 - [ ] Điền `config/variable_map.csv` (tên biến Kobo → tên chuẩn).
 - [ ] Chạy thử toàn bộ `code/` trên dữ liệu giả lập (`tests/make_synthetic_data.py`). **Mã chưa từng được chạy trên Stata.**
 - [ ] Chạy trên dữ liệu thật → điền Bảng 5–9 → viết bài.
+- [ ] Bài NCKH 5 chương (khung ~80 trang đã duyệt: Mở đầu 5–6, Ch1 8–10, Ch2 18–20, Ch3 18–20, Ch4 13–15, Ch5 11–13, Tổng kết 2–3). Mở đầu + Ch1 (vấn đề nghiên cứu) + Ch2 (lý thuyết, khoảng trống, giả thuyết) đã có bản chờ tác giả duyệt trong `docs/bai_nckh/`, kèm biên bản phản biện. Chưa viết Ch3–5. Không viết Ch4–5 khi chưa có kết quả thật.
 
 ## Quy tắc bắt buộc
 
