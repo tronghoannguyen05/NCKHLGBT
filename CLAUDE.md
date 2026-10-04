@@ -24,7 +24,7 @@
 - [ ] Điền `config/variable_map.csv` (tên biến Kobo → tên chuẩn).
 - [ ] Chạy thử toàn bộ `code/` trên dữ liệu giả lập (`tests/make_synthetic_data.py`). **Mã chưa từng được chạy trên Stata.**
 - [ ] Chạy trên dữ liệu thật → điền Bảng 5–9 → viết bài.
-- [ ] Bài NCKH 5 chương (khung ~80 trang đã duyệt: Mở đầu 5–6, Ch1 8–10, Ch2 18–20, Ch3 18–20, Ch4 13–15, Ch5 11–13, Tổng kết 2–3). Mở đầu + Ch1 (vấn đề nghiên cứu) + Ch2 (lý thuyết, khoảng trống, giả thuyết) đã có bản chờ tác giả duyệt trong `docs/bai_nckh/`, kèm biên bản phản biện. Chưa viết Ch3–5. Không viết Ch4–5 khi chưa có kết quả thật.
+- [ ] Bài NCKH 5 chương (khung ~80 trang: Mở đầu 5–6, Ch1 8–10, Ch2 16–17, Ch3 21–23, Ch4 13–15, Ch5 11–13, Tổng kết 2–3). Ch2 = cơ sở lý thuyết và khoảng trống; khung khái niệm và giả thuyết nằm ở mục 3.1 (theo yêu cầu tác giả). Mở đầu, Ch1, Ch2 và mục 3.1 đã có bản chờ tác giả duyệt trong `docs/bai_nckh/`, kèm biên bản phản biện. Chưa viết 3.2–3.9 và Ch4–5. Thời điểm hình thành giả thuyết đã bỏ khỏi phần giả thuyết, nhưng phải trình bày ở mục 3.8. Không viết Ch4–5 khi chưa có kết quả thật.
 
 ## Quy tắc bắt buộc
 

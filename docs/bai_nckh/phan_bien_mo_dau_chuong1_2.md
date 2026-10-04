@@ -16,7 +16,7 @@ Nếu ba phần này là phần lý thuyết của một bản thảo gửi tạ
 
 ## 2. Các sửa đổi quan trọng đã thực hiện sau phản biện
 
-1. **Công khai lịch sử phân tích.** Các phân tích sơ bộ trước đăng ký đã ước lượng quan hệ giữa một dạng của chỉ số kỳ thị và PHQ-4. Bản thảo nêu thẳng điều này và kết luận rằng H1 không phải một kiểm định khẳng định độc lập với dữ liệu (mục 2.7.3).
+1. **Công khai lịch sử phân tích.** Các phân tích sơ bộ trước đăng ký đã ước lượng quan hệ giữa một dạng của chỉ số kỳ thị và PHQ-4. Bản thảo kết luận rằng H1 không phải một kiểm định khẳng định độc lập với dữ liệu. Theo yêu cầu của tác giả, nội dung này và cột "thời điểm hình thành" đã được bỏ khỏi phần giả thuyết. Nội dung sẽ được trình bày ở mục 3.8 (đăng ký trước, lịch sử phân tích và tính minh bạch). Không được bỏ hẳn: đề cương (mục 1.5 và 3.11) và bản đăng ký cam kết công khai thông tin này.
 2. **Khoảng trống được định nghĩa lại.** Khoảng trống không còn là "chưa có ở Việt Nam" mà gồm ba ý. Thứ nhất, dự báo về chênh lệch không phân biệt được hai cách đọc. Thứ hai, bối cảnh thể chế khác. Thứ ba, đo lường và quy nguyên. Nhận định về Việt Nam được giới hạn bằng cụm "trong phạm vi rà soát", kèm cam kết rà soát có cấu trúc (mục 2.6).
 3. **Thêm lập luận che giấu hai chiều.** Che giấu có thể là phản ứng trước kỳ thị, nhưng cũng có thể làm giảm phơi nhiễm. Vì vậy gradient quan sát được có thể bị thu hẹp (mục 2.4). Lập luận này cũng trả lời câu hỏi "che giấu xảy ra trước hay sau kỳ thị".
 4. **Tách kỳ thị khỏi phân biệt đối xử.** Bản thảo xác định năm dạng kỳ thị thể hiện, khớp với các tình huống trong bảng hỏi và nối với định nghĩa trong Bộ luật Lao động (mục 2.3.1).
@@ -30,7 +30,7 @@ Nếu ba phần này là phần lý thuyết của một bản thảo gửi tạ
    - Hebl và cộng sự (2002): sửa "phần lớn trải nghiệm" thành "một phần quan trọng"
    - Nội dung Công văn 4132/BYT-PC: chỉ giữ phần đã xác minh
 9. **Bổ sung bối cảnh pháp lý đã xác minh.** Bản thảo thêm Bộ luật Dân sự 2015, Điều 37, và phân tích hệ quả: các phúc lợi cho bạn đời cùng giới và việc dùng tên gọi, trang phục phù hợp phụ thuộc vào từng nơi làm việc (mục 1.3.1).
-10. **Cắt phần trùng lặp.** Đã cắt các đoạn lặp giữa Mở đầu, Chương 1 và Chương 2. Chương 2 còn khoảng 20 trang. Trích dẫn trong bài thêm chữ viết tắt tên (I. H. Meyer / J. W. Meyer; T. Q. Nguyen / L. V. Nguyen) theo APA 7.
+10. **Cắt phần trùng lặp.** Đã cắt các đoạn lặp giữa Mở đầu, Chương 1 và Chương 2. Theo yêu cầu của tác giả, khung khái niệm và giả thuyết (mục 2.7 cũ) được chuyển thành mục 3.1. Chương 2 còn khoảng 16–17 trang; mục 3.1 khoảng 4–4,5 trang. Trích dẫn trong bài thêm chữ viết tắt tên (I. H. Meyer / J. W. Meyer; T. Q. Nguyen / L. V. Nguyen) theo APA 7.
 
 ## 3. Vấn đề còn tồn tại
 
@@ -42,7 +42,7 @@ Nếu ba phần này là phần lý thuyết của một bản thảo gửi tạ
   - người từng bị phân biệt đối xử có khả năng lo âu cao hơn khoảng 1,77 lần.
 
   Tôi không lấy được báo cáo gốc, nên **không trích dẫn** khảo sát này. Nếu các con số trên đúng, đây là bằng chứng Việt Nam trực tiếp nhất về quan hệ giữa kỳ thị nơi làm việc và lo âu, dù không qua bình duyệt. Khi đó phải bổ sung nó vào mục 1.3.2, và ở mục 2.6 phải viết rõ điểm khác: nghiên cứu của mình là bình duyệt, gồm nhiều nhóm SOGIE, phân tích trong nội bộ nhóm, đo kỳ thị theo từng tình huống và đo cả lo âu lẫn trầm cảm. Bỏ qua nguồn này sẽ là một lỗi định vị nghiêm trọng.
-- **C2. Trạng thái đăng ký OSF.** Bản thảo viết rằng kế hoạch đã được đăng ký trước khi ước lượng. Nếu thực tế chưa nộp, phải làm hai việc. Thứ nhất, nộp bản đăng ký trước khi chạy mô hình chính. Thứ hai, sửa Mở đầu mục 3 và các mục 2.7.2, 2.7.3.
+- **C2. Trạng thái đăng ký OSF.** Bản thảo viết rằng kế hoạch đã được đăng ký trước khi ước lượng. Nếu thực tế chưa nộp, phải làm hai việc. Thứ nhất, nộp bản đăng ký trước khi chạy mô hình chính. Thứ hai, sửa Mở đầu mục 3, mục 3.1 và mục 3.8.
 - **C3. Đạo đức nghiên cứu.** Dữ liệu được thu khi chưa có phê duyệt. Vấn đề này sẽ được trình bày ở Chương 3, nhưng nó quyết định khả năng công bố của toàn bài.
 
 ### Lớn (Major)
@@ -76,7 +76,7 @@ Môi trường làm việc chặn Crossref và doi.org. Vì vậy mọi DOI ch�
 | Ngo và cộng sự (2026); Ha và cộng sự (2015); T. Q. Nguyen và cộng sự (2016, hai bài) | Thông tin lấy từ đề cương; cần kiểm tra DOI |
 | UNDP và USAID (2014); iSEE (2015); Human Rights Watch (2020) | Tài liệu không qua bình duyệt; cần kiểm tra thông tin nhà xuất bản |
 
-Đã đối chiếu bằng máy: mọi trích dẫn trong bài đều có trong danh mục tham khảo, và mọi mục trong danh mục đều được trích (53 tài liệu).
+Đã đối chiếu bằng máy: mọi trích dẫn trong bài đều có trong danh mục tham khảo, và mọi mục trong danh mục đều được trích (sau khi chuyển mục, Kerr (1998) chỉ còn được trích ở đoạn đã bỏ nên được bỏ khỏi danh mục; sẽ trích lại ở mục 3.8).
 
 ## 5. Q1 test
 

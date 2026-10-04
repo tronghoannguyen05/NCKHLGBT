@@ -4,7 +4,7 @@
 
 Công trình nghiên cứu khoa học sinh viên, Học viện Ngân hàng
 
-> **Tình trạng văn bản (bản chờ duyệt).** Văn bản này gồm Mở đầu, Chương 1 và Chương 2 của bài nghiên cứu năm chương. Chương 3 (Phương pháp nghiên cứu), Chương 4 (Kết quả), Chương 5 (Thảo luận) và phần Tổng kết sẽ được viết sau khi bản này được duyệt. Các chỗ đánh dấu [CẦN XÁC NHẬN] cần tác giả kiểm tra trước khi hoàn thiện.
+> **Tình trạng văn bản (bản chờ duyệt).** Văn bản này gồm Mở đầu, Chương 1, Chương 2 và mục 3.1 (khung khái niệm và giả thuyết) của Chương 3 trong bài nghiên cứu năm chương. Phần còn lại của Chương 3, Chương 4 (Kết quả), Chương 5 (Thảo luận) và phần Tổng kết sẽ được viết sau khi bản này được duyệt. Các chỗ đánh dấu [CẦN XÁC NHẬN] cần tác giả kiểm tra trước khi hoàn thiện.
 
 ## DANH MỤC TỪ VIẾT TẮT
 
@@ -67,7 +67,7 @@ Nghiên cứu sử dụng thiết kế định lượng, quan sát, cắt ngang,
 
 ### 5. Kết cấu của nghiên cứu
 
-Ngoài Mở đầu, Tổng kết, tài liệu tham khảo và phụ lục, nghiên cứu gồm năm chương. Chương 1 xác lập vấn đề nghiên cứu: chênh lệch sức khỏe tâm thần, hai cách diễn giải chênh lệch đó và bối cảnh Việt Nam. Chương 2 xây dựng cơ sở lý thuyết, tổng hợp bằng chứng về các cơ chế, xác định khoảng trống và phát triển các giả thuyết. Chương 3 trình bày thiết kế nghiên cứu, dữ liệu, đo lường, chiến lược phân tích và các giới hạn của suy luận. Chương 4 trình bày kết quả theo trình tự các giả thuyết. Chương 5 thảo luận kết quả trong quan hệ với lý thuyết và bằng chứng trước đây, nêu hàm ý và hạn chế. Phần Tổng kết nêu các kết luận chính và khuyến nghị.
+Ngoài Mở đầu, Tổng kết, tài liệu tham khảo và phụ lục, nghiên cứu gồm năm chương. Chương 1 xác lập vấn đề nghiên cứu: chênh lệch sức khỏe tâm thần, hai cách diễn giải chênh lệch đó và bối cảnh Việt Nam. Chương 2 xây dựng cơ sở lý thuyết, tổng hợp bằng chứng về các cơ chế và xác định các khoảng trống nghiên cứu. Chương 3 trình bày khung khái niệm, các giả thuyết, thiết kế nghiên cứu, dữ liệu, đo lường, chiến lược phân tích và các giới hạn của suy luận. Chương 4 trình bày kết quả theo trình tự các giả thuyết. Chương 5 thảo luận kết quả trong quan hệ với lý thuyết và bằng chứng trước đây, nêu hàm ý và hạn chế. Phần Tổng kết nêu các kết luận chính và khuyến nghị.
 
 ---
 
@@ -133,9 +133,9 @@ Câu hỏi này có ý nghĩa ở ba phương diện. Về khoa học, câu hỏ
 
 ---
 
-## CHƯƠNG 2. CƠ SỞ LÝ THUYẾT, KHOẢNG TRỐNG NGHIÊN CỨU VÀ GIẢ THUYẾT
+## CHƯƠNG 2. CƠ SỞ LÝ THUYẾT VÀ KHOẢNG TRỐNG NGHIÊN CỨU
 
-Chương 1 kết thúc bằng một câu hỏi: trong nội bộ nhóm người lao động LGBT, kỳ thị tại nơi làm việc có đi kèm mức triệu chứng cao hơn hay không. Chương này xây dựng cơ sở lý thuyết để trả lời câu hỏi đó, xác định các khoảng trống nghiên cứu (mục 2.6) và phát triển các giả thuyết (mục 2.7).
+Chương 1 kết thúc bằng một câu hỏi: trong nội bộ nhóm người lao động LGBT, kỳ thị tại nơi làm việc có đi kèm mức triệu chứng cao hơn hay không. Chương này xây dựng cơ sở lý thuyết để trả lời câu hỏi đó và xác định các khoảng trống nghiên cứu (mục 2.6). Các giả thuyết được phát biểu ở Chương 3.
 
 ### 2.1. Lý thuyết căng thẳng thiểu số
 
@@ -213,7 +213,7 @@ I. H. Meyer (2003) xếp che giấu vào nhóm tác nhân gần vì nó có chi 
 
 Bằng chứng tổng hợp phức tạp hơn mô hình lý thuyết. Phân tích gộp của Pachankis và cộng sự (2020) ghi nhận mối liên hệ giữa che giấu xu hướng tính dục và triệu chứng trầm cảm phụ thuộc vào khía cạnh của che giấu được đo và vào đặc điểm của mẫu, với mối liên hệ mạnh hơn trong các mẫu chỉ gồm người song tính. Như vậy, che giấu không đồng nhất là có hại. Che giấu đồng thời là một chiến lược ứng phó mà người lao động có thể lựa chọn có chủ đích để tránh kỳ thị.
 
-Điểm quan trọng nhất đối với nghiên cứu này là vị trí của che giấu trong quan hệ với kỳ thị thể hiện có tính hai chiều. Theo hướng thứ nhất, kỳ thị thể hiện có thể làm người lao động che giấu nhiều hơn, và che giấu, với các chi phí nhận thức và cảm xúc của nó, có thể đi kèm mức triệu chứng cao hơn. Đây là con đường mà lý thuyết căng thẳng thiểu số mô tả và giả thuyết H3 phát biểu. Theo hướng thứ hai, che giấu có thể làm giảm khả năng người khác biết về danh tính, và do đó làm giảm phơi nhiễm với những hình thức kỳ thị nhắm vào người đã bị nhận diện. Hai hướng này dự báo dấu ngược nhau cho mối liên hệ giữa kỳ thị và che giấu. Dữ liệu cắt ngang không phân tách được hai hướng.
+Điểm quan trọng nhất đối với nghiên cứu này là vị trí của che giấu trong quan hệ với kỳ thị thể hiện có tính hai chiều. Theo hướng thứ nhất, kỳ thị thể hiện có thể làm người lao động che giấu nhiều hơn, và che giấu, với các chi phí nhận thức và cảm xúc của nó, có thể đi kèm mức triệu chứng cao hơn. Đây là con đường mà lý thuyết căng thẳng thiểu số mô tả và giả thuyết H3 (mục 3.1.2) phát biểu. Theo hướng thứ hai, che giấu có thể làm giảm khả năng người khác biết về danh tính, và do đó làm giảm phơi nhiễm với những hình thức kỳ thị nhắm vào người đã bị nhận diện. Hai hướng này dự báo dấu ngược nhau cho mối liên hệ giữa kỳ thị và che giấu. Dữ liệu cắt ngang không phân tách được hai hướng.
 
 Vị trí hai chiều của che giấu có thêm một hệ quả cho việc đọc gradient chính. Nếu che giấu vừa làm giảm phơi nhiễm vừa có chi phí tâm lý riêng, nhóm người báo cáo ít kỳ thị có thể bao gồm những người che giấu nhiều và có mức triệu chứng không thấp. Trong trường hợp đó, gradient quan sát được giữa kỳ thị và triệu chứng có thể nhỏ hơn mức mà một tác động của kỳ thị, nếu có, sẽ tạo ra. Hệ quả này đặc biệt đáng lưu ý ở những bối cảnh mà che giấu có thể phổ biến, như các bối cảnh có mức kỳ thị cấu trúc cao hơn (Pachankis & Bränström, 2018). Vì những lý do trên, nghiên cứu xem che giấu là một biến trung gian giả định. Nghiên cứu chỉ đánh giá mức độ phù hợp của dữ liệu với con đường kỳ thị → che giấu → triệu chứng, và không diễn giải kết quả như bằng chứng về trung gian.
 
@@ -237,7 +237,7 @@ Khoảng trống thứ hai nằm ở bối cảnh thể chế. Các nghiên cứ
 
 Khoảng trống thứ ba nằm ở đo lường và suy luận. Khi kỳ thị tại nơi làm việc được tổng hợp thành một điểm duy nhất, không thể biết mối liên hệ với triệu chứng tập trung ở dạng hành vi nào. Tác giả chưa tìm thấy nghiên cứu nào về người lao động LGBT sử dụng sự khác biệt giữa các dạng kỳ thị phụ thuộc và không phụ thuộc vào quy nguyên như một phép kiểm tra thiên lệch báo cáo. Một số nghiên cứu gần đây chỉ đo triệu chứng trầm cảm (Lo và cộng sự, 2025; Tran và cộng sự, 2020), trong khi lý thuyết gợi ý rằng lo âu và trầm cảm cần được xem xét riêng. Cuối cùng, khi phần lớn bằng chứng trong lĩnh vực đến từ thiết kế cắt ngang, giá trị gia tăng của một nghiên cứu cắt ngang mới phụ thuộc vào mức độ minh bạch về đại lượng ước lượng, về các lựa chọn phân tích và về mức nhạy của kết quả với các nguồn sai lệch.
 
-Bảng 2.1 ánh xạ từng khoảng trống với cách tiếp cận của nghiên cứu và với các phân tích tương ứng.
+Bảng 2.1 ánh xạ từng khoảng trống với cách tiếp cận của nghiên cứu và với các phân tích tương ứng. Các giả thuyết (H) và phân tích thăm dò (E) được phát biểu ở mục 3.1.
 
 **Bảng 2.1. Khoảng trống nghiên cứu và cách tiếp cận của nghiên cứu**
 
@@ -247,23 +247,31 @@ Bảng 2.1 ánh xạ từng khoảng trống với cách tiếp cận của nghi
 | 2. Thiếu bằng chứng từ bối cảnh không có bảo vệ pháp lý theo SOGIE tại nơi làm việc | Mẫu người lao động LGBT thuộc nhiều nhóm SOGIE tại Việt Nam; xem xét che giấu danh tính và mức thực thi DEI ở cấp nơi làm việc | H3; E4; E5 |
 | 3. Đo lường tổng hợp che khuất dạng kỳ thị; lo âu và trầm cảm ít được xem xét riêng; suy luận từ dữ liệu cắt ngang thiếu minh bạch | Chỉ số gồm các tình huống cụ thể và phân tích từng tình huống; phân tích riêng GAD-2 và PHQ-2; đại lượng ước lượng xác định trước, đăng ký trước, hiệu chỉnh kiểm định đa lần và phân tích độ nhạy (Chương 3) | E2; H2a, H2b; toàn bộ phân tích |
 
-### 2.7. Khung khái niệm và giả thuyết nghiên cứu
+Ba khoảng trống trên xác định những gì một nghiên cứu mới cần làm: kiểm tra gradient trong nội bộ nhóm, trong một bối cảnh thể chế khác với bối cảnh của phần lớn bằng chứng hiện có, bằng một thước đo cho phép tách các dạng kỳ thị. Chương 3 chuyển các yêu cầu này thành khung khái niệm, giả thuyết và phương pháp kiểm định.
 
-#### 2.7.1. Khung khái niệm
+---
 
-Hình 2.1 trình bày khung khái niệm của nghiên cứu. Biến phơi nhiễm là kỳ thị thể hiện tại nơi làm việc, đo bằng chỉ số bảy tình huống, được xem là một tác nhân xa. Biến kết quả là mức độ triệu chứng, gồm tổng điểm PHQ-4 và hai thành phần lo âu (GAD-2) và trầm cảm (PHQ-2). Mối liên hệ giữa hai biến này là đối tượng của H1, H2a và H2b.
+## CHƯƠNG 3. MÔ HÌNH NGHIÊN CỨU VÀ PHƯƠNG PHÁP NGHIÊN CỨU
+
+Chương này chuyển cơ sở lý thuyết và các khoảng trống ở Chương 2 thành một mô hình nghiên cứu có thể kiểm định. Mục 3.1 trình bày khung khái niệm, các giả thuyết và các phân tích thăm dò. Các mục tiếp theo trình bày thiết kế, dữ liệu, đo lường và chiến lược phân tích được dùng để kiểm định các giả thuyết đó, cùng các giới hạn của suy luận.
+
+### 3.1. Khung khái niệm và giả thuyết nghiên cứu
+
+#### 3.1.1. Khung khái niệm
+
+Hình 3.1 trình bày khung khái niệm của nghiên cứu. Biến phơi nhiễm là kỳ thị thể hiện tại nơi làm việc, đo bằng chỉ số bảy tình huống, được xem là một tác nhân xa. Biến kết quả là mức độ triệu chứng, gồm tổng điểm PHQ-4 và hai thành phần lo âu (GAD-2) và trầm cảm (PHQ-2). Mối liên hệ giữa hai biến này là đối tượng của H1, H2a và H2b.
 
 Che giấu danh tính được đặt ở vị trí trung gian giả định trên đường dẫn từ kỳ thị đến triệu chứng (H3). Vị trí này phản ánh con đường mà lý thuyết căng thẳng thiểu số mô tả, không phản ánh một thứ tự thời gian đã được xác lập (mục 2.4). Mức thực thi DEI được cảm nhận được đặt ở vị trí điều kiện thăm dò trên đường dẫn chính (E5). Từng tình huống kỳ thị được phân tích riêng như một phân tích thăm dò (E2).
 
-![Hình 2.1. Khung khái niệm của nghiên cứu](../de_cuong/hinh/hinh1_khung_phan_tich.png)
+![Hình 3.1. Khung khái niệm của nghiên cứu](../de_cuong/hinh/hinh1_khung_phan_tich.png)
 
-*Hình 2.1. Khung khái niệm của nghiên cứu. Nét liền đậm: phân tích chính (H1) và hai kết quả phụ (H2a, H2b). Nét đứt: giả thuyết phụ H3. Nét chấm: phân tích thăm dò (E2, E5). Mọi mũi tên biểu thị mối liên hệ được ước lượng, không phải tác động nhân quả đã được nhận diện. E1, E3 và E4 không được vẽ.*
+*Hình 3.1. Khung khái niệm của nghiên cứu. Nét liền đậm: phân tích chính (H1) và hai kết quả phụ (H2a, H2b). Nét đứt: giả thuyết phụ H3. Nét chấm: phân tích thăm dò (E2, E5). Mọi mũi tên biểu thị mối liên hệ được ước lượng, không phải tác động nhân quả đã được nhận diện. E1, E3 và E4 không được vẽ.*
 
-Khung khái niệm không phải là một đồ thị nhân quả. Biến kiểm soát được lựa chọn dựa trên một đồ thị nhân quả giản lược riêng, trình bày ở Chương 3. Khung khái niệm cũng có những thành phần lý thuyết không được đo. Sự chờ đợi bị từ chối và kỳ thị nội tâm hóa, hai tác nhân gần quan trọng trong mô hình của I. H. Meyer (2003), không được đo bằng thang riêng. Căng thẳng thiểu số ngoài nơi làm việc, chẳng hạn từ gia đình, cũng không được đo. Những thành phần này giới hạn khả năng tách con đường qua che giấu khỏi các con đường khác, và là nguồn gây nhiễu tiềm năng được phân tích ở Chương 3.
+Khung khái niệm không phải là một đồ thị nhân quả. Biến kiểm soát được lựa chọn dựa trên một đồ thị nhân quả giản lược riêng, trình bày ở mục 3.5. Khung khái niệm cũng có những thành phần lý thuyết không được đo. Sự chờ đợi bị từ chối và kỳ thị nội tâm hóa, hai tác nhân gần quan trọng trong mô hình của I. H. Meyer (2003), không được đo bằng thang riêng. Căng thẳng thiểu số ngoài nơi làm việc, chẳng hạn từ gia đình, cũng không được đo. Những thành phần này giới hạn khả năng tách con đường qua che giấu khỏi các con đường khác, và là nguồn gây nhiễu tiềm năng được phân tích ở mục 3.6.
 
-#### 2.7.2. Giả thuyết nghiên cứu
+#### 3.1.2. Giả thuyết nghiên cứu
 
-Các giả thuyết được tổ chức thành hai tầng. Giả thuyết chính H1 là kiểm định trung tâm của nghiên cứu. Các giả thuyết phụ H2a, H2b và H3 được xác định trước khi ước lượng và được kiểm soát sai số loại I theo họ kiểm định bằng thủ tục Holm (1979).
+Các giả thuyết được tổ chức thành hai tầng. Giả thuyết chính H1 là kiểm định trung tâm của nghiên cứu. Các giả thuyết phụ H2a, H2b và H3 tạo thành một họ kiểm định, được kiểm soát sai số loại I bằng thủ tục Holm (1979).
 
 H1 là dạng thực nghiệm trực tiếp của dự báo trong nội bộ nhóm đã trình bày ở mục 2.1.2. Nếu kỳ thị tại nơi làm việc là một tác nhân xa theo nghĩa của lý thuyết, người lao động gặp kỳ thị thường xuyên hơn được kỳ vọng có mức triệu chứng cao hơn những người cùng nhóm có các đặc điểm có trước phơi nhiễm tương tự nhưng gặp kỳ thị ít hơn.
 
@@ -279,31 +287,33 @@ H3 phát biểu con đường qua che giấu danh tính mà lý thuyết mô t�
 
 > **H3.** Các mối liên hệ giữa kỳ thị, che giấu danh tính và điểm PHQ-4 phù hợp với cấu trúc đường dẫn kỳ thị → che giấu danh tính → triệu chứng.
 
-#### 2.7.3. Phân tích thăm dò và thời điểm hình thành giả thuyết
+#### 3.1.3. Phân tích thăm dò
 
-Năm phân tích thăm dò bổ sung cho các giả thuyết (Bảng 2.2). E1 xem xét liệu mối liên hệ tập trung ở bước chuyển từ không gặp sang có gặp kỳ thị hay tăng dần theo mức kỳ thị. E2 phục vụ mục tiêu thứ hai và phép kiểm tra về quy nguyên ở mục 2.3.2. E3 chỉ mô tả phân bố triệu chứng, không kèm kiểm định. Câu hỏi của E4 về nhóm xu hướng tính dục có cơ sở từ bằng chứng về mức triệu chứng cao hơn ở người song tính (Ross và cộng sự, 2018) và về mối liên hệ mạnh hơn giữa che giấu và trầm cảm trong các mẫu người song tính (Pachankis và cộng sự, 2020). E5 dựa trên lập luận ở mục 2.5. Các phân tích thăm dò chỉ được dùng để mô tả và gợi hướng cho nghiên cứu sau, không được dùng để thay thế hoặc củng cố kết luận về các giả thuyết.
+Năm phân tích thăm dò bổ sung cho các giả thuyết (Bảng 3.1). E1 xem xét liệu mối liên hệ tập trung ở bước chuyển từ không gặp sang có gặp kỳ thị hay tăng dần theo mức kỳ thị. E2 phục vụ mục tiêu thứ hai và phép kiểm tra về quy nguyên ở mục 2.3.2. E3 chỉ mô tả phân bố triệu chứng, không kèm kiểm định. Câu hỏi của E4 về nhóm xu hướng tính dục có cơ sở từ bằng chứng về mức triệu chứng cao hơn ở người song tính (Ross và cộng sự, 2018) và về mối liên hệ mạnh hơn giữa che giấu và trầm cảm trong các mẫu người song tính (Pachankis và cộng sự, 2020). E5 dựa trên lập luận ở mục 2.5. Các phân tích thăm dò chỉ được dùng để mô tả và gợi hướng cho nghiên cứu sau, không được dùng để thay thế hoặc củng cố kết luận về các giả thuyết.
 
-**Bảng 2.2. Giả thuyết và phân tích thăm dò**
+**Bảng 3.1. Giả thuyết và phân tích thăm dò**
 
-| Ký hiệu | Nội dung | Vị trí | Thời điểm hình thành |
-|---|---|---|---|
-| H1 | Trong nhóm LGBT, chỉ số kỳ thị tại nơi làm việc liên hệ đồng biến với tổng điểm PHQ-4. | Giả thuyết chính | Nội dung có trong kế hoạch ban đầu; vị trí chính được xác lập sau khi tác giả tiếp xúc một phần với dữ liệu |
-| H2a | Chỉ số kỳ thị liên hệ đồng biến với điểm lo âu (GAD-2). | Giả thuyết phụ | Bổ sung khi đăng ký, trước khi ước lượng |
-| H2b | Chỉ số kỳ thị liên hệ đồng biến với điểm trầm cảm (PHQ-2). | Giả thuyết phụ | Bổ sung khi đăng ký, trước khi ước lượng |
-| H3 | Các mối liên hệ giữa kỳ thị, che giấu danh tính và điểm PHQ-4 phù hợp với cấu trúc đường dẫn kỳ thị → che giấu danh tính → triệu chứng. | Giả thuyết phụ | Kế hoạch ban đầu |
-| E1 | Mối liên hệ giữa kỳ thị và PHQ-4 khi kỳ thị được chia thành ba mức. | Thăm dò | Sau khi tiếp xúc với dữ liệu |
-| E2 | Mối liên hệ giữa từng tình huống kỳ thị và PHQ-4. | Thăm dò | Sau khi tiếp xúc với dữ liệu |
-| E3 | Phân bố điểm PHQ-4 giữa người non-LGBT, người LGBT chưa gặp và đã gặp kỳ thị. | Thăm dò, chỉ mô tả | Sau khi tiếp xúc với dữ liệu |
-| E4 | Mối liên hệ chính khác nhau theo giới tính khi sinh và theo nhóm xu hướng tính dục. | Thăm dò | Bổ sung khi đăng ký, trước khi ước lượng |
-| E5 | Mức thực thi DEI được cảm nhận làm suy yếu mối liên hệ giữa kỳ thị và PHQ-4. | Thăm dò | Bổ sung khi đăng ký, trước khi ước lượng |
+| Ký hiệu | Nội dung | Vị trí |
+|---|---|---|
+| H1 | Trong nhóm LGBT, chỉ số kỳ thị tại nơi làm việc liên hệ đồng biến với tổng điểm PHQ-4. | Giả thuyết chính |
+| H2a | Chỉ số kỳ thị liên hệ đồng biến với điểm lo âu (GAD-2). | Giả thuyết phụ |
+| H2b | Chỉ số kỳ thị liên hệ đồng biến với điểm trầm cảm (PHQ-2). | Giả thuyết phụ |
+| H3 | Các mối liên hệ giữa kỳ thị, che giấu danh tính và điểm PHQ-4 phù hợp với cấu trúc đường dẫn kỳ thị → che giấu danh tính → triệu chứng. | Giả thuyết phụ |
+| E1 | Mối liên hệ giữa kỳ thị và PHQ-4 khi kỳ thị được chia thành ba mức. | Thăm dò |
+| E2 | Mối liên hệ giữa từng tình huống kỳ thị và PHQ-4. | Thăm dò |
+| E3 | Phân bố điểm PHQ-4 giữa người non-LGBT, người LGBT chưa gặp và đã gặp kỳ thị. | Thăm dò, chỉ mô tả |
+| E4 | Mối liên hệ chính khác nhau theo giới tính khi sinh và theo nhóm xu hướng tính dục. | Thăm dò |
+| E5 | Mức thực thi DEI được cảm nhận làm suy yếu mối liên hệ giữa kỳ thị và PHQ-4. | Thăm dò |
 
-*Ghi chú.* Nội dung các giả thuyết được giữ nguyên như trong kế hoạch phân tích. Mọi mô hình điều chỉnh các đặc điểm có trước phơi nhiễm, như trình bày ở Chương 3. Cụm từ "làm suy yếu" ở E5 được hiểu là "đi kèm một mối liên hệ yếu hơn", tức một tương tác thống kê, không phải một tác động điều tiết nhân quả (mục 2.5).
+*Ghi chú.* Nội dung các giả thuyết được giữ nguyên như trong kế hoạch phân tích. Mọi mô hình điều chỉnh các đặc điểm có trước phơi nhiễm, như trình bày ở mục 3.5. Cụm từ "làm suy yếu" ở E5 được hiểu là "đi kèm một mối liên hệ yếu hơn", tức một tương tác thống kê, không phải một tác động điều tiết nhân quả (mục 2.5).
 
-Cột thời điểm hình thành được đưa vào bảng vì giá trị bằng chứng của một kiểm định phụ thuộc vào thời điểm giả thuyết được đặt ra. Kế hoạch phân tích ban đầu, xây dựng trước khi thu thập dữ liệu, đặt thu nhập làm trọng tâm. Trong kế hoạch đó, mối liên hệ giữa kỳ thị và sức khỏe tâm thần là một mắt xích trên đường dẫn đến thu nhập. Sau khi tiếp xúc một phần với dữ liệu, tác giả đặt mối liên hệ này vào vị trí phân tích chính và loại toàn bộ các phân tích về thu nhập khỏi phạm vi nghiên cứu. Một số phân tích sơ bộ thực hiện trước khi đăng ký đã bao gồm ước lượng mối liên hệ giữa một dạng của chỉ số kỳ thị và PHQ-4. Vì vậy, H1 có giá trị của một kiểm định được đặc tả trước, nhưng không có giá trị của một kiểm định khẳng định độc lập với dữ liệu. Việc công khai thời điểm hình thành của từng nội dung giúp tránh trình bày một giả thuyết hình thành sau khi xem dữ liệu như thể nó đã được đặt ra từ trước (Kerr, 1998). Chi tiết về các phân tích sơ bộ và về bản đăng ký được trình bày ở Chương 3.
+Tình trạng đăng ký trước của kế hoạch phân tích và lịch sử phân tích được trình bày ở mục 3.8.
+
+> **Các mục còn lại của Chương 3 (chưa viết, chờ tác giả duyệt mục 3.1):** 3.2. Thiết kế nghiên cứu; 3.3. Dữ liệu và mẫu nghiên cứu; 3.4. Đo lường các biến; 3.5. Chiến lược phân tích; 3.6. Nhận diện và giới hạn của diễn giải nhân quả; 3.7. Phân tích độ nhạy và kiểm tra độ bền; 3.8. Đăng ký trước, lịch sử phân tích và tính minh bạch; 3.9. Đạo đức nghiên cứu và bảo vệ dữ liệu.
 
 ---
 
-## TÀI LIỆU THAM KHẢO (cho Mở đầu, Chương 1 và Chương 2)
+## TÀI LIỆU THAM KHẢO (cho Mở đầu, Chương 1, Chương 2 và mục 3.1)
 
 ### Văn bản pháp lý
 
@@ -349,7 +359,6 @@ Human Rights Watch. (2020). *"My teacher said I had a disease": Barriers to the 
 
 iSEE [Viện Nghiên cứu Xã hội, Kinh tế và Môi trường]. (2015). *Is it because I am LGBT? Discrimination based on sexual orientation and gender identity in Viet Nam*. iSEE.
 
-Kerr, N. L. (1998). HARKing: Hypothesizing after the results are known. *Personality and Social Psychology Review, 2*(3), 196–217. https://doi.org/10.1207/s15327957pspr0203_4
 
 King, M., Semlyen, J., Tai, S. S., Killaspy, H., Osborn, D., Popelyuk, D., & Nazareth, I. (2008). A systematic review of mental disorder, suicide, and deliberate self harm in lesbian, gay and bisexual people. *BMC Psychiatry, 8*, Article 70. https://doi.org/10.1186/1471-244X-8-70
 
