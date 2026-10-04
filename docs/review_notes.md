@@ -20,6 +20,7 @@ Xếp theo mức độ ưu tiên. Đánh dấu [x] khi đã xử lý và ghi v�
 - [ ] **B4. Họ BH.** E2 và E4 là một họ hay hai họ hiệu chỉnh? Bảng 9 hiện ghi chung “p đã hiệu chỉnh”.
 - [ ] **B5. E2 với tình huống 4.** Chỉ 1,6% người từng gặp, tức khoảng 4 người, nên hệ số gần như không ước lượng được. Nên tuyên bố trước rằng tình huống có dưới 10 người gặp chỉ được báo cáo số người, không báo cáo hệ số. Ghi vào `deviations.md` nếu OSF chưa có quy tắc này.
 - [ ] **B6. Số câu hợp lệ tối thiểu của chỉ số che giấu** chưa được nêu.
+- [ ] **B7. Góp ý bổ sung ngày 4/10/2026** (hiệu ứng nhỏ nhất có ý nghĩa và kiểm định tương đương, nhóm thưa và HC3, wild bootstrap, thứ tự câu hỏi kỳ thị → PHQ-4, sai lệch chọn mẫu, xu hướng tính dục trong Xᴰ, kiểm định hiệu ở E2, cách trình bày tương tác): xem `docs/gop_y_phuong_phap.md`.
 
 ## C. Trình bày
 
