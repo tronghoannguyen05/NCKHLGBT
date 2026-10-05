@@ -1,0 +1,42 @@
+variable,level,group,n,pct,total
+agegrp_orig,18-24,LGBT,64,23.0,278
+agegrp_orig,25-34,LGBT,116,41.7,278
+agegrp_orig,35-44,LGBT,49,17.6,278
+agegrp_orig,45+,LGBT,43,15.5,278
+agegrp_orig,18-24,Non-LGBT,68,21.1,323
+agegrp_orig,25-34,Non-LGBT,130,40.2,323
+agegrp_orig,35-44,Non-LGBT,61,18.9,323
+agegrp_orig,45+,Non-LGBT,54,16.7,323
+sex_birth_orig,Male,LGBT,98,35.3,278
+sex_birth_orig,Female,LGBT,171,61.5,278
+sex_birth_orig,Male,Non-LGBT,135,41.8,323
+sex_birth_orig,Female,Non-LGBT,178,55.1,323
+educ_orig,Upper secondary or below,LGBT,45,16.2,278
+educ_orig,College,LGBT,25,9.0,278
+educ_orig,University,LGBT,171,61.5,278
+educ_orig,Postgraduate,LGBT,33,11.9,278
+educ_orig,Upper secondary or below,Non-LGBT,44,13.6,323
+educ_orig,College,Non-LGBT,28,8.7,323
+educ_orig,University,Non-LGBT,211,65.3,323
+educ_orig,Postgraduate,Non-LGBT,37,11.5,323
+relstat_orig,No partner,LGBT,135,48.6,278
+relstat_orig,Partner,LGBT,127,45.7,278
+relstat_orig,"Separated, divorced, or widowed",LGBT,<10,,278
+relstat_orig,Prefer not to answer,LGBT,<10,,278
+relstat_orig,No partner,Non-LGBT,171,52.9,323
+relstat_orig,Partner,Non-LGBT,123,38.1,323
+relstat_orig,"Separated, divorced, or widowed",Non-LGBT,<10,,323
+relstat_orig,Prefer not to answer,Non-LGBT,20,6.2,323
+region_orig,Hanoi,LGBT,74,26.6,278
+region_orig,Ho Chi Minh City,LGBT,147,52.9,278
+region_orig,Da Nang,LGBT,23,8.3,278
+region_orig,Elsewhere,LGBT,31,11.2,278
+region_orig,Hanoi,Non-LGBT,79,24.5,323
+region_orig,Ho Chi Minh City,Non-LGBT,132,40.9,323
+region_orig,Da Nang,Non-LGBT,17,5.3,323
+region_orig,Elsewhere,Non-LGBT,93,28.8,323
+orient_g,Gay,LGBT,68,24.5,278
+orient_g,Lesbian,LGBT,74,26.6,278
+orient_g,Bisexual,LGBT,87,31.3,278
+orient_g,Pansexual,LGBT,23,8.3,278
+orient_g,"Other, questioning, or not reported",LGBT,26,9.4,278
