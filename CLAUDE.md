@@ -23,8 +23,8 @@
 - [ ] Đăng ký OSF: **chưa nộp** (tác giả xác nhận 5/10/2026). Nộp `docs/analysis_plan.md` (gồm mục 8, các quyết định chốt ngày 5/10/2026) **trước khi chạy `05_main_models.do`**, rồi ghi đường dẫn vào `docs/analysis_plan.md` và bài báo.
 - [x] Chốt phương pháp (5/10/2026): hết `TODO(OSF)`; thêm ngưỡng hiệu ứng nhỏ nhất (1,0 điểm PHQ-4, TOST), gộp mức thưa (`04b_collapse_levels.do`), wild bootstrap, đặc tả thêm xu hướng tính dục, kiểm định hiệu ở E2; bỏ kiểm định White. Mã Stata đã sửa nhưng **chưa chạy thử**.
 - [x] Điền `config/variable_map.csv` và tạo `config/value_map.csv` (mã chữ Kobo → mã số), 5/10/2026. Đã đối chiếu bằng Python trên tệp thật (chỉ số đếm): không có mã chưa ánh xạ; luồng mẫu khớp 850 → … → 243.
-- [x] Tệp chạy một lần bấm `CHAY_PHAN_TICH.do` (chế độ thu / kiemtra / chinhthuc); dữ liệu giả lập định dạng Kobo ở `tests/synthetic_kobo.csv`. Hướng dẫn: `docs/huong_dan_chay_stata.md`.
-- [ ] Chạy thử toàn bộ `code/` trên dữ liệu giả lập: `CHAY_PHAN_TICH.do` với `CHE_DO "thu"`. **Mã chưa từng được chạy trên Stata.**
+- [x] **Tệp chạy chính thức: `phan_tich.do`** (một tệp, theo yêu cầu tác giả 5/10/2026): đường dẫn dữ liệu trên máy tác giả (ổ D), xuất `ket_qua.xlsx`; `RUN_MODELS 0` chỉ chạy dữ liệu và mô tả, `1` chạy mô hình (sau khi đăng ký OSF). Hướng dẫn: `docs/huong_dan_chay_stata.md`. Pipeline nhiều tệp trong `code/` là bản trước, giữ để tham chiếu; mọi sửa đổi làm trên `phan_tich.do` trước. Dữ liệu giả lập định dạng Kobo: `tests/synthetic_kobo.csv`.
+- [ ] Chạy `phan_tich.do` trên máy tác giả. **Mã chưa từng được chạy trên Stata.**
 - [ ] Chạy trên dữ liệu thật → điền Bảng 5–9 → viết bài.
 - [ ] Bài NCKH 5 chương (khung ~80 trang: Mở đầu 5–6, Ch1 8–10, Ch2 16–17, Ch3 21–23, Ch4 13–15, Ch5 11–13, Tổng kết 2–3). Ch2 = cơ sở lý thuyết và khoảng trống; khung khái niệm và giả thuyết nằm ở mục 3.1 (theo yêu cầu tác giả). Mở đầu, Ch1, Ch2 và mục 3.1 đã có bản chờ tác giả duyệt trong `docs/bai_nckh/`, kèm biên bản phản biện. Chưa viết 3.2–3.9 và Ch4–5. Thời điểm hình thành giả thuyết đã bỏ khỏi phần giả thuyết, nhưng phải trình bày ở mục 3.8. Không viết Ch4–5 khi chưa có kết quả thật. Bản tiếng Anh 5 chương dài (Introduction, Ch1, Ch2) ở `docs/bai_nckh/manuscript_en_intro_ch1_ch2.md`, giữ để tham khảo.
 - [ ] **Bản chính hiện nay (từ 4/10/2026, theo yêu cầu tác giả): bài báo tiếng Anh trình bày theo Herry & Dyar (2025)**, ở `docs/bai_nckh/manuscript_en_article.md`. Bố cục: Abstract có cấu trúc, Keywords, Introduction (các mục không đánh số, kết thúc bằng Current Study và Hypotheses), Methods, Results, Discussion, Conclusions, Declarations, References. Đã viết Abstract (Introduction, Methods), Introduction và Methods (5/10/2026, theo `docs/analysis_plan.md`). Results, Discussion, Conclusions để trống cho đến khi có kết quả thật. Không phát triển thêm bản tiếng Việt và bản 5 chương trừ khi tác giả yêu cầu.
@@ -80,7 +80,7 @@
 
 ## Cách chạy
 
-Mở `CHAY_PHAN_TICH.do` trong Stata 17, chọn `CHE_DO` ("thu" → "kiemtra" → "chinhthuc"), bấm Do. Chi tiết ở `docs/huong_dan_chay_stata.md`.
-- Dữ liệu thật: tệp `.xlsx` xuất từ Kobo đặt trong `data/raw/`; tệp chạy tự chép thành `data/raw/kobo_export.xlsx`.
-- Chế độ "kiemtra" dừng sau `04b` (cờ `STOP_BEFORE_MODELS`); "chinhthuc" chỉ chạy sau khi đăng ký OSF.
-- Nếu Kobo có mã chữ mới, thêm vào `config/value_map.csv`. Sinh lại dữ liệu giả lập: `python3 tests/make_synthetic_data.py`.
+Mở `phan_tich.do` trong Stata 17 và bấm Do. Chi tiết ở `docs/huong_dan_chay_stata.md`.
+- Đường dẫn dữ liệu và thư mục kết quả ở mục 0 (`global DATA`, `global OUT`).
+- `RUN_MODELS 0`: dữ liệu, luồng mẫu, mô tả. `RUN_MODELS 1`: toàn bộ mô hình, chỉ sau khi đăng ký OSF.
+- Mã hóa mã chữ của Kobo nằm ở mục 1 (lệnh `map_codes`), khớp `config/value_map.csv`. Nếu Kobo có mã mới, sửa cả hai.
