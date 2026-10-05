@@ -20,7 +20,18 @@ global LOGS    "output/logs"
 global SEED       20260928
 global MI_M       20        // số bộ gán giá trị
 global BOOT_REPS  5000      // bootstrap hiệu ứng gián tiếp (tài liệu bổ sung)
-global MIN_CELL   10        // ẩn ô có dưới 10 người trong bảng chéo
+global MIN_CELL   10        // ẩn ô có dưới 10 người trong bảng chéo; E2 không ước lượng tình huống có < 10 người gặp
+global WILD_REPS  9999      // wild bootstrap cho H1 (boottest, trọng số Webb)
+
+* ---- Ngưỡng hiệu ứng nhỏ nhất có ý nghĩa (chốt 5/10/2026, deviations D1) ----
+* 1,0 điểm PHQ-4 trên 1 đơn vị S, tương đương khoảng 0,15 SD của PHQ-4 trên 1 SD của S
+* (0,15 x 3,19 / 0,48 theo độ lệch chuẩn ở đề cương). Cố định bằng số, không tính lại từ dữ liệu.
+global SESOI_PHQ4 1.0
+
+* ---- Gộp mức thưa của biến kiểm soát phân loại (chốt 5/10/2026, deviations D2) ----
+global MIN_LEVEL_N  5        // mức có dưới 5 người trong mẫu ước lượng được gộp (lý do: đòn bẩy và HC3)
+global POOLED_CODE  98       // mã của mức "khác (gộp)" cho biến danh nghĩa
+global ORDERED_VARS "agegrp educ exper orgsize hours"   // biến thứ bậc: gộp với mức liền kề
 
 * ---- Biến kiểm soát ----------------------------------------------------------
 * Xᴰ: có trước phơi nhiễm (đặc tả chính). Xᴶ: đặc điểm việc làm (đặc tả 2).
@@ -36,9 +47,9 @@ global DEI   "dei1 dei2 dei3 dei4"
 
 * ---- Quy tắc dựng chỉ số -----------------------------------------------------
 global S_MIN_VALID   4      // chỉ số kỳ thị 7 câu: tối thiểu 4 câu hợp lệ (đề cương)
-global S8_MIN_VALID  4      // TODO(OSF): chỉ số 8 câu
-global C_MIN_VALID   4      // TODO(OSF): che giấu 4 câu (mặc định: đủ cả 4)
-global C3_MIN_VALID  3      // TODO(OSF): che giấu 3 câu
+global S8_MIN_VALID  4      // chỉ số 8 câu: tối thiểu 4 câu hợp lệ (chốt 5/10/2026, như chỉ số 7 câu)
+global C_MIN_VALID   4      // che giấu: đủ cả 4 câu (chốt 5/10/2026; khớp alpha 0,78 tính trên quan sát đủ câu)
+global C3_MIN_VALID  3      // che giấu 3 câu: đủ cả 3 câu (chốt 5/10/2026)
 global Q_MIN_VALID   3      // DEI: tối thiểu 3 câu hợp lệ (đề cương)
 global CONC_FATIGUE_ITEM "conc4"   // câu "mệt mỏi do phải kiểm soát thông tin"
 
@@ -48,7 +59,7 @@ global CODE_PNTA 9
 * Mã position của quản lý cấp cao (dùng cho cờ thông tin mâu thuẫn)
 global SENIOR_POSITION_CODES "5"
 
-* Mẫu dùng để lấy trung vị S trong số người đã gặp kỳ thị (E1). TODO(OSF)
+* Mẫu dùng để lấy trung vị S trong số người đã gặp kỳ thị (E1). Chốt 5/10/2026: mẫu chính 278.
 global E1_MEDIAN_SAMPLE "in_main"
 
 * ---- Đối chiếu luồng mẫu (đề cương Bảng 2) ----------------------------------

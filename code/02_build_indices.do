@@ -104,7 +104,7 @@ label define S3_lb 0 "Không gặp" 1 "Thấp" 2 "Cao"
 label values S3 S3_lb
 di as text "Trung vị S trong số người đã gặp kỳ thị: " %5.3f S_med_exposed
 
-* ---- Định nghĩa LGBT thay thế cho đường cong đặc tả. TODO(OSF) ------------------
+* ---- Định nghĩa LGBT thay thế cho đường cong đặc tả (chốt 5/10/2026) ------------
 * Mặc định: tự nhận LGBT VÀ câu trả lời SOGI nhất quán (xu hướng không dị tính
 * hoặc bản dạng giới thiểu số). Lý do: câu hỏi kỳ thị chỉ hỏi người tự nhận LGBT.
 gen byte lgbt_consistent = lgbt == 1 & (inrange(orient, 2, 6) | gender_minority == 1)

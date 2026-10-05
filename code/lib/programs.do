@@ -211,3 +211,103 @@ program define gvif_calc, rclass
     matrix list _G, format(%9.3f) title("GVIF")
     return matrix gvif = _G
 end
+
+* -----------------------------------------------------------------------------
+* collapse_sparse: gộp mức thưa của một biến phân loại (chốt 5/10/2026).
+*   Chỉ dựa trên số đếm trong mẫu ước lượng touse, không dùng biến kết quả.
+*   Quy tắc (lặp đến khi mọi mức có ít nhất min người):
+*   - mức "không muốn trả lời" (pna): gộp vào mức "khác (gộp)" (pooled) nếu đã có,
+*     nếu không thì vào mức đông nhất;
+*   - biến thứ bậc (kind = ordered): gộp với mức liền kề phía trung vị;
+*   - biến danh nghĩa (kind = nominal): gộp vào mức "khác (gộp)"; nếu chính mức gộp
+*     còn thưa thì gộp nó vào mức đông nhất.
+*   Thay đổi áp dụng cho toàn bộ dữ liệu. Mỗi lần gộp được ghi vào postfile handle,
+*   với số đếm ghi là "<min" để không lộ ô nhỏ.
+*   collapse_sparse agegrp, touse(in_xd_main) min(5) kind(ordered) pna(9) pooled(98) handle(H)
+* -----------------------------------------------------------------------------
+capture program drop _modal_level
+program define _modal_level, rclass
+    syntax varname, Touse(varname) [Exclude(numlist)]
+    quietly levelsof `varlist' if `touse', local(levs)
+    local best .
+    local bestn -1
+    foreach l of local levs {
+        local skip 0
+        foreach x of local exclude {
+            if `l' == `x' local skip 1
+        }
+        if `skip' continue
+        quietly count if `touse' & `varlist' == `l'
+        if r(N) > `bestn' {
+            local bestn = r(N)
+            local best = `l'
+        }
+    }
+    return scalar level = `best'
+end
+
+capture program drop collapse_sparse
+program define collapse_sparse
+    syntax varname, Touse(varname) Min(integer) Kind(string) Pna(integer) Pooled(integer) Handle(name)
+    local v `varlist'
+    local guard 0
+    while 1 {
+        local ++guard
+        if `guard' > 50 {
+            di as error "collapse_sparse: quá nhiều vòng lặp ở `v'"
+            exit 498
+        }
+        quietly levelsof `v' if `touse', local(levs)
+        local nlev : word count `levs'
+        if `nlev' <= 1 continue, break
+        local l .
+        foreach x of local levs {
+            quietly count if `touse' & `v' == `x'
+            if r(N) < `min' {
+                local l = `x'
+                continue, break
+            }
+        }
+        if missing(`l') continue, break
+
+        local haspooled : list posof "`pooled'" in levs
+        local target .
+        if `l' == `pna' {
+            if `haspooled' local target = `pooled'
+            else {
+                _modal_level `v', touse(`touse') exclude(`pna')
+                local target = r(level)
+            }
+        }
+        else if "`kind'" == "ordered" {
+            quietly summarize `v' if `touse' & `v' != `pna' & `v' != `pooled', detail
+            local med = r(p50)
+            local up .
+            local down .
+            foreach x of local levs {
+                if `x' == `pna' | `x' == `pooled' continue
+                if `x' > `l' & missing(`up') local up = `x'
+                if `x' < `l' local down = `x'
+            }
+            if `l' < `med' local target = cond(!missing(`up'), `up', `down')
+            else local target = cond(!missing(`down'), `down', `up')
+        }
+        else {
+            if `l' == `pooled' {
+                _modal_level `v', touse(`touse') exclude(`pooled' `pna')
+                local target = r(level)
+            }
+            else local target = `pooled'
+        }
+        if missing(`target') | `target' == `l' {
+            di as text "collapse_sparse: không gộp được mức `l' của `v' (giữ nguyên)"
+            continue, break
+        }
+        quietly replace `v' = `target' if `v' == `l'
+        post `handle' ("`v'") (`l') (`target') ("<`min'")
+        local lbl : value label `v'
+        if "`lbl'" != "" & `target' == `pooled' {
+            capture label define `lbl' `pooled' "Khác (gộp)", add
+        }
+    }
+end

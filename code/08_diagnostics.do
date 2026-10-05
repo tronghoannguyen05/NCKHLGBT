@@ -15,10 +15,8 @@ local k = e(df_m) + 1
 
 quietly estat hettest
 post `D' ("Breusch-Pagan") (r(chi2)) (r(df)) (r(p)) ("")
-quietly estat imtest, white
-local wchi = cond(!missing(r(chi2)), r(chi2), r(chi2_h))
-local wdf  = cond(!missing(r(df)), r(df), r(df_h))
-post `D' ("White") (`wchi') (`wdf') (chi2tail(`wdf', `wchi')) ("")
+* Kiểm định White đã bỏ (chốt 5/10/2026): chỉ có giá trị mô tả, nhiều bậc tự do
+* với các biến giả, và HC3 được dùng bất kể kết quả.
 quietly estat ovtest
 post `D' ("Ramsey RESET") (r(F)) (r(df)) (r(p)) ("F(" + string(r(df)) + "," + string(r(df_r)) + ")")
 

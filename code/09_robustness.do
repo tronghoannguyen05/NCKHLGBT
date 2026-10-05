@@ -19,7 +19,7 @@ post_coef, handle(res_robust) coef(1.ever_exposed) analysis("linearity") depvar(
 post_coef, handle(res_robust) coef(S_exposed) analysis("linearity") depvar("phq4") spec("intensity_among_exposed") table(RT)
 
 * ---- Tính tuyến tính (ii): spline bậc ba có giới hạn, nút p10/p50/p90 --------
-* TODO(OSF): spline trên toàn dải S với nút lấy từ người đã gặp kỳ thị.
+* Chốt 5/10/2026: spline trên toàn dải S, nút lấy từ phân phối S của người đã gặp kỳ thị.
 quietly _pctile S if in_xd_main & S > 0, percentiles(10 50 90)
 local k1 = r(r1)
 local k2 = r(r2)
@@ -66,6 +66,34 @@ matrix DFM = e(df_mi)
 local dfS = DFM[1, colnumb(DFM, "S")]
 post_bse, handle(res_robust) coef(S) analysis("missing") depvar("phq4") spec("mi_chained_m${MI_M}") df(`dfS')
 restore
+
+* ---- Suy luận: wild bootstrap cho H1 (Davidson & Flachaire, 2008) ---------------
+* Bổ sung chốt 5/10/2026 (kế hoạch mục 6.4). Phương án chính vẫn là HC3.
+capture which boottest
+if !_rc {
+    regress phq4 S i.(${XD}) if in_xd_main, vce(robust)
+    boottest S, reps($WILD_REPS) weighttype(webb) seed($SEED) nograph
+    local pw = r(p)
+    local wlo = .
+    local whi = .
+    capture matrix WCI = r(CI)
+    if !_rc {
+        local wlo = WCI[1,1]
+        local whi = WCI[1,2]
+    }
+    post_value, handle(res_robust) analysis("inference") depvar("phq4") spec("wild_bootstrap_webb") ///
+        coef("S") b(`=_b[S]') lb(`wlo') ub(`whi') p(`pw') nobs(`e(N)') ///
+        note("Wild bootstrap có ràng buộc, $WILD_REPS lần, trọng số Webb")
+}
+else di as text "Bỏ qua wild bootstrap: chưa cài boottest."
+
+* ---- Gây nhiễu: thêm xu hướng tính dục vào Xᴰ -----------------------------------
+* Bổ sung chốt 5/10/2026 (kế hoạch mục 6.4): xu hướng tính dục có trước phơi nhiễm
+* nhưng không có trong Xᴰ đã chốt ở đề cương. Mức 4 = khác / không xác định.
+gen byte orient4 = orient3
+replace orient4 = 4 if missing(orient3) & in_main
+regress phq4 S i.(${XD}) i.orient4 if in_xd_main, vce(hc3)
+post_coef, handle(res_robust) coef(S) analysis("confounding") depvar("phq4") spec("XD_plus_orientation")
 
 * ---- Gây nhiễu không quan sát: Cinelli & Hazlett (2020) -------------------------
 capture which sensemakr

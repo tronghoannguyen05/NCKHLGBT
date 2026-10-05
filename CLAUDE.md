@@ -20,12 +20,13 @@
 - [x] Thu dữ liệu xong. Dữ liệu thô **không** nằm trong repo.
 - [x] Đề cương lần 2.
 - [ ] Hồ sơ xét duyệt đạo đức. Đây là vấn đề lớn nhất, xem `docs/ethics_data_protection.md`.
-- [ ] Đăng ký OSF. Cần xác nhận đã nộp hay chưa, rồi ghi đường dẫn vào `docs/analysis_plan.md`.
+- [ ] Đăng ký OSF: **chưa nộp** (tác giả xác nhận 5/10/2026). Nộp `docs/analysis_plan.md` (gồm mục 8, các quyết định chốt ngày 5/10/2026) **trước khi chạy `05_main_models.do`**, rồi ghi đường dẫn vào `docs/analysis_plan.md` và bài báo.
+- [x] Chốt phương pháp (5/10/2026): hết `TODO(OSF)`; thêm ngưỡng hiệu ứng nhỏ nhất (1,0 điểm PHQ-4, TOST), gộp mức thưa (`04b_collapse_levels.do`), wild bootstrap, đặc tả thêm xu hướng tính dục, kiểm định hiệu ở E2; bỏ kiểm định White. Mã Stata đã sửa nhưng **chưa chạy thử**.
 - [ ] Điền `config/variable_map.csv` (tên biến Kobo → tên chuẩn).
 - [ ] Chạy thử toàn bộ `code/` trên dữ liệu giả lập (`tests/make_synthetic_data.py`). **Mã chưa từng được chạy trên Stata.**
 - [ ] Chạy trên dữ liệu thật → điền Bảng 5–9 → viết bài.
 - [ ] Bài NCKH 5 chương (khung ~80 trang: Mở đầu 5–6, Ch1 8–10, Ch2 16–17, Ch3 21–23, Ch4 13–15, Ch5 11–13, Tổng kết 2–3). Ch2 = cơ sở lý thuyết và khoảng trống; khung khái niệm và giả thuyết nằm ở mục 3.1 (theo yêu cầu tác giả). Mở đầu, Ch1, Ch2 và mục 3.1 đã có bản chờ tác giả duyệt trong `docs/bai_nckh/`, kèm biên bản phản biện. Chưa viết 3.2–3.9 và Ch4–5. Thời điểm hình thành giả thuyết đã bỏ khỏi phần giả thuyết, nhưng phải trình bày ở mục 3.8. Không viết Ch4–5 khi chưa có kết quả thật. Bản tiếng Anh 5 chương dài (Introduction, Ch1, Ch2) ở `docs/bai_nckh/manuscript_en_intro_ch1_ch2.md`, giữ để tham khảo.
-- [ ] **Bản chính hiện nay (từ 4/10/2026, theo yêu cầu tác giả): bài báo tiếng Anh trình bày theo Herry & Dyar (2025)**, ở `docs/bai_nckh/manuscript_en_article.md`. Bố cục: Abstract có cấu trúc, Keywords, Introduction (các mục không đánh số, kết thúc bằng Current Study và Hypotheses), Methods, Results, Discussion, Conclusions, Declarations, References. Đã viết phần Introduction của Abstract và toàn bộ Introduction. Methods, Results, Discussion, Conclusions để trống vì phương pháp chưa chốt. Không phát triển thêm bản tiếng Việt và bản 5 chương trừ khi tác giả yêu cầu.
+- [ ] **Bản chính hiện nay (từ 4/10/2026, theo yêu cầu tác giả): bài báo tiếng Anh trình bày theo Herry & Dyar (2025)**, ở `docs/bai_nckh/manuscript_en_article.md`. Bố cục: Abstract có cấu trúc, Keywords, Introduction (các mục không đánh số, kết thúc bằng Current Study và Hypotheses), Methods, Results, Discussion, Conclusions, Declarations, References. Đã viết Abstract (Introduction, Methods), Introduction và Methods (5/10/2026, theo `docs/analysis_plan.md`). Results, Discussion, Conclusions để trống cho đến khi có kết quả thật. Không phát triển thêm bản tiếng Việt và bản 5 chương trừ khi tác giả yêu cầu.
 - [ ] Góp ý phương pháp trước khi chạy (hiệu ứng nhỏ nhất có ý nghĩa, nhóm thưa và HC3, thứ tự câu hỏi, sai lệch chọn mẫu, Xᴰ, E2): `docs/gop_y_phuong_phap.md`. Chưa ghi gì vào `deviations.md`; tác giả quyết định trước.
 
 ## Quy tắc bắt buộc

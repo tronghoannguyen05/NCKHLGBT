@@ -15,12 +15,12 @@ Xếp theo mức độ ưu tiên. Đánh dấu [x] khi đã xử lý và ghi v�
 ## B. Phương pháp
 
 - [ ] **B1. Kiểm tra cấu trúc hai nhân tố của PHQ-4** (CFA trên n = 601, hoặc ít nhất trên n = 278). Phiên bản tiếng Việt chưa được thẩm định, trong khi H2a và H2b dựa vào việc tách lo âu và trầm cảm. Báo cáo CFI, RMSEA và tương quan giữa hai nhân tố trong tài liệu bổ sung. Đây là một bổ sung rẻ nhưng tăng độ tin cậy. Việc này phải ghi vào `deviations.md` như một phân tích mô tả thêm sau đăng ký.
-- [ ] **B2. Đường cong đặc tả.** Đề cương nói “bốn cách tính chỉ số kỳ thị” và “hai định nghĩa nhóm LGBT” nhưng không liệt kê. Cần đối chiếu với OSF (`analysis_plan.md` mục 6).
-- [ ] **B3. E4 theo xu hướng tính dục.** Có 103 + 64 + 64 = 231 người trong 256, nên 25 người không thuộc ba nhóm. Cần ghi rõ cách xử lý họ.
-- [ ] **B4. Họ BH.** E2 và E4 là một họ hay hai họ hiệu chỉnh? Bảng 9 hiện ghi chung “p đã hiệu chỉnh”.
-- [ ] **B5. E2 với tình huống 4.** Chỉ 1,6% người từng gặp, tức khoảng 4 người, nên hệ số gần như không ước lượng được. Nên tuyên bố trước rằng tình huống có dưới 10 người gặp chỉ được báo cáo số người, không báo cáo hệ số. Ghi vào `deviations.md` nếu OSF chưa có quy tắc này.
-- [ ] **B6. Số câu hợp lệ tối thiểu của chỉ số che giấu** chưa được nêu.
-- [ ] **B7. Góp ý bổ sung ngày 4/10/2026** (hiệu ứng nhỏ nhất có ý nghĩa và kiểm định tương đương, nhóm thưa và HC3, wild bootstrap, thứ tự câu hỏi kỳ thị → PHQ-4, sai lệch chọn mẫu, xu hướng tính dục trong Xᴰ, kiểm định hiệu ở E2, cách trình bày tương tác): xem `docs/gop_y_phuong_phap.md`.
+- [x] **B2. Đường cong đặc tả.** Đã chốt 5/10/2026 (`analysis_plan.md` mục 6, D8). Đề cương nói “bốn cách tính chỉ số kỳ thị” và “hai định nghĩa nhóm LGBT” nhưng không liệt kê. Cần đối chiếu với OSF (`analysis_plan.md` mục 6).
+- [x] **B3. E4 theo xu hướng tính dục.** Đã chốt: 25 người không vào mô hình `orient3` (D8). Có 103 + 64 + 64 = 231 người trong 256, nên 25 người không thuộc ba nhóm. Cần ghi rõ cách xử lý họ.
+- [x] **B4. Họ BH.** Đã chốt: hai họ riêng (D8). E2 và E4 là một họ hay hai họ hiệu chỉnh? Bảng 9 hiện ghi chung “p đã hiệu chỉnh”.
+- [x] **B5. E2 với tình huống 4.** Đã chốt: tình huống có dưới 10 người gặp không được ước lượng và không ghi số đếm (D6). Chỉ 1,6% người từng gặp, tức khoảng 4 người, nên hệ số gần như không ước lượng được. Nên tuyên bố trước rằng tình huống có dưới 10 người gặp chỉ được báo cáo số người, không báo cáo hệ số. Ghi vào `deviations.md` nếu OSF chưa có quy tắc này.
+- [x] **B6. Số câu hợp lệ tối thiểu của chỉ số che giấu.** Đã chốt: đủ cả 4 câu; C3 đủ cả 3 câu (D3).
+- [x] **B7. Góp ý bổ sung ngày 4/10/2026** đã đưa vào kế hoạch ngày 5/10/2026 (`analysis_plan.md` mục 8), trừ CFA của PHQ-4 (B1, vẫn mở). (hiệu ứng nhỏ nhất có ý nghĩa và kiểm định tương đương, nhóm thưa và HC3, wild bootstrap, thứ tự câu hỏi kỳ thị → PHQ-4, sai lệch chọn mẫu, xu hướng tính dục trong Xᴰ, kiểm định hiệu ở E2, cách trình bày tương tác): xem `docs/gop_y_phuong_phap.md`.
 
 ## C. Trình bày
 

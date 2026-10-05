@@ -11,9 +11,27 @@ foreach y in phq4 gad2 phq2 {
 
     * Đặc tả 1: Xᴰ (đặc tả chính, mẫu 256)
     regress `y' S i.(${XD}) if in_xd_main, vce(hc3)
+    matrix RT = r(table)
     local mde = string(2.8 * _se[S], "%5.2f")
     post_coef, handle(res_main) coef(S) analysis("`hyp'") depvar("`y'") spec("1_XD") ///
-        note("MDE ~ `mde' (2.8 x SE)")
+        note("MDE ~ `mde' (2.8 x SE)") table(RT)
+
+    * Kiểm định tương đương (TOST) cho H1, ngưỡng $SESOI_PHQ4 điểm (kế hoạch mục 6.3).
+    * Kết luận "không có liên hệ đáng kể" chỉ khi CI 90% nằm trọn trong (-SESOI; SESOI).
+    if "`y'" == "phq4" {
+        local df = e(df_r)
+        local b = _b[S]
+        local se = _se[S]
+        local lo90 = `b' - invttail(`df', 0.05) * `se'
+        local hi90 = `b' + invttail(`df', 0.05) * `se'
+        local p_lo = ttail(`df', (`b' + $SESOI_PHQ4) / `se')
+        local p_hi = 1 - ttail(`df', (`b' - $SESOI_PHQ4) / `se')
+        local p_tost = max(`p_lo', `p_hi')
+        local verdict = cond(`lo90' > -$SESOI_PHQ4 & `hi90' < $SESOI_PHQ4, "trong vùng tương đương", "không kết luận được tương đương")
+        post_value, handle(res_main) analysis("H1_equivalence") depvar("phq4") spec("1_XD_TOST") ///
+            coef("S") b(`b') se(`se') lb(`lo90') ub(`hi90') p(`p_tost') nobs(`e(N)') ///
+            note("CI 90%; SESOI = +/-$SESOI_PHQ4; `verdict'")
+    }
 
     * Đặc tả 2: Xᴰ + Xᴶ (không dùng để chọn kết quả)
     regress `y' S i.(${XD}) i.(${XJ}) if in_xj, vce(hc3)

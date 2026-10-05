@@ -25,6 +25,9 @@ log using "$LOGS/master_`c(current_date)'.log", replace text name(master)
 *   ssc install sensemakr
 capture which sensemakr
 if _rc di as text "Cảnh báo: chưa cài sensemakr (ssc install sensemakr); 09_robustness sẽ bỏ qua phần độ nhạy."
+*   ssc install boottest
+capture which boottest
+if _rc di as text "Cảnh báo: chưa cài boottest (ssc install boottest); 09_robustness sẽ bỏ qua wild bootstrap."
 
 do "code/lib/programs.do"
 
@@ -32,6 +35,7 @@ do "code/01_import_clean.do"
 do "code/02_build_indices.do"
 do "code/03_sample_flow.do"
 do "code/04_descriptives.do"
+do "code/04b_collapse_levels.do"
 do "code/05_main_models.do"
 do "code/06_path_H3.do"
 do "code/07_exploratory.do"
