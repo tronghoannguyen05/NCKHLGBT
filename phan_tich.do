@@ -688,12 +688,21 @@ restore
 tempfile resfile
 postfile res str20 part str16 outcome str60 spec str40 term double(b se lb ub p) long N str244 note ///
     using "`resfile'", replace
+* Hệ số của mức có dưới MIN_CELL người không được xuất
 regress phq4 i.($XD) if in_xd_main, vce(hc3)
 matrix RT = r(table)
 local cn : colnames RT
 foreach c of local cn {
-    if "`c'" == "_cons" | strpos("`c'", "b.") continue
-    post_coef, part("Bang6") outcome("phq4") spec("XD") coef(`c') table(RT)
+    if "`c'" == "_cons" | strpos("`c'", "b.") | strpos("`c'", "o.") continue
+    local lev = substr("`c'", 1, strpos("`c'", ".") - 1)
+    local var = substr("`c'", strpos("`c'", ".") + 1, .)
+    quietly count if e(sample) & `var' == `lev'
+    if r(N) < $MIN_CELL {
+        post_val, part("Bang6") outcome("phq4") spec("XD") coef("`c'") note("Dưới $MIN_CELL người: không xuất")
+    }
+    else {
+        post_coef, part("Bang6") outcome("phq4") spec("XD") coef(`c') table(RT)
+    }
 }
 
 if $RUN_MODELS == 0 {
@@ -1025,11 +1034,14 @@ foreach v of global XD {
 }
 unab sexd : sx_sex_birth_*
 unab educd : sx_educ_*
+* gbenchmark() cần ít nhất hai biến; nhóm chỉ có một biến giả dùng benchmark()
 foreach g in sex_birth educ {
     local gb = cond("`g'" == "educ", "`educd'", "`sexd'")
+    local ngb : word count `gb'
+    if `ngb' > 1 local bopt "gbenchmark(`gb') gname(`g')"
+    else local bopt "benchmark(`gb')"
     di as text _n "{hline 60}" _n "sensemakr, mốc so sánh: `g'" _n "{hline 60}"
-    capture noisily sensemakr phq4 S `xd_dum', treat(S) gbenchmark(`gb') gname(`g') kd(1 2 3)
-    if _rc capture noisily sensemakr phq4 `xd_dum', treat(S) gbenchmark(`gb') gname(`g') kd(1 2 3)
+    capture noisily sensemakr phq4 S `xd_dum', treat(S) `bopt' kd(1 2 3)
 }
 restore
 
@@ -1085,6 +1097,7 @@ restore
 postclose res
 preserve
 use "`resfile'", clear
+gen long thu_tu = _n
 gen str8 ho_holm = ""
 replace ho_holm = "phu" if inlist(part, "H2a", "H2b") & spec == "XD"
 replace ho_holm = "phu" if part == "H3" & spec == "C"
@@ -1097,6 +1110,8 @@ replace ho_bh = "E4" if part == "E4"
 gen double p_tmp = p if ho_bh != ""
 padjust p_tmp, gen(p_bh) method(bh) by(ho_bh)
 drop p_tmp ho_holm ho_bh
+sort thu_tu
+drop thu_tu
 order part outcome spec term b se lb ub p p_holm p_bh N note
 xl_out "KetQua"
 restore

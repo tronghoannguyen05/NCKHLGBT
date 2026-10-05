@@ -35,7 +35,12 @@ xdalt = [v + '_alt' for v in XD]
 # Bảng 6 sau khi gộp mức
 f = R(d, 'phq4', d.in_xd_main, factors=XD)
 for t in f.names:
-    if t != '_cons':
+    if t == '_cons':
+        continue
+    lev, var = t.split('.', 1)
+    if ((d.loc[f.sample, var] == float(lev)).sum()) < 10:
+        post('Bang6', 'phq4', 'XD', t, note='Dưới 10 người: không xuất')
+    else:
         postf(f, 'Bang6', 'phq4', 'XD', t)
 
 # ---------------- 6. H1, H2a, H2b

@@ -6,7 +6,7 @@ RESEARCH
 
 ¹ Banking Academy of Vietnam, Hanoi, Vietnam
 
-> *Working note (remove before submission).* This draft contains all sections. The Methods follow the analysis plan finalized on 5 October 2026 (`docs/analysis_plan.md`). The numbers in the Results come from a Python replication of `phan_tich.do` run on 5 October 2026 (`output/tables/doi_chieu_python/`). The deterministic parts of that replication reproduced the authors' Stata output to six decimal places. Once `phan_tich.do` has been run in full in Stata, three values must be replaced with the Stata output, because they depend on random draws: the bootstrap interval of *a* × *b*, the wild bootstrap *p* value and interval, and the multiple imputation estimate. The sensemakr values should also be checked against the Stata log. Items marked [TO BE CONFIRMED] require verification by the authors. Two prospective studies, Dyar et al. (2020) and Pachankis et al. (2018), are cited secondarily as summarized in Herry and Dyar (2025); following APA 7, only the secondary source appears in the reference list, and the primary sources should be read and cited directly before submission.
+> *Working note (remove before submission).* This draft contains all sections. The Methods follow the analysis plan finalized on 5 October 2026 (`docs/analysis_plan.md`). The numbers in the Results come from the full Stata run of `phan_tich.do` (5 October 2026). An independent Python replication (`tests/doi_chieu_python/`) reproduced every deterministic estimate to within 10⁻⁹. The sex-at-birth benchmark in Table S3 is the only value taken from the Python replication, because the Stata command `gbenchmark()` requires at least two variables; `phan_tich.do` now uses `benchmark()` for single-variable groups, and the value should be checked after the next Stata run. Items marked [TO BE CONFIRMED] require verification by the authors. Two prospective studies, Dyar et al. (2020) and Pachankis et al. (2018), are cited secondarily as summarized in Herry and Dyar (2025); following APA 7, only the secondary source appears in the reference list, and the primary sources should be read and cited directly before submission.
 
 ---
 
@@ -274,7 +274,7 @@ Before the plan was finalized, we ran several analyses in Python (statsmodels) w
 
 The main model, H2a, H2b, E2, E4, E5, and all robustness checks had not been estimated when the plan was finalized. Because the second specification and the attribution contrast resemble analyses already run, their results are not new tests. Two departures from the finalized plan are recorded in the deviation log: the registration took place after estimation, and the descriptive regression of PHQ-4 scores on pre-exposure characteristics (Table S1) was estimated after, rather than before, sparse categories were merged, because one age category contained a single respondent. For these reasons we present the study as exploratory research with a prespecified analysis plan, not as a confirmatory test.
 
-**Software.** Analyses were conducted in Stata 17 with the user-written commands sensemakr and boottest, and were replicated independently in Python [TO BE CONFIRMED: replace Python values with the Stata output where they differ]. The analysis code and codebook are available with the registration.
+**Software.** Analyses were conducted in Stata 17 with the user-written commands sensemakr and boottest. An independent replication in Python reproduced all estimates that do not depend on random draws. The analysis code and codebook are available with the registration.
 
 ---
 
@@ -424,7 +424,7 @@ In E5, the interaction between the stigma index and perceived DEI enforcement wa
 
 ### Robustness and Sensitivity Analyses
 
-Table 7 reports the robustness checks. In every check that kept the stigma index as a single linear term, its coefficient was positive and ranged from 1.57 to 1.96, against 1.72 in the main specification, and its confidence interval excluded zero. The one exception was the check that separated the association into any exposure and intensity among exposed respondents. Both components were positive, but neither was distinguishable from zero on its own (any exposure: 0.75, 95% CI [−0.27, 1.76]; intensity: 1.22, 95% CI [−0.07, 2.50]). The restricted cubic spline gave no evidence of nonlinearity (*p* = .231). The fractional logit model, which respects the bounds of the PHQ-4, gave an average marginal effect of 1.61 points (95% CI [0.87, 2.35]). The restricted wild bootstrap gave *p* < .001 and a 95% interval of [0.75, 2.75]. The estimate from multiple imputation (1.96, 95% CI [1.02, 2.89], *n* = 300) did not differ materially from the complete-case estimate.
+Table 7 reports the robustness checks. In every check that kept the stigma index as a single linear term, its coefficient was positive and ranged from 1.57 to 1.93, against 1.72 in the main specification, and its confidence interval excluded zero. The one exception was the check that separated the association into any exposure and intensity among exposed respondents. Both components were positive, but neither was distinguishable from zero on its own (any exposure: 0.75, 95% CI [−0.27, 1.76]; intensity: 1.22, 95% CI [−0.07, 2.50]). The restricted cubic spline gave no evidence of nonlinearity (*p* = .231). The fractional logit model, which respects the bounds of the PHQ-4, gave an average marginal effect of 1.61 points (95% CI [0.87, 2.35]). The restricted wild bootstrap gave *p* < .001 and a 95% interval of [0.77, 2.73]. The estimate from multiple imputation (1.91, 95% CI [1.01, 2.81], *n* = 300) did not differ materially from the complete-case estimate.
 
 **Table 7** *Robustness checks for the association between the stigma index and PHQ-4 scores*
 
@@ -437,10 +437,10 @@ Table 7 reports the robustness checks. In every check that kept the stigma index
 | 3b. Intensity among exposed, same model | 256 | 1.22 | [−0.07, 2.50] | .063 |
 | 3c. Restricted cubic spline, test of nonlinearity | 256 | | | .231 |
 | 4. Fractional logit, AME × 12 | 256 | 1.61 | [0.87, 2.35] | < .001 |
-| 5. Multiple imputation (*m* = 20) | 300 | 1.96 | [1.02, 2.89] | < .001 |
+| 5. Multiple imputation (*m* = 20) | 300 | 1.91 | [1.01, 2.81] | < .001 |
 | 6. Excluding flagged responses | 240 | 1.69 | [0.70, 2.68] | < .001 |
 | 7. Excluding Cook's distance > 4/*n* | 234 | 1.57 | [0.82, 2.32] | < .001 |
-| 8. Restricted wild bootstrap (Webb, 9,999) | 256 | 1.72 | [0.75, 2.75] | < .001 |
+| 8. Restricted wild bootstrap (Webb, 9,999) | 256 | 1.72 | [0.77, 2.73] | < .001 |
 | 9. Adding sexual orientation group | 256 | 1.74 | [0.74, 2.73] | < .001 |
 
 *Note.* All models adjust for pre-exposure characteristics and use HC3 standard errors unless stated otherwise. AME = average marginal effect. Check 5 uses Rubin's rules; checks 4 and 8 report *z*-based and bootstrap intervals, respectively.
@@ -771,7 +771,7 @@ World Health Organization. (2019). *International statistical classification of 
 |---|---|---|
 | 0.08 | 0.07 | [−0.03, 0.25] |
 
-*Note.* 5,000 bootstrap resamples. Because concealment may also reduce exposure to stigma and the data are cross-sectional, this product is not interpreted as evidence of mediation.
+*Note.* 5,000 bootstrap resamples, of which 4,991 yielded estimates. Because concealment may also reduce exposure to stigma and the data are cross-sectional, this product is not interpreted as evidence of mediation.
 
 **Table S6** *All 32 specifications of the specification curve*
 

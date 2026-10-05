@@ -35,6 +35,6 @@ Nếu Stata báo lỗi khác, gửi Claude đoạn cuối của `nhat_ky.log`. K
 
 ## Lưu ý
 
-- Mục 0–5 đã chạy thành công trên máy tác giả (5/10/2026). Mục 6–12 chưa chạy trên Stata.
+- Toàn bộ tệp đã chạy thành công trên máy tác giả (5/10/2026). Kết quả tổng hợp lưu ở `output/tables/stata/`.
 - Toàn bộ mục 1–12 đã được tái lập bằng Python trên tệp thật (`tests/doi_chieu_python/`, chỉ xuất số tổng hợp). Phần mô tả và hồi quy HC3 khớp kết quả Stata của tác giả đến 6 chữ số. Kết quả Python nằm ở `output/tables/doi_chieu_python/`. Sau khi chạy Stata, đối chiếu sheet KetQua với `KetQua.csv`: các phần tất định phải khớp, riêng bootstrap, wild bootstrap và gán giá trị đa lần chỉ khớp gần đúng vì khác bộ sinh số ngẫu nhiên.
 - Không đưa tệp dữ liệu hay tệp kết quả có dữ liệu cá nhân lên GitHub.

@@ -13,6 +13,7 @@ data/**
 !config/*.csv
 !output/tables/*.csv
 !output/tables/doi_chieu_python/*.csv
+!output/tables/stata/*.csv
 # Dữ liệu GIẢ LẬP (mã phiếu SYN...), được kiểm tra bởi tests/check_no_data.sh
 !tests/synthetic_kobo.csv
 
