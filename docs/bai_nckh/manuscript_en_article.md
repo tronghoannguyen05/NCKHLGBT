@@ -6,7 +6,7 @@ RESEARCH
 
 ¹ Banking Academy of Vietnam, Hanoi, Vietnam
 
-> *Working note (remove before submission).* This draft contains the Abstract (Introduction and Methods), the Introduction, the Methods, and the References. The Methods follow the analysis plan finalized on 5 October 2026 (`docs/analysis_plan.md`). The Results, Discussion, and Conclusions are intentionally left blank because no models have been estimated. Items marked [TO BE CONFIRMED] require verification by the authors. Two prospective studies, Dyar et al. (2020) and Pachankis et al. (2018), are cited secondarily as summarized in Herry and Dyar (2025); following APA 7, only the secondary source appears in the reference list, and the primary sources should be read and cited directly before submission.
+> *Working note (remove before submission).* This draft contains all sections. The Methods follow the analysis plan finalized on 5 October 2026 (`docs/analysis_plan.md`). The numbers in the Results come from a Python replication of `phan_tich.do` run on 5 October 2026 (`output/tables/doi_chieu_python/`). The deterministic parts of that replication reproduced the authors' Stata output to six decimal places. Once `phan_tich.do` has been run in full in Stata, three values must be replaced with the Stata output, because they depend on random draws: the bootstrap interval of *a* × *b*, the wild bootstrap *p* value and interval, and the multiple imputation estimate. The sensemakr values should also be checked against the Stata log. Items marked [TO BE CONFIRMED] require verification by the authors. Two prospective studies, Dyar et al. (2020) and Pachankis et al. (2018), are cited secondarily as summarized in Herry and Dyar (2025); following APA 7, only the secondary source appears in the reference list, and the primary sources should be read and cited directly before submission.
 
 ---
 
@@ -16,11 +16,11 @@ RESEARCH
 
 **Methods** Data came from a cross-sectional survey of 850 workers in Vietnam. Among the 278 LGBT workers with complete symptom and stigma data, we estimated the association between an index of seven situations of enacted stigma at work and PHQ-4 symptom scores, adjusting for characteristics that precede exposure, using ordinary least squares with HC3 standard errors. Anxiety and depressive symptoms were examined separately, together with a concealment pathway and exploratory moderators.
 
-**Results** *[To be written after the analyses are conducted.]*
+**Results** Among the 256 respondents with complete covariates, 55% reported at least one situation of enacted stigma at work in the previous 12 months. Each one-unit difference in the stigma index was associated with 1.72 points higher PHQ-4 scores (95% CI [0.74, 2.69]), about 0.26 standard deviations per standard deviation of the index. The index was also associated with anxiety (GAD-2: 0.75 [0.24, 1.26]) and depressive symptoms (PHQ-2: 0.97 [0.44, 1.49]), and the two coefficients did not differ detectably. The association was positive in all 32 alternative specifications and in every robustness check. The data did not support a pathway through identity concealment. In exploratory analyses, offensive jokes or comments and unwanted personal questions were the situations most clearly associated with symptoms.
 
-**Conclusions** *[To be written.]*
+**Conclusions** Among LGBT workers in Vietnam, symptom levels varied with how often workers encountered stigma at work. This gradient is predicted by minority stress theory and not by an account that locates distress in sexual or gender minority identity itself. The cross-sectional design does not establish the direction of the association.
 
-**Policy Implications** *[To be written.]*
+**Policy Implications** The findings argue against reading elevated symptoms among LGBT people as evidence of pathology. They support naming sexual orientation and gender identity among the prohibited grounds of discrimination in Vietnam's Labor Code, and workplace policies that address interpersonal derogation and intrusive questioning as well as formal decisions.
 
 **Keywords** Minority stress · Workplace stigma · Identity concealment · Anxiety · Depression · Vietnam
 
@@ -84,7 +84,7 @@ We focus on perceived enforcement rather than on the existence of written polici
 
 Three limitations of the existing evidence motivate the present study. First, evidence on LGBT workers' mental health is reported mainly as differences between LGBT and non-LGBT workers (Tomic et al., 2025). Such differences cannot discriminate between the pathology and prejudice readings, because both predict a disparity, and the within-group gradient that does discriminate between them is less often tested directly. Second, the foundational studies of minority stress at work come from the United States. Evidence from settings in which labor law does not name stigma based on sexual orientation and gender identity, in which concealment may be common, and in which pathologizing views remain present is limited. These features may change the conditions under which the prediction must hold, because exposure depends more on the individual workplace and concealment may narrow the observed gradient. To our knowledge, no peer-reviewed study in Vietnam has estimated the association between enacted stigma at work and anxiety or depressive symptoms among workers from several sexual and gender minority groups [TO BE CONFIRMED: structured literature search]. Third, when workplace stigma is summed into a single score, or combined with stigma in other life domains (e.g., Herry & Dyar, 2025), it is not possible to tell in which forms of behavior an association with symptoms is concentrated. Some recent studies also measure depressive symptoms only (Lo et al., 2025; Tran et al., 2020).
 
-The present study addresses these limitations by asking whether, among LGBT workers in Vietnam, the frequency of enacted stigma at work is associated with the severity of anxiety and depressive symptoms after adjustment for characteristics that precede exposure. We use LGBT as an umbrella term for sexual minorities, whose sexual orientation is not heterosexual, and gender minorities, whose gender identity differs from the sex assigned at birth. We recognize that sex assigned at birth, gender identity, and sexual orientation are distinct (National Academies of Sciences, Engineering, and Medicine, 2022) and that LGBT people may differ in the visibility of their identities, in the forms of stigma they encounter, and in their symptom levels. We examine symptom severity rather than psychiatric disorder. A higher symptom score indicates neither a disorder nor that an identity is pathological; the question is whether symptom levels vary with a specific social condition. Analyses compare LGBT workers who differ in their exposure to stigma rather than comparing LGBT with non-LGBT workers. The analysis plan is to be registered on the Open Science Framework before the main model is estimated [TO BE CONFIRMED: not yet registered as of 5 October 2026; add the link and date after registration]. Because the mental health question was placed at the center of the analysis after we had partial contact with the data, we present the study as exploratory research with a publicly registered analysis plan rather than as a confirmatory test.
+The present study addresses these limitations by asking whether, among LGBT workers in Vietnam, the frequency of enacted stigma at work is associated with the severity of anxiety and depressive symptoms after adjustment for characteristics that precede exposure. We use LGBT as an umbrella term for sexual minorities, whose sexual orientation is not heterosexual, and gender minorities, whose gender identity differs from the sex assigned at birth. We recognize that sex assigned at birth, gender identity, and sexual orientation are distinct (National Academies of Sciences, Engineering, and Medicine, 2022) and that LGBT people may differ in the visibility of their identities, in the forms of stigma they encounter, and in their symptom levels. We examine symptom severity rather than psychiatric disorder. A higher symptom score indicates neither a disorder nor that an identity is pathological; the question is whether symptom levels vary with a specific social condition. Analyses compare LGBT workers who differ in their exposure to stigma rather than comparing LGBT with non-LGBT workers. The analysis plan was finalized before the models were estimated but was registered on the Open Science Framework only afterwards (see "Analysis history and registration" in the Methods). Because the mental health question was also placed at the center of the analysis after we had partial contact with the data, we present the study as exploratory research with a prespecified analysis plan rather than as a confirmatory test.
 
 #### Hypotheses
 
@@ -137,7 +137,7 @@ By the sexual orientation item, the main sample included 87 bisexual, 74 lesbian
 
 Responses ranged from 0 (*never*) to 4 (*very often*); "not applicable or prefer not to answer" was coded as missing. The situations were adapted from Waldo (1999) and behavioural indicators of workplace stigma. The wording was developed with the project supervisor, revised after expert consultation, and refined in a pilot with 30 respondents. The instrument has not been validated, and we treat this as a limitation.
 
-We treat the situations as a formative index rather than a reflective scale. Each situation is a distinct type of event, and experiencing one does not imply experiencing another, so internal consistency is not a criterion of quality (Bollen & Lennox, 1991). Cronbach's α (.61 for seven situations, .67 for eight) is reported for reference only.
+We treat the situations as a formative index rather than a reflective scale. Each situation is a distinct type of event, and experiencing one does not imply experiencing another, so internal consistency is not a criterion of quality (Bollen & Lennox, 1991). Cronbach's α (.62 for seven situations, *n* = 182; .66 for eight, *n* = 142; respondents who answered every situation) is reported for reference only.
 
 The stigma index *S* is the mean frequency of the first seven situations, computed when at least four were answered. All 278 respondents in the main sample answered at least five. Situation 8 is excluded from the main index because 65 of the 297 LGBT respondents who answered the section marked it "not applicable", mostly because its content concerns transgender and nonbinary people; including it would compute the index over different sets of situations for different respondents. For the situation-level analyses, each situation is also coded 1 if it occurred at least once.
 
@@ -263,44 +263,265 @@ We report every result and identify the choices that change the inferential conc
 
 **Disclosure control.** Every cross-tabulation by sexual orientation, gender identity, demographic, or workplace group suppresses cells with fewer than 10 respondents. Transgender and nonbinary respondents are not presented as a separate group.
 
-**Analysis history and registration.** The analysis plan, including the decisions described in this section, will be registered on the Open Science Framework before the main model is estimated [TO BE CONFIRMED: registration link and date]. The original plan, written before data collection, centred on income and included the association between stigma and mental health as one link on the path to income. After partial contact with the data, we placed the mental health question at the centre of the analysis and removed all income analyses from this article.
+**Analysis history and registration.** The analysis plan, including the decisions described in this section, was finalized on 5 October 2026, before any of the models reported in this article were estimated. The plan and its dated revision history are kept in the project repository. The plan was not registered before estimation. It was deposited on the Open Science Framework after estimation, and the deposit is labelled accordingly [TO BE CONFIRMED: registration link and date]. The original plan, written before data collection, centred on income and included the association between stigma and mental health as one link on the path to income. After partial contact with the data, we placed the mental health question at the centre of the analysis and removed all income analyses from this article.
 
-Before registration, we ran several analyses in Python (statsmodels) with both covariate blocks and HC1 standard errors:
+Before the plan was finalized, we ran several analyses in Python (statsmodels) with both covariate blocks and HC1 standard errors:
 - a comparison of PHQ-4 scores across three groups;
 - a three-level version of the eight-situation stigma index;
 - interpersonal and institutional stigma subscales;
 - a parallel mediation model through three facets of concealment;
 - the income analyses.
 
-The main model, H2a, H2b, E2, E4, E5, and all robustness checks had not been estimated when the plan was finalized. Because the second specification and the attribution contrast resemble analyses already run, their results are not new tests. For these reasons we present the study as exploratory research with a publicly registered analysis plan, not as a confirmatory test.
+The main model, H2a, H2b, E2, E4, E5, and all robustness checks had not been estimated when the plan was finalized. Because the second specification and the attribution contrast resemble analyses already run, their results are not new tests. Two departures from the finalized plan are recorded in the deviation log: the registration took place after estimation, and the descriptive regression of PHQ-4 scores on pre-exposure characteristics (Table S1) was estimated after, rather than before, sparse categories were merged, because one age category contained a single respondent. For these reasons we present the study as exploratory research with a prespecified analysis plan, not as a confirmatory test.
 
-**Software.** Analyses are conducted in Stata 17 with the user-written commands sensemakr and boottest. The analysis code and codebook will be made available with the registration.
+**Software.** Analyses were conducted in Stata 17 with the user-written commands sensemakr and boottest, and were replicated independently in Python [TO BE CONFIRMED: replace Python values with the Stata output where they differ]. The analysis code and codebook are available with the registration.
 
 ---
 
 ## Results
 
-*[To be written after the analyses are conducted.]*
+### Descriptive Statistics
+
+Table 2 describes the 278 LGBT respondents of the main sample and, for context, the 323 non-LGBT respondents with complete PHQ-4 data. Among LGBT respondents, 41.7% were aged 25-34 years, 61.5% were assigned female at birth, 61.5% held a university degree, and 52.9% worked in Ho Chi Minh City. Bisexual respondents formed the largest orientation group (31.3%), followed by lesbian (26.6%), gay (24.5%), and pansexual (8.3%) respondents.
+
+**Table 2** *Characteristics of the main sample and of non-LGBT respondents*
+
+| Characteristic | LGBT, main sample (*n* = 278) | Non-LGBT (*n* = 323) |
+|---|---|---|
+| **Age group** | | |
+| 18-24 | 64 (23.0) | 68 (21.1) |
+| 25-34 | 116 (41.7) | 130 (40.2) |
+| 35-44 | 49 (17.6) | 61 (18.9) |
+| 45 or older | 43 (15.5) | 54 (16.7) |
+| **Sex assigned at birth** | | |
+| Male | 98 (35.3) | 135 (41.8) |
+| Female | 171 (61.5) | 178 (55.1) |
+| **Education** | | |
+| Upper secondary or below | 45 (16.2) | 44 (13.6) |
+| College | 25 (9.0) | 28 (8.7) |
+| University | 171 (61.5) | 211 (65.3) |
+| Postgraduate | 33 (11.9) | 37 (11.5) |
+| **Relationship status** | | |
+| No partner | 135 (48.6) | 171 (52.9) |
+| Partner | 127 (45.7) | 123 (38.1) |
+| Separated, divorced, or widowed | <10 | <10 |
+| Prefer not to answer | <10 | 20 (6.2) |
+| **Region of work** | | |
+| Hanoi | 74 (26.6) | 79 (24.5) |
+| Ho Chi Minh City | 147 (52.9) | 132 (40.9) |
+| Da Nang | 23 (8.3) | 17 (5.3) |
+| Elsewhere | 31 (11.2) | 93 (28.8) |
+| **Sexual orientation** | | |
+| Gay | 68 (24.5) | - |
+| Lesbian | 74 (26.6) | - |
+| Bisexual | 87 (31.3) | - |
+| Pansexual | 23 (8.3) | - |
+| Other, questioning, or not reported | 26 (9.4) | - |
+
+*Note.* Values are *n* (%), with percentages of the column total. Cells with fewer than 10 respondents are suppressed. Missing and "prefer not to answer" responses are not shown, except for relationship status, so categories may not sum to the column total. Sexual orientation is not shown for non-LGBT respondents. Transgender and nonbinary respondents are not shown as a separate group.
+
+Table 3 presents the study variables in the main-rule sample of 256 respondents. The mean PHQ-4 score was 3.30 (*SD* = 3.19), and 21.5% scored 6 or more. Exposure to stigma was concentrated at low frequencies: the mean stigma index was 0.33 (*SD* = 0.48) on the 0-4 scale, the median was 0.14, and 55.1% reported at least one of the seven situations. In the main sample of 278, the most frequently reported situations were unwanted personal questions (32.7% of those who answered the item) and offensive jokes or comments (25.3%), followed by disclosure or threatened disclosure (15.4%), pressure to conform to gender stereotypes (15.1%), unfavourable work assignments (11.9%), and unfair evaluation, pay, or promotion (9.1%). Fewer than 10 respondents reported exclusion from training or career development. Difficulty using a name, pronouns, dress, or restrooms consistent with one's gender identity was reported by 6.0% of those who answered it.
+
+The stigma index correlated with PHQ-4 scores at *r* = .23, with GAD-2 scores at *r* = .19, and with PHQ-2 scores at *r* = .23. Its correlation with concealment was weak (*r* = .10). Its correlation with perceived DEI enforcement was small and positive (*r* = .12), so respondents who reported more stigma did not report weaker enforcement.
+
+**Table 3** *Descriptive statistics and correlations of the study variables (main-rule sample)*
+
+| Variable | *n* | *M* | *SD* | Range | 1 | 2 | 3 | 4 | 5 |
+|---|---|---|---|---|---|---|---|---|---|
+| 1. PHQ-4 | 256 | 3.30 | 3.19 | 0-12 | | | | | |
+| 2. GAD-2 | 256 | 1.60 | 1.66 | 0-6 | .92 | | | | |
+| 3. PHQ-2 | 256 | 1.70 | 1.79 | 0-6 | .93 | .71 | | | |
+| 4. Stigma index (*S*) | 256 | 0.33 | 0.48 | 0-2.86 | .23 | .19 | .23 | | |
+| 5. Concealment (*C*) | 254 | 2.93 | 1.14 | 1-5 | .13 | .09 | .14 | .10 | |
+| 6. Perceived DEI enforcement (*Q*) | 243 | 3.35 | 0.78 | 1-5 | −.08 | −.12 | −.04 | .12 | .04 |
+
+*Note.* Pearson correlations computed pairwise. Range is the observed range.
+
+Of the 278 respondents in the main sample, 22 lacked at least one pre-exposure covariate. Their mean PHQ-4 score was higher than that of respondents with complete covariates (4.86, *SD* = 3.78, vs. 3.30, *SD* = 3.19), and their mean stigma index was similar (0.40 vs. 0.33). Of the 300 LGBT respondents in the analytic sample, 22 did not complete the PHQ-4. Among the 19 of them with a valid stigma index, the mean index was 0.19, compared with 0.34 among respondents with complete PHQ-4 data.
+
+### Workplace Stigma and Symptom Severity (H1)
+
+Table 4 presents the main results. In the main specification, a one-unit difference in the stigma index was associated with 1.72 points higher PHQ-4 scores (*SE* = 0.49, 95% CI [0.74, 2.69], *p* < .001). In standardized terms, a difference of one standard deviation in the index corresponded to about 0.26 standard deviations of the PHQ-4. H1 was therefore supported.
+
+The 90% confidence interval, [0.90, 2.53], did not lie within the equivalence bounds of ±1.0, so the conclusion of no practically meaningful association did not apply. By the prespecified decision rule, the result is a positive association. The point estimate exceeded the smallest effect size of interest, but the lower limit of the 90% interval fell just below it, so the data do not exclude an association slightly smaller than 1.0 point per unit of the index. The minimum detectable effect after estimation was about 1.38 points.
+
+Adding job characteristics did not reduce the estimate (η = 1.93, 95% CI [0.65, 3.21], *n* = 225). The two specifications use different samples, because 31 respondents lacked at least one job characteristic, so the comparison is approximate. Treating "prefer not to answer" as missing gave a similar estimate (η = 1.79, 95% CI [0.79, 2.78], *n* = 247).
+
+**Table 4** *Associations between the workplace stigma index and symptom scores (H1, H2a, H2b)*
+
+| Outcome | Specification | *n* | η | *SE* | 95% CI | *p* | Holm *p* |
+|---|---|---|---|---|---|---|---|
+| PHQ-4 (H1) | Xᴰ | 256 | 1.72 | 0.49 | [0.74, 2.69] | < .001 | - |
+| | Xᴰ, alternative rule | 247 | 1.79 | 0.50 | [0.79, 2.78] | < .001 | |
+| | Xᴰ + Xᴶ | 225 | 1.93 | 0.65 | [0.65, 3.21] | .003 | |
+| GAD-2 (H2a) | Xᴰ | 256 | 0.75 | 0.26 | [0.24, 1.26] | .004 | .009 |
+| | Xᴰ + Xᴶ | 225 | 0.87 | 0.35 | [0.18, 1.55] | .013 | |
+| PHQ-2 (H2b) | Xᴰ | 256 | 0.97 | 0.27 | [0.44, 1.49] | < .001 | .001 |
+| | Xᴰ + Xᴶ | 225 | 1.06 | 0.35 | [0.38, 1.75] | .003 | |
+
+*Note.* Ordinary least squares with HC3 standard errors. η is the difference in symptom score per unit of the stigma index (0-4). Xᴰ = pre-exposure characteristics; Xᴶ = job characteristics. Under the alternative rule, "prefer not to answer" on a covariate is treated as missing. H1: 90% CI [0.90, 2.53]; equivalence bounds ±1.0. Holm *p* values are adjusted over H2a, H2b, and H3. The specifications with Xᴶ are reported for comparison and are not tests of the hypotheses.
+
+### Anxiety and Depressive Symptoms (H2a and H2b)
+
+The stigma index was associated with higher GAD-2 scores (0.75, 95% CI [0.24, 1.26], Holm-adjusted *p* = .009) and with higher PHQ-2 scores (0.97, 95% CI [0.44, 1.49], Holm-adjusted *p* = .001). In standardized terms, the coefficients were about 0.22 and 0.26, respectively. H2a and H2b were therefore supported. In the direct test of the difference between the two coefficients, the GAD-2 coefficient minus the PHQ-2 coefficient was −0.22 (95% CI [−0.55, 0.12], *p* = .204). The data therefore give no indication that stigma was more strongly associated with one symptom dimension than with the other. The interval ranges from a PHQ-2 coefficient 0.55 points larger to a GAD-2 coefficient 0.12 points larger.
+
+### Concealment Pathway (H3)
+
+Table 5 shows the two equations of H3. Both coefficients were positive, but neither was statistically significant. A one-unit difference in the stigma index was associated with 0.25 points higher concealment scores (*a*, 95% CI [−0.08, 0.59], *p* = .140), and a one-point difference in concealment was associated with 0.31 points higher PHQ-4 scores when the stigma index was held constant (*b*, 95% CI [−0.06, 0.68], *p* = .104). The intersection-union *p* value of H3 was .140 (Holm-adjusted *p* = .140), so H3 was not supported. Both intervals contain zero and values that would be practically relevant, so the evidence on the pathway is inconclusive rather than evidence against it. Adjusting for concealment changed the stigma coefficient little (*c*′ = 1.88, 95% CI [0.85, 2.90]). The version of the concealment score without the fatigue statement gave similar results (*a* = 0.29, 95% CI [−0.06, 0.64]; *b* = 0.25, 95% CI [−0.10, 0.59]; intersection-union *p* = .156). The bootstrap estimate of the indirect product *a* × *b* is reported in Table S5.
+
+**Table 5** *Associations among workplace stigma, identity concealment, and PHQ-4 scores (H3; n = 254)*
+
+| Concealment score | Path | Coefficient | *SE* | 95% CI | *p* |
+|---|---|---|---|---|---|
+| *C* (four statements) | *a*: stigma → concealment | 0.25 | 0.17 | [−0.08, 0.59] | .140 |
+| | *b*: concealment → PHQ-4 | 0.31 | 0.19 | [−0.06, 0.68] | .104 |
+| | *c*′: stigma → PHQ-4, adjusted for concealment | 1.88 | 0.52 | [0.85, 2.90] | < .001 |
+| *C3* (fatigue statement omitted) | *a* | 0.29 | 0.18 | [−0.06, 0.64] | .099 |
+| | *b* | 0.25 | 0.17 | [−0.10, 0.59] | .156 |
+| | *c*′ | 1.88 | 0.52 | [0.86, 2.91] | < .001 |
+
+*Note.* Ordinary least squares with HC3 standard errors, adjusted for pre-exposure characteristics. The arrows denote the order of the hypothesized path structure, not established causal direction. H3 *p* (intersection-union) = .140 for *C* (Holm-adjusted .140) and .156 for *C3*.
+
+### Exploratory Analyses
+
+Table 6 summarizes the exploratory analyses. When stigma was divided into three levels (E1), respondents with low exposure (an index above 0 and up to 0.50, the median among exposed respondents; *n* = 78) scored 0.90 points higher than unexposed respondents (*n* = 115; 95% CI [0.02, 1.77]), and those with high exposure (*n* = 63) scored 2.21 points higher (95% CI [1.16, 3.27]).
+
+In the situation-level models (E2), two situations were associated with higher PHQ-4 scores after Benjamini-Hochberg adjustment: offensive jokes or comments (1.56, 95% CI [0.66, 2.46], adjusted *p* = .003) and unwanted personal questions (1.77, 95% CI [0.85, 2.69], adjusted *p* = .001). The coefficients for the other situations were also positive, but their intervals included zero (adjusted *p* ≥ .19). These situations were less common, so their coefficients were estimated less precisely. Exclusion from training was not estimated, because fewer than 10 respondents reported it.
+
+In the attribution contrast, the event-based sub-index was associated with higher PHQ-4 scores (1.21, 95% CI [0.45, 1.98]), whereas the attribution-dependent sub-index, which comprised unfair evaluation and unfavourable assignments, was not (0.18, 95% CI [−0.85, 1.20]). The difference between the two coefficients was −1.03 (95% CI [−2.55, 0.49], *p* = .181). The association was therefore not confined to attribution-dependent situations. The point estimates were larger for event-based situations, but the data cannot distinguish the two coefficients.
+
+E3 is described in Table S4 without tests. Mean PHQ-4 scores were 3.27 (*SD* = 3.07) among non-LGBT respondents (*n* = 323), 2.58 (*SD* = 2.85) among LGBT respondents who reported no stigma (*n* = 125), and 4.12 (*SD* = 3.42) among LGBT respondents who reported at least one situation (*n* = 153). The shares scoring 6 or more were 22.9%, 14.4%, and 30.7%, respectively.
+
+The interaction coefficients of E4 were imprecise (Table 6). The coefficient for respondents assigned female at birth relative to those assigned male was 1.10 (95% CI [−0.85, 3.05], adjusted *p* = .402). Relative to bisexual and pansexual respondents, the coefficients were −0.91 for lesbian respondents (95% CI [−3.26, 1.44], adjusted *p* = .447) and −1.36 for gay respondents (95% CI [−3.59, 0.88], adjusted *p* = .402). The intervals include both zero and differences as large as the main association, so the analysis is inconclusive about differences between these groups.
+
+In E5, the interaction between the stigma index and perceived DEI enforcement was negative (κ = −1.19, 95% CI [−2.63, 0.25], *p* = .106). At the mean level of enforcement, the stigma coefficient was 2.34 (95% CI [1.26, 3.43]). The sign of κ is consistent with a weaker association where enforcement is perceived to be stronger, but the interval contains both zero and large values, so this result is also inconclusive.
+
+**Table 6** *Exploratory analyses (PHQ-4 scores)*
+
+| Analysis | Term | *n* | Coefficient | 95% CI | *p* | BH *p* |
+|---|---|---|---|---|---|---|
+| **E1: three levels** (ref. no exposure) | Low exposure | 256 | 0.90 | [0.02, 1.77] | .044 | |
+| | High exposure | 256 | 2.21 | [1.16, 3.27] | < .001 | |
+| **E2: situations** (experienced at least once) | 1. Offensive jokes or comments | 252 | 1.56 | [0.66, 2.46] | < .001 | .003 |
+| | 2. Unwanted personal questions | 246 | 1.77 | [0.85, 2.69] | < .001 | .001 |
+| | 3. Disclosure or threatened disclosure | 239 | 0.57 | [−0.63, 1.78] | .351 | .434 |
+| | 4. Exclusion from training | | not estimated | | | |
+| | 5. Unfair evaluation, pay, or promotion | 223 | 0.83 | [−0.99, 2.65] | .372 | .434 |
+| | 6. Unfavourable work assignments | 240 | 0.97 | [−0.53, 2.48] | .204 | .357 |
+| | 7. Pressure to conform to gender stereotypes | 240 | 1.16 | [−0.15, 2.48] | .082 | .192 |
+| | 8. Gender identity barriers | 199 | 0.36 | [−2.05, 2.77] | .768 | .768 |
+| **E2: attribution contrast** | Event-based (1, 2, 3, 7) | 255 | 1.21 | [0.45, 1.98] | .002 | |
+| | Attribution-dependent (5, 6) | 255 | 0.18 | [−0.85, 1.20] | .733 | |
+| | Difference | 255 | −1.03 | [−2.55, 0.49] | .181 | |
+| **Anxiety vs. depression** | GAD-2 minus PHQ-2 coefficient | 256 | −0.22 | [−0.55, 0.12] | .204 | |
+| **E4: interactions with *S*** | Assigned female (ref. male) | 256 | 1.10 | [−0.85, 3.05] | .268 | .402 |
+| | Lesbian (ref. bisexual or pansexual) | 231 | −0.91 | [−3.26, 1.44] | .447 | .447 |
+| | Gay (ref. bisexual or pansexual) | 231 | −1.36 | [−3.59, 0.88] | .232 | .402 |
+| **E5: perceived DEI enforcement** | *S* × *Q* (κ) | 243 | −1.19 | [−2.63, 0.25] | .106 | |
+| | *S* at mean *Q* | 243 | 2.34 | [1.26, 3.43] | < .001 | |
+
+*Note.* All models adjust for pre-exposure characteristics and use HC3 standard errors, except the anxiety-versus-depression contrast, which uses seemingly unrelated estimation with robust standard errors. BH *p* = Benjamini-Hochberg adjustment within the E2 family and within the E4 family. Situation 4 was not estimated because fewer than 10 respondents reported it. These analyses are exploratory.
+
+### Robustness and Sensitivity Analyses
+
+Table 7 reports the robustness checks. In every check that kept the stigma index as a single linear term, its coefficient was positive and ranged from 1.57 to 1.96, against 1.72 in the main specification, and its confidence interval excluded zero. The one exception was the check that separated the association into any exposure and intensity among exposed respondents. Both components were positive, but neither was distinguishable from zero on its own (any exposure: 0.75, 95% CI [−0.27, 1.76]; intensity: 1.22, 95% CI [−0.07, 2.50]). The restricted cubic spline gave no evidence of nonlinearity (*p* = .231). The fractional logit model, which respects the bounds of the PHQ-4, gave an average marginal effect of 1.61 points (95% CI [0.87, 2.35]). The restricted wild bootstrap gave *p* < .001 and a 95% interval of [0.75, 2.75]. The estimate from multiple imputation (1.96, 95% CI [1.02, 2.89], *n* = 300) did not differ materially from the complete-case estimate.
+
+**Table 7** *Robustness checks for the association between the stigma index and PHQ-4 scores*
+
+| Check | *n* | η | 95% CI | *p* |
+|---|---|---|---|---|
+| Main specification | 256 | 1.72 | [0.74, 2.69] | < .001 |
+| 1. Adding job characteristics | 225 | 1.93 | [0.65, 3.21] | .003 |
+| 2. "Prefer not to answer" as missing | 247 | 1.79 | [0.79, 2.78] | < .001 |
+| 3a. Any exposure (indicator) | 256 | 0.75 | [−0.27, 1.76] | .147 |
+| 3b. Intensity among exposed, same model | 256 | 1.22 | [−0.07, 2.50] | .063 |
+| 3c. Restricted cubic spline, test of nonlinearity | 256 | | | .231 |
+| 4. Fractional logit, AME × 12 | 256 | 1.61 | [0.87, 2.35] | < .001 |
+| 5. Multiple imputation (*m* = 20) | 300 | 1.96 | [1.02, 2.89] | < .001 |
+| 6. Excluding flagged responses | 240 | 1.69 | [0.70, 2.68] | < .001 |
+| 7. Excluding Cook's distance > 4/*n* | 234 | 1.57 | [0.82, 2.32] | < .001 |
+| 8. Restricted wild bootstrap (Webb, 9,999) | 256 | 1.72 | [0.75, 2.75] | < .001 |
+| 9. Adding sexual orientation group | 256 | 1.74 | [0.74, 2.73] | < .001 |
+
+*Note.* All models adjust for pre-exposure characteristics and use HC3 standard errors unless stated otherwise. AME = average marginal effect. Check 5 uses Rubin's rules; checks 4 and 8 report *z*-based and bootstrap intervals, respectively.
+
+The diagnostics of the main model indicated heteroskedasticity (Breusch-Pagan χ²(1) = 13.83, *p* < .001), which the prespecified HC3 standard errors address. The RESET test gave *F*(3, 238) = 2.17, *p* = .092. Collinearity was low (all GVIF^1/(2df) ≤ 1.06). Twenty-two observations had Cook's distance above 4/*n* and 15 had leverage above 2*k*/*n*; the largest leverage was 0.22 (Table S2).
+
+All 32 specifications of the specification curve produced positive estimates (Figure 2; Table S6). Expressed per standard deviation of the respective index, they ranged from 0.65 to 1.11 PHQ-4 points, compared with 0.82 in the main specification. The 95% interval excluded zero in 29 specifications. Each of the three exceptions combined two choices: restricting the index to respondents who answered all seven situations, and adding job characteristics. Together these choices reduced the sample to between 118 and 136 respondents. The fourth specification that combined them (*n* = 129) had an interval that excluded zero. No other choice changed the inferential conclusion.
+
+**Figure 2** *Specification curve*
+
+![Specification curve](figures/fig2_specification_curve.png)
+
+*Note.* The upper panel shows the estimated difference in PHQ-4 scores per standard deviation of the stigma index, with 95% confidence intervals, for 32 specifications ranked by the estimate. The lower panel marks the choices made in each specification. "LGBT: self-identification + SOGI" requires both LGBT self-identification and a non-heterosexual orientation or a minority gender identity. Sparse covariate categories were merged in the main estimation samples, not separately within each specification.
+
+In the sensitivity analysis (Table S3), the stigma index accounted for 6.9% of the residual variance in PHQ-4 scores. An unmeasured confounder would have to explain 23.7% of the residual variance of both the stigma index and PHQ-4 scores to reduce the estimate to zero, and 13.4% to make the 95% interval include zero. Education, entered as a group, explained 0.9% of the residual variance of the stigma index and 2.4% of the residual variance of PHQ-4 scores. A confounder three times as strong as education would reduce the estimate to 1.42 (95% CI [0.63, 2.20]). Sex assigned at birth explained almost none of the variance in the stigma index, so it provides a negligible benchmark. These values use classical standard errors and serve as indicators rather than as HC3-based tests.
 
 ---
 
 ## Discussion
 
-*[To be written after the results are available.]*
+This study asked whether, among LGBT workers in Vietnam, the frequency of enacted stigma at work is associated with the severity of anxiety and depressive symptoms. Workers who reported stigma more often reported more symptoms. The association was present for total symptom severity and for both the anxiety and the depression subscales, and the two subscale coefficients did not differ detectably. Its point estimate, about a quarter of a standard deviation in symptoms per standard deviation of stigma, exceeded the smallest effect size of interest set before estimation, although the interval did not exclude slightly smaller values. It changed little across covariate sets, codings of missing responses, estimators, influential-observation checks, and 32 alternative specifications. The data did not support the hypothesized pathway through identity concealment. In exploratory analyses, the association was clearest for the two most common situations, offensive jokes or comments and unwanted personal questions.
+
+### A Gradient Within the Group
+
+The within-group gradient is the prediction that separates the two readings described in the Introduction. Both an identity-based reading and a prejudice-based reading predict that LGBT people report more symptoms than heterosexual and cisgender people. Only the prejudice reading expects symptoms to vary with exposure to stigma among people who share an LGBT identity. The gradient observed here is therefore consistent with minority stress theory (I. H. Meyer, 2003) and with the theory's account of distal stressors. It is not predicted by an account that locates distress in sexual or gender minority identity itself. The zero-order correlation between the stigma index and PHQ-4 scores (*r* = .23) is of the same magnitude as the average association between perceived discrimination and well-being in the meta-analysis of Schmitt et al. (2014) [TO BE CONFIRMED: *r* = −.23 in that meta-analysis]. The direction also matches workplace studies conducted in the United States (Velez et al., 2013; Waldo, 1999).
+
+The gradient is necessary for the prejudice reading but not sufficient to establish that stigma raises symptoms. Three alternatives remain. First, the direction may run partly from symptoms to reports: people with more symptoms may recall or interpret more events as stigmatizing, or may be treated worse by colleagues. Second, a factor that the models did not measure, such as rejection by family or stigma in other domains of life, may shape both workplace experiences and symptoms. Third, because the stigma section immediately preceded the PHQ-4, recalling stigmatizing events may have raised the symptom ratings that followed (Schwarz, 1999). Our analyses address these alternatives only partly. The sensitivity analysis shows that a confounder would need to be several times as strongly related to stigma and symptoms as education to remove the association. It cannot show that no such confounder exists, and family rejection could plausibly be that strong. The attribution contrast speaks to one version of recall bias. If the association arose mainly because distressed workers attribute ambiguous decisions to prejudice, it should be concentrated in attribution-dependent situations. It was not. The point estimates were larger for event-based situations, although the two coefficients could not be distinguished. Mood-congruent recall can, however, affect reports of any event, so the contrast weakens only the attribution version of the argument.
+
+### Anxiety and Depression
+
+Stigma was associated with both anxiety and depressive symptoms. In the direct test, which is exploratory, the interval for the difference ran from a depression coefficient about half a point larger to an anxiety coefficient about a tenth of a point larger. The data are therefore difficult to reconcile with a markedly stronger association with anxiety in this sample. This pattern differs from the longitudinal results of Herry and Dyar (2025), in which discrimination predicted later anxiety more consistently than later depression. The difference may reflect design: a cross-sectional association combines processes that a longitudinal design separates, and the hypervigilance that links discrimination to later internalizing symptoms (Hollinsaid et al., 2023) may unfold over a longer period than our measures capture. It may also reflect measurement, because each subscale has only two items and both are measured with more error than the full PHQ-4. The depression association is consistent with the reasoning that repeated stigma that a worker cannot control is expressed in loss of interest and hopelessness. The study cannot, however, distinguish the mechanisms behind either association.
+
+### Identity Concealment
+
+The data did not support the pathway from stigma to concealment to symptoms. Both paths were positive, but both were imprecise, and adjusting for concealment changed the stigma coefficient little. Several features of the study may explain the weak link between stigma and concealment (*r* = .10). The Introduction described concealment as standing in a two-way position. Stigma may lead workers to conceal more, while concealment reduces the chance that others know a worker's identity and direct stigma at it. In a cross-sectional association, the two processes can offset each other. Concealment is also multifaceted, and its association with depressive symptoms depends on the facet measured (Pachankis et al., 2020). Our four statements combine effort, avoidance, worry, and fatigue in a single score. Finally, cross-sectional data can substantially misestimate mediation processes that unfold over time (Maxwell & Cole, 2007). We therefore read the H3 result as inconclusive. It does not show that concealment plays no role, and it does not provide evidence for the pathway.
+
+### Forms of Stigma
+
+The situations most clearly associated with symptoms were interpersonal: offensive jokes or comments, and unwanted personal questions about sexual orientation, gender identity, or romantic life. These were also the most common situations, so they were estimated most precisely, and the result does not show that formal discrimination is less strongly associated with symptoms. The finding nonetheless fits evidence that interpersonal forms of bias persist where formal forms are absent (Hebl et al., 2002) and that microaggressions accompany psychological distress (Nadal et al., 2016). It also fits the Vietnamese context described in the Introduction. Where labor law does not name sexual orientation or gender identity, jokes and intrusive questions are especially likely to be treated as private matters between colleagues, and the worker who is the target has few formal means of response.
+
+Two further exploratory results describe the shape of the association. In the three-level model, both low and high exposure groups scored higher than unexposed workers, and the high-exposure group scored about 2.2 points higher. When any exposure and intensity were separated, neither component was distinguishable from zero on its own, and the spline gave no evidence of nonlinearity. The data are therefore consistent with a broadly linear gradient, but they cannot tell whether the association reflects having any experience of stigma or the frequency of such experiences.
+
+### Comparison With Non-LGBT Workers
+
+E3 is descriptive and does not test a hypothesis. LGBT workers who reported no stigma had a lower mean PHQ-4 score than non-LGBT workers, and LGBT workers who reported stigma had a higher one. This pattern is the descriptive counterpart of the within-group gradient. Three features of the comparison prevent stronger conclusions. Non-LGBT respondents were not asked about negative experiences at work, the two groups were recruited through channels that overlapped only partly, and LGBT workers who reported no stigma may include workers who conceal their identity extensively. The comparison suggests a direction for research that measures stigma in both groups with equivalent sampling.
+
+### Moderation by Sex, Orientation, and Perceived DEI Enforcement
+
+We found no evidence that the association differed by sex assigned at birth or between bisexual or pansexual, lesbian, and gay workers. The intervals were wide, so the analysis cannot rule out differences of the size of the main association. The interaction with perceived DEI enforcement had the sign predicted by the buffering argument (Cohen & Wills, 1985), but its interval included both zero and large values. This result is consistent with the low power of interaction tests in observational data (McClelland & Judd, 1993). The small positive correlation between stigma and perceived enforcement also illustrates the overlap discussed in the Introduction. Workers who encounter stigma may be the workers best placed to observe whether it is sanctioned, so the two measures are not independent. A test of the buffering role of workplace support requires organization-level measures of policies and practices (Webster et al., 2018).
 
 ### Policy Implications
 
-*[To be written.]*
+The first implication concerns interpretation. Higher symptom levels among LGBT people are sometimes read as evidence that LGBT identities are pathological. In this sample, symptom levels varied with how often workers were stigmatized at work, which is not what an identity-based account would predict. This is consistent with the position of the Ministry of Health of Vietnam (2022) that sexual and gender minority identities should not be regarded as illnesses. It also suggests that health and workplace programs should address the conditions that LGBT workers face rather than treat LGBT identity as a risk factor in itself.
+
+The second implication concerns law. Article 3(8) of the Labor Code defines discrimination in employment through a list of grounds that does not name sexual orientation or gender identity (National Assembly of Vietnam, 2019). Adding these grounds would give workers a basis for complaint about formal decisions. The forms of stigma most clearly associated with symptoms in this study, however, were interpersonal, and they fall outside the narrow definition of discrimination as distinction, exclusion, or preference. Protection would therefore also require rules on workplace conduct that cover derogatory jokes, intrusive questioning, and disclosure of a worker's sexual orientation or gender identity without consent.
+
+The third implication concerns employers. Because protection in Vietnam depends largely on the individual organization, employers can act without waiting for legal change. Codes of conduct can name derogatory jokes and intrusive questions about sexual orientation and gender identity as unacceptable, protect information about a worker's identity, and provide a reporting channel that workers regard as safe. Our results on DEI enforcement are inconclusive, so they do not show that such measures weaken the association with symptoms. Evaluations of these measures should therefore be built into their introduction.
+
+These implications assume that the association reflects, at least in part, an influence of stigma on symptoms. The design cannot establish this, and the implications should be read with that qualification.
 
 ### Limitations and Future Directions
 
-*[To be written.]*
+Several limitations qualify these findings. First, the design is cross-sectional, so the direction of the association cannot be established. Longitudinal designs that measure stigma and symptoms repeatedly, including diary designs that capture events close to when they occur, would allow the temporal order to be examined.
+
+Second, exposure and outcome were reported by the same person in one questionnaire. The stigma section immediately preceded the PHQ-4, and the data cannot test whether this order raised symptom reports. Future surveys should place the two sections apart or randomize their order.
+
+Third, the sample was recruited by convenience and snowball sampling. Participation may depend on both stigma and distress (Hernán et al., 2004), and the employment criterion excluded workers who had left their jobs, possibly because of stigma or distress. The sample was concentrated in Ho Chi Minh City and among university graduates, and the results may not generalize to LGBT workers in rural areas, in informal employment, or with less education. Snowball recruitment may also produce correlated errors among respondents from the same network or workplace. No network or workplace identifier was recorded, so standard errors could not be clustered and may be understated. The wild bootstrap addresses small-sample inference but not clustering.
+
+Fourth, the measures have limitations. The stigma situations have not been validated, one situation was too rare to analyze, and the gender identity situation was presented to all respondents although it applies mainly to transgender and nonbinary people. We found no validation study of the Vietnamese PHQ-4, and each of its subscales has only two items. Concealment and perceived DEI enforcement were measured with short scales. Future research should validate a Vietnamese measure of workplace stigma and use longer symptom scales.
+
+Fifth, the covariates do not capture minority stress outside work, such as rejection by family. Relationship status may partly reflect symptoms, and region of work may reflect moves to cities perceived as more accepting. The sensitivity analysis indicates how strong an omitted confounder would need to be, but it cannot show that none exists.
+
+Sixth, the transgender and nonbinary group was too small to analyze separately. The gender identity barriers that these workers face may differ in kind from the stigma that cisgender LGBT workers encounter, and they require studies with targeted recruitment.
+
+Finally, the analysis plan was finalized before the models were estimated but was registered only afterwards, and several related analyses had been run before it was finalized. We therefore present the study as exploratory. Replication in a new sample, with a plan registered before data collection, would provide a stronger test.
 
 ---
 
 ## Conclusions
 
-*[To be written.]*
+Among LGBT workers in Vietnam, those who encountered enacted stigma at work more often reported more anxiety and depressive symptoms. The association was robust to a wide range of analytic choices, and it was clearest for offensive jokes and intrusive personal questions. A gradient of this kind is predicted by minority stress theory and not by an account that treats sexual or gender minority identity as the source of distress. The cross-sectional design leaves the direction of the association open. Within that limit, the findings direct attention away from LGBT identity and toward the treatment of LGBT workers, including everyday interpersonal behavior that current Vietnamese labor law does not address.
 
 ---
 
@@ -477,3 +698,116 @@ Waldo, C. R. (1999). Working in a majority context: A structural model of hetero
 Webster, J. R., Adams, G. A., Maranto, C. L., Sawyer, K., & Thoroughgood, C. (2018). Workplace contextual supports for LGBT employees: A review, meta-analysis, and agenda for future research. *Human Resource Management, 57*(1), 193–210. https://doi.org/10.1002/hrm.21873
 
 World Health Organization. (2019). *International statistical classification of diseases and related health problems* (11th ed.). https://icd.who.int/
+
+---
+
+## Supplementary Material
+
+*[To be moved to a separate supplementary file before submission.]*
+
+**Table S1** *PHQ-4 scores by pre-exposure characteristics among LGBT respondents (main-rule sample, n = 256)*
+
+| Characteristic | Coefficient | *SE* | 95% CI | *p* |
+|---|---|---|---|---|
+| Age 25-34 (ref. 18-24) | 0.39 | 0.49 | [−0.56, 1.35] | .419 |
+| Age 35-44 | 1.27 | 0.78 | [−0.26, 2.80] | .103 |
+| Age 45 or older | −0.98 | 0.59 | [−2.14, 0.19] | .101 |
+| Assigned female at birth (ref. male) | −0.34 | 0.43 | [−1.18, 0.51] | .433 |
+| College (ref. upper secondary or below) | 1.12 | 0.93 | [−0.72, 2.96] | .231 |
+| University | −0.60 | 0.61 | [−1.80, 0.61] | .329 |
+| Postgraduate | 0.01 | 0.88 | [−1.72, 1.73] | .992 |
+| Partner (ref. no partner) | 0.41 | 0.44 | [−0.47, 1.28] | .360 |
+| Separated, divorced, or widowed | not shown | | | |
+| Prefer not to answer (relationship status) | not shown | | | |
+| Ho Chi Minh City (ref. Hanoi) | 0.62 | 0.48 | [−0.33, 1.57] | .197 |
+| Da Nang | 1.48 | 0.70 | [0.09, 2.86] | .037 |
+| Elsewhere | 0.72 | 0.82 | [−0.90, 2.34] | .380 |
+
+*Note.* Descriptive regression without the stigma index; ordinary least squares with HC3 standard errors. Coefficients for categories with fewer than 10 respondents were estimated but are not shown. The "prefer not to answer" category of age (fewer than five respondents) was merged into the 25-34 category before estimation.
+
+**Table S2** *Diagnostics of the main model (n = 256)*
+
+| Diagnostic | Value |
+|---|---|
+| Breusch-Pagan test (fitted values) | χ²(1) = 13.83, *p* < .001 |
+| Ramsey RESET | *F*(3, 238) = 2.17, *p* = .092 |
+| GVIF^(1/(2df)): stigma index; age; sex at birth; education; relationship status; region | 1.016; 1.058; 1.037; 1.036; 1.037; 1.023 |
+| Observations with Cook's distance > 4/*n* | 22 |
+| Observations with leverage > 2*k*/*n* | 15 |
+| Largest leverage | 0.22 |
+
+*Note.* The diagnostics are descriptive. HC3 standard errors were prespecified regardless of the heteroskedasticity test.
+
+**Table S3** *Sensitivity to unmeasured confounding (Cinelli & Hazlett, 2020)*
+
+| Quantity | Value |
+|---|---|
+| Estimate (classical *SE*) | 1.72 (0.41), *t*(241) = 4.22 |
+| Partial *R*² of the stigma index with PHQ-4 | 6.9% |
+| Robustness value, *q* = 1 | 23.7% |
+| Robustness value, *q* = 1, α = .05 | 13.4% |
+| Benchmark: education (group), partial *R*² with *S*; with PHQ-4 | 0.94%; 2.44% |
+| Confounder 1 × education: adjusted estimate [95% CI] | 1.62 [0.82, 2.42] |
+| Confounder 2 × education | 1.52 [0.73, 2.31] |
+| Confounder 3 × education | 1.42 [0.63, 2.20] |
+| Benchmark: sex assigned at birth, partial *R*² with *S*; with PHQ-4 | < 0.01%; 0.28% |
+| Confounder 1, 2, 3 × sex assigned at birth | 1.72 [0.91, 2.52]; 1.72 [0.92, 2.52]; 1.72 [0.92, 2.52] |
+
+*Note.* The robustness value is the share of residual variance of both the stigma index and PHQ-4 scores that an omitted confounder would need to explain to reduce the estimate to zero (*q* = 1), or to make the 95% interval include zero (α = .05). Values use classical standard errors and are indicators rather than HC3-based tests.
+
+**Table S4** *Distribution of PHQ-4 scores in three groups (E3, descriptive only)*
+
+| Group | *n* | *M* | *SD* | Median | Score ≥ 6 (%) |
+|---|---|---|---|---|---|
+| Non-LGBT | 323 | 3.27 | 3.07 | 3 | 22.9 |
+| LGBT, no reported stigma | 125 | 2.58 | 2.85 | 2 | 14.4 |
+| LGBT, at least one situation | 153 | 4.12 | 3.42 | 4 | 30.7 |
+
+*Note.* Non-LGBT respondents were not asked about negative experiences at work, and the groups were recruited through channels that overlapped only partly. No tests are reported.
+
+**Table S5** *Indirect product a × b of the concealment pathway (n = 254)*
+
+| Estimate | Bootstrap *SE* | 95% percentile interval |
+|---|---|---|
+| 0.08 | 0.07 | [−0.03, 0.25] |
+
+*Note.* 5,000 bootstrap resamples. Because concealment may also reduce exposure to stigma and the data are cross-sectional, this product is not interpreted as evidence of mediation.
+
+**Table S6** *All 32 specifications of the specification curve*
+
+| Index | Covariates | LGBT definition | Transgender and nonbinary | *n* | Estimate [95% CI] | Per *SD* of index |
+|---|---|---|---|---|---|---|
+| 7-situation mean | Xᴰ | Self-identification | Included | 256 | 1.72 [0.74, 2.69] | 0.82 [0.35, 1.28] |
+| 7-situation mean | Xᴰ | Self-identification | Excluded | 244 | 1.94 [0.93, 2.96] | 0.90 [0.43, 1.37] |
+| 7-situation mean | Xᴰ | Self-identification + SOGI | Included | 236 | 1.72 [0.74, 2.71] | 0.84 [0.36, 1.32] |
+| 7-situation mean | Xᴰ | Self-identification + SOGI | Excluded | 224 | 1.95 [0.91, 2.98] | 0.92 [0.43, 1.41] |
+| 7-situation mean | Xᴰ + Xᴶ | Self-identification | Included | 225 | 1.93 [0.65, 3.21] | 0.92 [0.31, 1.54] |
+| 7-situation mean | Xᴰ + Xᴶ | Self-identification | Excluded | 214 | 2.30 [0.96, 3.64] | 1.06 [0.44, 1.68] |
+| 7-situation mean | Xᴰ + Xᴶ | Self-identification + SOGI | Included | 207 | 2.00 [0.65, 3.36] | 0.98 [0.32, 1.65] |
+| 7-situation mean | Xᴰ + Xᴶ | Self-identification + SOGI | Excluded | 196 | 2.36 [0.92, 3.80] | 1.11 [0.43, 1.80] |
+| 8-situation mean | Xᴰ | Self-identification | Included | 256 | 1.76 [0.68, 2.84] | 0.80 [0.31, 1.29] |
+| 8-situation mean | Xᴰ | Self-identification | Excluded | 244 | 2.09 [0.99, 3.20] | 0.91 [0.43, 1.39] |
+| 8-situation mean | Xᴰ | Self-identification + SOGI | Included | 236 | 1.77 [0.68, 2.85] | 0.82 [0.32, 1.33] |
+| 8-situation mean | Xᴰ | Self-identification + SOGI | Excluded | 224 | 2.09 [0.97, 3.22] | 0.93 [0.43, 1.43] |
+| 8-situation mean | Xᴰ + Xᴶ | Self-identification | Included | 225 | 1.84 [0.42, 3.26] | 0.85 [0.20, 1.50] |
+| 8-situation mean | Xᴰ + Xᴶ | Self-identification | Excluded | 214 | 2.36 [0.93, 3.79] | 1.03 [0.41, 1.66] |
+| 8-situation mean | Xᴰ + Xᴶ | Self-identification + SOGI | Included | 207 | 1.92 [0.45, 3.38] | 0.91 [0.21, 1.60] |
+| 8-situation mean | Xᴰ + Xᴶ | Self-identification + SOGI | Excluded | 196 | 2.40 [0.88, 3.92] | 1.08 [0.40, 1.76] |
+| Count of situations (0-7) | Xᴰ | Self-identification | Included | 256 | 0.63 [0.28, 0.98] | 0.83 [0.38, 1.29] |
+| Count of situations (0-7) | Xᴰ | Self-identification | Excluded | 244 | 0.74 [0.39, 1.09] | 0.94 [0.50, 1.38] |
+| Count of situations (0-7) | Xᴰ | Self-identification + SOGI | Included | 236 | 0.63 [0.28, 0.98] | 0.85 [0.38, 1.32] |
+| Count of situations (0-7) | Xᴰ | Self-identification + SOGI | Excluded | 224 | 0.74 [0.38, 1.09] | 0.96 [0.50, 1.42] |
+| Count of situations (0-7) | Xᴰ + Xᴶ | Self-identification | Included | 225 | 0.68 [0.22, 1.13] | 0.89 [0.29, 1.49] |
+| Count of situations (0-7) | Xᴰ + Xᴶ | Self-identification | Excluded | 214 | 0.83 [0.36, 1.29] | 1.04 [0.45, 1.63] |
+| Count of situations (0-7) | Xᴰ + Xᴶ | Self-identification + SOGI | Included | 207 | 0.71 [0.24, 1.18] | 0.96 [0.32, 1.59] |
+| Count of situations (0-7) | Xᴰ + Xᴶ | Self-identification + SOGI | Excluded | 196 | 0.86 [0.36, 1.35] | 1.11 [0.47, 1.75] |
+| 7-situation mean, complete only | Xᴰ | Self-identification | Included | 157 | 1.36 [0.16, 2.55] | 0.70 [0.08, 1.31] |
+| 7-situation mean, complete only | Xᴰ | Self-identification | Excluded | 149 | 1.69 [0.41, 2.98] | 0.83 [0.20, 1.46] |
+| 7-situation mean, complete only | Xᴰ | Self-identification + SOGI | Included | 145 | 1.24 [0.04, 2.44] | 0.65 [0.02, 1.28] |
+| 7-situation mean, complete only | Xᴰ | Self-identification + SOGI | Excluded | 137 | 1.57 [0.29, 2.85] | 0.78 [0.14, 1.42] |
+| 7-situation mean, complete only | Xᴰ + Xᴶ | Self-identification | Included | 136 | 1.31 [−0.25, 2.88] | 0.68 [−0.13, 1.48] |
+| 7-situation mean, complete only | Xᴰ + Xᴶ | Self-identification | Excluded | 129 | 1.85 [0.15, 3.56] | 0.90 [0.07, 1.73] |
+| 7-situation mean, complete only | Xᴰ + Xᴶ | Self-identification + SOGI | Included | 125 | 1.34 [−0.49, 3.17] | 0.70 [−0.26, 1.67] |
+| 7-situation mean, complete only | Xᴰ + Xᴶ | Self-identification + SOGI | Excluded | 118 | 1.81 [−0.16, 3.79] | 0.90 [−0.08, 1.88] |
+
+*Note.* Ordinary least squares with HC3 standard errors. "Self-identification + SOGI" requires LGBT self-identification together with a non-heterosexual orientation or a minority gender identity. The first row is the main specification. The count index is on a 0-7 scale, so its unadjusted estimate is not comparable with the others; the last column expresses every estimate per standard deviation of the respective index.
