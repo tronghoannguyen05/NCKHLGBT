@@ -27,20 +27,20 @@ foreach v of global XD {
     local isord : list v in ordered
     local kind = cond(`isord', "ordered", "nominal")
     collapse_sparse `v', touse(in_xd_main) min($MIN_LEVEL_N) kind(`kind') ///
-        pna($CODE_PNTA) pooled($POOLED_CODE) handle(`H')
+        special($CODE_PNTA $CODE_NONSUBST) pooled($POOLED_CODE) handle(`H')
 }
 foreach v of local xd_alt {
     local base : subinstr local v "_alt" "", all
     local isord : list base in ordered
     local kind = cond(`isord', "ordered", "nominal")
     collapse_sparse `v', touse(in_xd_alt) min($MIN_LEVEL_N) kind(`kind') ///
-        pna($CODE_PNTA) pooled($POOLED_CODE) handle(`H')
+        special($CODE_PNTA $CODE_NONSUBST) pooled($POOLED_CODE) handle(`H')
 }
 foreach v of global XJ {
     local isord : list v in ordered
     local kind = cond(`isord', "ordered", "nominal")
     collapse_sparse `v', touse(in_xj) min($MIN_LEVEL_N) kind(`kind') ///
-        pna($CODE_PNTA) pooled($POOLED_CODE) handle(`H')
+        special($CODE_PNTA $CODE_NONSUBST) pooled($POOLED_CODE) handle(`H')
 }
 postclose `H'
 

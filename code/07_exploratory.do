@@ -65,9 +65,9 @@ post_value, handle(res_expl) analysis("E_anx_vs_dep") depvar("gad2-phq2") spec("
 estimates drop m_gad m_phq
 
 * ---- E4: khác biệt theo giới tính khi sinh và xu hướng tính dục ---------------
-local _xd $XD
-local _sx sex_birth
-local xd_nosex : list _xd - _sx
+local xd_all $XD
+local sx_one sex_birth
+local xd_nosex : list xd_all - sx_one
 * Điều kiện dùng sex_birth_orig vì 04b có thể đã gộp mức "không muốn trả lời".
 regress phq4 ib1.sex_birth##c.S i.(`xd_nosex') if in_xd_main & sex_birth_orig != $CODE_PNTA, vce(hc3)
 post_coef, handle(res_expl) coef(2.sex_birth#c.S) analysis("E4") depvar("phq4") spec("S_x_female")

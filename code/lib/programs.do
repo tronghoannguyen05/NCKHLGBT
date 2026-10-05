@@ -216,14 +216,14 @@ end
 * collapse_sparse: gộp mức thưa của một biến phân loại (chốt 5/10/2026).
 *   Chỉ dựa trên số đếm trong mẫu ước lượng touse, không dùng biến kết quả.
 *   Quy tắc (lặp đến khi mọi mức có ít nhất min người):
-*   - mức "không muốn trả lời" (pna): gộp vào mức "khác (gộp)" (pooled) nếu đã có,
-*     nếu không thì vào mức đông nhất;
+*   - mức đặc biệt (special: "không muốn trả lời" 9, "không áp dụng/không rõ" 97):
+*     gộp vào mức "khác (gộp)" (pooled) nếu đã có, nếu không thì vào mức đông nhất;
 *   - biến thứ bậc (kind = ordered): gộp với mức liền kề phía trung vị;
 *   - biến danh nghĩa (kind = nominal): gộp vào mức "khác (gộp)"; nếu chính mức gộp
 *     còn thưa thì gộp nó vào mức đông nhất.
 *   Thay đổi áp dụng cho toàn bộ dữ liệu. Mỗi lần gộp được ghi vào postfile handle,
 *   với số đếm ghi là "<min" để không lộ ô nhỏ.
-*   collapse_sparse agegrp, touse(in_xd_main) min(5) kind(ordered) pna(9) pooled(98) handle(H)
+*   collapse_sparse agegrp, touse(in_xd_main) min(5) kind(ordered) special(9 97) pooled(98) handle(H)
 * -----------------------------------------------------------------------------
 capture program drop _modal_level
 program define _modal_level, rclass
@@ -248,7 +248,7 @@ end
 
 capture program drop collapse_sparse
 program define collapse_sparse
-    syntax varname, Touse(varname) Min(integer) Kind(string) Pna(integer) Pooled(integer) Handle(name)
+    syntax varname, Touse(varname) Min(integer) Kind(string) Special(numlist) Pooled(integer) Handle(name)
     local v `varlist'
     local guard 0
     while 1 {
@@ -271,21 +271,25 @@ program define collapse_sparse
         if missing(`l') continue, break
 
         local haspooled : list posof "`pooled'" in levs
+        local isspecial : list posof "`l'" in special
         local target .
-        if `l' == `pna' {
+        if `isspecial' {
             if `haspooled' local target = `pooled'
             else {
-                _modal_level `v', touse(`touse') exclude(`pna')
+                _modal_level `v', touse(`touse') exclude(`special')
                 local target = r(level)
             }
         }
         else if "`kind'" == "ordered" {
-            quietly summarize `v' if `touse' & `v' != `pna' & `v' != `pooled', detail
+            local excl `special' `pooled'
+            local exclc : subinstr local excl " " ",", all
+            quietly summarize `v' if `touse' & !inlist(`v', `exclc'), detail
             local med = r(p50)
             local up .
             local down .
             foreach x of local levs {
-                if `x' == `pna' | `x' == `pooled' continue
+                local skipx : list posof "`x'" in excl
+                if `skipx' continue
                 if `x' > `l' & missing(`up') local up = `x'
                 if `x' < `l' local down = `x'
             }
@@ -294,7 +298,7 @@ program define collapse_sparse
         }
         else {
             if `l' == `pooled' {
-                _modal_level `v', touse(`touse') exclude(`pooled' `pna')
+                _modal_level `v', touse(`touse') exclude(`pooled' `special')
                 local target = r(level)
             }
             else local target = `pooled'

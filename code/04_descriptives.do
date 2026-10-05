@@ -59,8 +59,10 @@ forvalues j = 1/8 {
 postclose `P'
 use "$DERIVED/stig_prev.dta", clear
 * Ẩn số đếm nhỏ khi công bố
+* (tỷ lệ cũng được ẩn, vì có thể tính ngược số đếm từ tỷ lệ và n_valid)
 gen str12 n_any_show = cond(n_any > 0 & n_any < $MIN_CELL, "<$MIN_CELL", string(n_any))
-export delimited item n_valid n_any_show pct using "$TAB/S_stigma_prevalence.csv", replace
+gen str8 pct_show = cond(n_any > 0 & n_any < $MIN_CELL, "", string(pct, "%5.1f"))
+export delimited item n_valid n_any_show pct_show using "$TAB/S_stigma_prevalence.csv", replace
 restore
 
 * ---- E3: phân bố PHQ-4 theo ba nhóm (chỉ mô tả, không kiểm định) -------------

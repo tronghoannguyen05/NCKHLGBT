@@ -22,8 +22,9 @@
 - [ ] Hồ sơ xét duyệt đạo đức. Đây là vấn đề lớn nhất, xem `docs/ethics_data_protection.md`.
 - [ ] Đăng ký OSF: **chưa nộp** (tác giả xác nhận 5/10/2026). Nộp `docs/analysis_plan.md` (gồm mục 8, các quyết định chốt ngày 5/10/2026) **trước khi chạy `05_main_models.do`**, rồi ghi đường dẫn vào `docs/analysis_plan.md` và bài báo.
 - [x] Chốt phương pháp (5/10/2026): hết `TODO(OSF)`; thêm ngưỡng hiệu ứng nhỏ nhất (1,0 điểm PHQ-4, TOST), gộp mức thưa (`04b_collapse_levels.do`), wild bootstrap, đặc tả thêm xu hướng tính dục, kiểm định hiệu ở E2; bỏ kiểm định White. Mã Stata đã sửa nhưng **chưa chạy thử**.
-- [ ] Điền `config/variable_map.csv` (tên biến Kobo → tên chuẩn).
-- [ ] Chạy thử toàn bộ `code/` trên dữ liệu giả lập (`tests/make_synthetic_data.py`). **Mã chưa từng được chạy trên Stata.**
+- [x] Điền `config/variable_map.csv` và tạo `config/value_map.csv` (mã chữ Kobo → mã số), 5/10/2026. Đã đối chiếu bằng Python trên tệp thật (chỉ số đếm): không có mã chưa ánh xạ; luồng mẫu khớp 850 → … → 243.
+- [x] Tệp chạy một lần bấm `CHAY_PHAN_TICH.do` (chế độ thu / kiemtra / chinhthuc); dữ liệu giả lập định dạng Kobo ở `tests/synthetic_kobo.csv`. Hướng dẫn: `docs/huong_dan_chay_stata.md`.
+- [ ] Chạy thử toàn bộ `code/` trên dữ liệu giả lập: `CHAY_PHAN_TICH.do` với `CHE_DO "thu"`. **Mã chưa từng được chạy trên Stata.**
 - [ ] Chạy trên dữ liệu thật → điền Bảng 5–9 → viết bài.
 - [ ] Bài NCKH 5 chương (khung ~80 trang: Mở đầu 5–6, Ch1 8–10, Ch2 16–17, Ch3 21–23, Ch4 13–15, Ch5 11–13, Tổng kết 2–3). Ch2 = cơ sở lý thuyết và khoảng trống; khung khái niệm và giả thuyết nằm ở mục 3.1 (theo yêu cầu tác giả). Mở đầu, Ch1, Ch2 và mục 3.1 đã có bản chờ tác giả duyệt trong `docs/bai_nckh/`, kèm biên bản phản biện. Chưa viết 3.2–3.9 và Ch4–5. Thời điểm hình thành giả thuyết đã bỏ khỏi phần giả thuyết, nhưng phải trình bày ở mục 3.8. Không viết Ch4–5 khi chưa có kết quả thật. Bản tiếng Anh 5 chương dài (Introduction, Ch1, Ch2) ở `docs/bai_nckh/manuscript_en_intro_ch1_ch2.md`, giữ để tham khảo.
 - [ ] **Bản chính hiện nay (từ 4/10/2026, theo yêu cầu tác giả): bài báo tiếng Anh trình bày theo Herry & Dyar (2025)**, ở `docs/bai_nckh/manuscript_en_article.md`. Bố cục: Abstract có cấu trúc, Keywords, Introduction (các mục không đánh số, kết thúc bằng Current Study và Hypotheses), Methods, Results, Discussion, Conclusions, Declarations, References. Đã viết Abstract (Introduction, Methods), Introduction và Methods (5/10/2026, theo `docs/analysis_plan.md`). Results, Discussion, Conclusions để trống cho đến khi có kết quả thật. Không phát triển thêm bản tiếng Việt và bản 5 chương trừ khi tác giả yêu cầu.
@@ -79,7 +80,7 @@
 
 ## Cách chạy
 
-1. Đặt tệp xuất từ Kobo vào `data/raw/` và khai tên tệp trong `config/settings.do`.
-2. Điền cột `raw_name` của `config/variable_map.csv`.
-3. Trong Stata: `cd` tới thư mục gốc của repo, rồi `do code/00_master.do`.
-4. Muốn chạy thử mà chưa có dữ liệu thật: `python3 tests/make_synthetic_data.py`, đặt `USE_SYNTHETIC = 1` trong `config/settings.do`, rồi chạy master.
+Mở `CHAY_PHAN_TICH.do` trong Stata 17, chọn `CHE_DO` ("thu" → "kiemtra" → "chinhthuc"), bấm Do. Chi tiết ở `docs/huong_dan_chay_stata.md`.
+- Dữ liệu thật: tệp `.xlsx` xuất từ Kobo đặt trong `data/raw/`; tệp chạy tự chép thành `data/raw/kobo_export.xlsx`.
+- Chế độ "kiemtra" dừng sau `04b` (cờ `STOP_BEFORE_MODELS`); "chinhthuc" chỉ chạy sau khi đăng ký OSF.
+- Nếu Kobo có mã chữ mới, thêm vào `config/value_map.csv`. Sinh lại dữ liệu giả lập: `python3 tests/make_synthetic_data.py`.

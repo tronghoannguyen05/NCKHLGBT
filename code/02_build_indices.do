@@ -42,9 +42,9 @@ gen byte ever_exposed = S > 0 if !missing(S)
 gen double S_exposed = cond(ever_exposed == 1, S, 0) if !missing(S)
 
 * ---- Che giấu danh tính ---------------------------------------------------------
-local _all  $CONC
-local _fat  $CONC_FATIGUE_ITEM
-local conc3 : list _all - _fat
+local conc_all  $CONC
+local conc_fat  $CONC_FATIGUE_ITEM
+local conc3 : list conc_all - conc_fat
 egen byte C_n = rownonmiss($CONC)
 egen double C_raw = rowmean($CONC)
 gen double C = C_raw if C_n >= $C_MIN_VALID & lgbt == 1

@@ -1,6 +1,7 @@
 * =============================================================================
 * 01_import_clean.do — nhập dữ liệu, đổi tên theo variable_map, sàng lọc,
 *                      mã hóa giá trị đặc biệt (đề cương mục 3.2, bước 1–2)
+* Vào: tệp xuất từ Kobo (.xlsx hoặc .csv, mã chữ của phương án)
 * Ra: $DERIVED/clean.dta
 * =============================================================================
 
@@ -10,13 +11,22 @@ if _rc {
     di as error "Không thấy tệp dữ liệu `infile'. Xem config/settings.do."
     exit 601
 }
-import delimited using "`infile'", varnames(1) clear encoding("utf-8") case(preserve)
+* Đọc mọi cột dưới dạng chuỗi; mã hóa ở các bước dưới.
+if lower(substr("`infile'", -5, .)) == ".xlsx" {
+    import excel using "`infile'", firstrow allstring clear
+}
+else {
+    import delimited using "`infile'", varnames(1) clear encoding("utf-8") case(preserve) stringcols(_all)
+}
 
 * ---- Đổi tên theo config/variable_map.csv (raw_name trống = trùng std_name) --
+* Chỉ giữ các biến có trong bảng ánh xạ: câu trả lời tự do, thu nhập và siêu dữ
+* liệu của Kobo bị bỏ ngay từ đầu.
 frame create vmap
-frame vmap: import delimited using "config/variable_map.csv", varnames(1) clear stringcols(_all)
+frame vmap: import delimited using "config/variable_map.csv", varnames(1) clear stringcols(_all) encoding("utf-8")
 frame vmap: quietly count
 local nmap = r(N)
+local keepvars
 forvalues i = 1/`nmap' {
     local std = strtrim(_frval(vmap, std_name, `i'))
     local raw = strtrim(_frval(vmap, raw_name, `i'))
@@ -27,20 +37,57 @@ forvalues i = 1/`nmap' {
         exit 111
     }
     if "`raw'" != "`std'" rename `raw' `std'
+    local keepvars `keepvars' `std'
 }
 frame drop vmap
+keep `keepvars'
 
-* ---- Kiểu số -----------------------------------------------------------------
-local numvars age18 has_job lgbt_self orient gender_id sex_birth $XD $XJ ///
-    $PHQI $STIG8 $CONC $DEI
-foreach v of varlist `numvars' {
-    capture confirm numeric variable `v'
-    if _rc destring `v', replace force
+* ---- Chuyển mã chữ của Kobo sang mã số (config/value_map.csv) -----------------
+* Dừng nếu gặp một giá trị chưa có trong bảng ánh xạ.
+foreach v of varlist _all {
+    capture confirm string variable `v'
+    if !_rc quietly replace `v' = strtrim(`v')
+}
+frame create vval
+frame vval: import delimited using "config/value_map.csv", varnames(1) clear stringcols(_all) encoding("utf-8")
+frame vval: quietly levelsof std_name, local(valvars) clean
+frame vval: quietly count
+local nval = r(N)
+foreach v of local valvars {
+    capture confirm string variable `v'
+    if !_rc quietly gen double _n_`v' = .
+}
+forvalues i = 1/`nval' {
+    local v   = strtrim(_frval(vval, std_name, `i'))
+    local raw = strtrim(_frval(vval, raw_value, `i'))
+    local cd  = strtrim(_frval(vval, code, `i'))
+    local lb  = strtrim(_frval(vval, label, `i'))
+    capture confirm variable _n_`v'
+    if _rc continue
+    quietly replace _n_`v' = `cd' if `v' == "`raw'"
+    label define `v'_lb `cd' `"`lb'"', modify
+}
+frame drop vval
+foreach v of local valvars {
+    capture confirm variable _n_`v'
+    if _rc continue
+    quietly count if `v' != "" & missing(_n_`v')
+    if r(N) > 0 {
+        di as error "value_map: `v' có giá trị chưa được ánh xạ (thêm vào config/value_map.csv):"
+        tab `v' if `v' != "" & missing(_n_`v')
+        exit 459
+    }
+    drop `v'
+    rename _n_`v' `v'
+    label values `v' `v'_lb
 }
 
-* ---- Recode theo bảng hỏi ----------------------------------------------------
-* Nếu mã trong tệp Kobo khác codebook (docs/codebook.md), chuyển mã ở đây.
-* Ví dụ: recode phqi1-phqi4 (1=0) (2=1) (3=2) (4=3)
+* ---- Các thang đo đã là số trong tệp Kobo: chuyển kiểu --------------------------
+local numvars $PHQI $STIG8 $CONC $DEI
+foreach v of local numvars {
+    capture confirm numeric variable `v'
+    if _rc destring `v', replace
+}
 
 * ---- Kiểm tra miền giá trị -----------------------------------------------------
 foreach v of varlist $PHQI {
@@ -87,12 +134,7 @@ foreach v of global XD {
     replace `v'_alt = . if `v' == $CODE_PNTA
 }
 
-label define sex_lb 1 "Nam" 2 "Nữ" 9 "Không muốn trả lời"
-label values sex_birth sex_lb
-label define age_lb 1 "18-24" 2 "25-34" 3 "35-44" 4 "45+" 9 "Không muốn trả lời"
-label values agegrp age_lb
-label define region_lb 1 "Hà Nội" 2 "TP.HCM" 3 "Đà Nẵng" 4 "Nơi khác" 9 "Không muốn trả lời"
-label values region region_lb
+* Nhãn giá trị lấy từ cột label của config/value_map.csv.
 
 compress
 save "$DERIVED/clean.dta", replace

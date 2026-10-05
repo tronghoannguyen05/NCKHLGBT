@@ -1,41 +1,41 @@
 std_name,raw_name,description
-resp_id,,Mã phiếu do Kobo sinh (_id hoặc _uuid)
-submit_time,,Thời điểm nộp phiếu (_submission_time)
-age18,,Sàng lọc: từ 18 tuổi trở lên (1/0)
-has_job,,Sàng lọc: có công việc chính tạo thu nhập (1/0)
-lgbt_self,,Câu tự nhận diện LGBT (1/0/8/9)
-orient,,Xu hướng tính dục
-gender_id,,Bản dạng giới
-sex_birth,,Giới tính khi sinh
-agegrp,,Nhóm tuổi
-educ,,Học vấn
-relstat,,Tình trạng quan hệ
-region,,Địa bàn làm việc
-exper,,Kinh nghiệm
-industry,,Ngành
-position,,Vị trí
-emptype,,Quan hệ việc làm
-orgtype,,Loại hình nơi làm việc
-orgsize,,Quy mô nơi làm việc
-socins,,Bảo hiểm xã hội
-hours,,Số giờ làm việc
-phqi1,,PHQ-4 câu 1 (lo âu)
-phqi2,,PHQ-4 câu 2 (lo âu)
-phqi3,,PHQ-4 câu 3 (trầm cảm)
-phqi4,,PHQ-4 câu 4 (trầm cảm)
-stig1,,Kỳ thị: nói đùa/bình luận xúc phạm
-stig2,,Kỳ thị: câu hỏi riêng tư không mong muốn
-stig3,,Kỳ thị: bị tiết lộ/đe dọa tiết lộ
-stig4,,Kỳ thị: bị loại khỏi đào tạo/phát triển
-stig5,,Kỳ thị: đánh giá/lương/thăng tiến không công bằng
-stig6,,Kỳ thị: phân công bất lợi
-stig7,,Kỳ thị: áp lực khuôn mẫu giới
-stig8,,Kỳ thị: tên gọi/đại từ/trang phục/nhà vệ sinh
-conc1,,Che giấu danh tính 1
-conc2,,Che giấu danh tính 2
-conc3,,Che giấu danh tính 3
-conc4,,Che giấu danh tính 4 (mệt mỏi do kiểm soát thông tin)
-dei1,,DEI: an toàn khi phản ánh
-dei2,,DEI: quản lý tôn trọng
-dei3,,DEI: hành vi xúc phạm bị xử lý
-dei4,,DEI: được dùng tên gọi/đại từ/trang phục phù hợp
+resp_id,_id,Mã phiếu do Kobo sinh (không phải định danh cá nhân)
+submit_time,_submission_time,Thời điểm nộp phiếu
+age18,s1_age18,Câu S1: từ 18 tuổi trở lên
+has_job,s2_has_job,Câu S2: có công việc chính tạo thu nhập
+lgbt_self,c17_lgbt_self_id,Câu 17: tự nhận LGBT
+orient,c16_sexual_orientation,Câu 16: xu hướng tính dục
+gender_id,c15_gender_identity,Câu 15: bản dạng giới
+sex_birth,c14_sex_assigned,Câu 14: giới tính khi sinh
+agegrp,c1_age_group,Câu 1: nhóm tuổi
+educ,c2_education,Câu 2: học vấn
+relstat,c11_relationship,Câu 11: tình trạng quan hệ
+region,c10_province,Câu 10: địa bàn làm việc
+exper,c3_experience,Câu 3: kinh nghiệm
+industry,c4_industry,Câu 4: ngành
+position,c5_position,Câu 5: vị trí
+emptype,c6_employment,Câu 6: quan hệ việc làm
+orgtype,c8_employer_type,Câu 8: loại hình nơi làm việc
+orgsize,c9_employer_size,Câu 9: quy mô nơi làm việc
+socins,c7_social_insurance,Câu 7: bảo hiểm xã hội bắt buộc
+hours,c13_hours,Câu 13: số giờ làm việc mỗi tuần
+phqi1,c21_1,Câu 21.1: lo lắng/bồn chồn/căng thẳng (GAD-2)
+phqi2,c21_2,Câu 21.2: không thể ngừng lo lắng (GAD-2)
+phqi3,c21_4,Câu 21.4: ít hứng thú (PHQ-2). Bảng hỏi đặt câu này ở vị trí 4
+phqi4,c21_3,Câu 21.3: buồn bã/chán nản/tuyệt vọng (PHQ-2). Bảng hỏi đặt câu này ở vị trí 3
+stig1,c19_1,Câu 19.1: nói đùa/bình luận xúc phạm
+stig2,c19_2,Câu 19.2: câu hỏi riêng tư không mong muốn
+stig3,c19_3,Câu 19.3: bị tiết lộ/đe dọa tiết lộ
+stig4,c19_4,Câu 19.4: bị loại khỏi đào tạo/phát triển
+stig5,c19_5,Câu 19.5: đánh giá/lương/thăng tiến không công bằng
+stig6,c19_6,Câu 19.6: phân công bất lợi
+stig7,c19_7,Câu 19.7: áp lực khuôn mẫu giới
+stig8,c19_8,Câu 19.8: tên gọi/đại từ/trang phục/nhà vệ sinh
+conc1,c22_1,Câu 22.1: cố gắng che giấu
+conc2,c22_2,Câu 22.2: tránh nói về đời sống cá nhân
+conc3,c22_3,Câu 22.3: lo đồng nghiệp biết
+conc4,c22_4,Câu 22.4: mệt mỏi do kiểm soát thông tin
+dei1,c24_1,Câu 24.1: an toàn khi phản ánh
+dei2,c24_2,Câu 24.2: quản lý tôn trọng người LGBT
+dei3,c24_3,Câu 24.3: hành vi xúc phạm bị nhắc nhở/xử lý
+dei4,c24_4,Câu 24.4: được dùng tên gọi/đại từ/trang phục phù hợp

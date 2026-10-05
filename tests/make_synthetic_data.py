@@ -1,12 +1,15 @@
 #!/usr/bin/env python3
-"""Sinh dữ liệu GIẢ LẬP có cùng cấu trúc với tệp Kobo (tên biến chuẩn trong
-docs/codebook.md) để chạy thử pipeline Stata mà không cần dữ liệu thật.
+"""Sinh dữ liệu GIẢ LẬP có cùng cấu trúc với tệp xuất từ Kobo (tên cột gốc trong
+config/variable_map.csv, mã chữ của phương án trong config/value_map.csv) để chạy
+thử pipeline Stata mà không cần dữ liệu thật. Dữ liệu được dựng bằng mã số chuẩn
+(docs/codebook.md) rồi đổi ngược sang định dạng Kobo khi ghi tệp, nên lần chạy thử
+đi qua đúng bước nhập của dữ liệu thật.
 
 Số đếm của luồng mẫu được dựng khớp đề cương (Bảng 2): 850 -> 727 -> 640
 (340/300) -> 601 (323/278) -> 278 -> 256 / 247 -> 243. Quan hệ giữa các biến
 là bịa, KHÔNG mang ý nghĩa thực nghiệm nào.
 
-Chạy:  python3 tests/make_synthetic_data.py [--out data/raw/synthetic.csv]
+Chạy:  python3 tests/make_synthetic_data.py [--out tests/synthetic_kobo.csv]
 Chỉ dùng thư viện chuẩn.
 """
 import argparse
@@ -45,12 +48,12 @@ def person(kind):
     r["relstat"] = rng.choices([1, 2, 3], [0.55, 0.3, 0.15])[0]
     r["region"] = rng.choices([1, 2, 3, 4], [0.3, 0.5, 0.08, 0.12] if is_lgbt else [0.25, 0.42, 0.05, 0.28])[0]
     r["exper"] = rng.randint(1, 5)
-    r["industry"] = rng.randint(1, 10)
-    r["position"] = rng.choices([1, 2, 3, 4, 5], [0.45, 0.25, 0.18, 0.1, 0.02])[0]
+    r["industry"] = rng.choice([1, 2, 3, 4, 5, 6, 7, 10, 11])
+    r["position"] = rng.choices([1, 2, 3, 4, 6], [0.45, 0.25, 0.18, 0.1, 0.02])[0]
     r["emptype"] = rng.randint(1, 4)
     r["orgtype"] = rng.randint(1, 5)
     r["orgsize"] = rng.randint(1, 4)
-    r["socins"] = rng.choice([0, 1])
+    r["socins"] = rng.choice([1, 2])
     r["hours"] = rng.randint(1, 4)
 
     # Kỳ thị (chỉ người LGBT)
@@ -85,9 +88,33 @@ FIELDS = (["resp_id", "submit_time", "age18", "has_job", "lgbt_self", "orient", 
           + [f"dei{j}" for j in range(1, 5)])
 
 
+def _read_csv(path):
+    with open(path, encoding="utf-8") as f:
+        return list(csv.DictReader(f))
+
+
+VARMAP = {r["std_name"]: (r["raw_name"] or r["std_name"]) for r in _read_csv("config/variable_map.csv")}
+INVVAL = {}
+for r in _read_csv("config/value_map.csv"):
+    INVVAL.setdefault(r["std_name"], {}).setdefault(int(r["code"]), r["raw_value"])
+
+
+def to_kobo(r):
+    """Đổi một dòng mã số chuẩn sang tên cột và mã chữ của Kobo."""
+    out = {}
+    for std, val in r.items():
+        if std in INVVAL and val != "":
+            code = int(val)
+            if code not in INVVAL[std]:
+                raise ValueError(f"{std}: mã {code} không có trong config/value_map.csv")
+            val = INVVAL[std][code]
+        out[VARMAP[std]] = val
+    return out
+
+
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--out", default="data/raw/synthetic.csv")
+    ap.add_argument("--out", default="tests/synthetic_kobo.csv")
     a = ap.parse_args()
 
     plan = (["under18"] * 37 + ["nojob"] * 86 + ["undet9"] * 32 + ["undet8"] * 29
@@ -131,9 +158,10 @@ def main():
     for i, r in enumerate(rows, 1):
         r["resp_id"] = f"SYN{i:04d}"
         r["submit_time"] = f"2026-08-{1 + i % 28:02d}T10:00:00"
+    rows = [to_kobo(r) for r in rows]
     os.makedirs(os.path.dirname(a.out), exist_ok=True)
     with open(a.out, "w", newline="", encoding="utf-8") as f:
-        w = csv.DictWriter(f, fieldnames=FIELDS)
+        w = csv.DictWriter(f, fieldnames=list(rows[0].keys()))
         w.writeheader()
         w.writerows(rows)
     print(f"Đã ghi {len(rows)} dòng giả lập vào {a.out}")

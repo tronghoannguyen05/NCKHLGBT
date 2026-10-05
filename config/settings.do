@@ -4,11 +4,30 @@
 * =============================================================================
 
 * ---- Dữ liệu vào ------------------------------------------------------------
-* Tệp xuất từ KoboToolbox (CSV, UTF-8). Đặt trong data/raw/ — KHÔNG commit.
-global RAW_FILE        "data/raw/kobo_export.csv"
+* Tệp xuất từ KoboToolbox (.xlsx, hoặc .csv UTF-8), mã chữ của phương án.
+* Chép tệp vào data/raw/ và đặt đúng tên dưới đây. KHÔNG commit.
+global RAW_FILE        "data/raw/kobo_export.xlsx"
 * 1 = chạy trên dữ liệu giả lập (tests/make_synthetic_data.py)
 global USE_SYNTHETIC   0
-global SYNTH_FILE      "data/raw/synthetic.csv"
+* 1 = dừng sau 04b (nhập, dựng chỉ số, luồng mẫu, mô tả, gộp mức), chưa ước lượng
+* mô hình. Giữ 1 cho đến khi đã đăng ký OSF (docs/analysis_plan.md). Dữ liệu giả
+* lập không bị chặn bởi cờ này.
+global STOP_BEFORE_MODELS 1
+
+* Chế độ do CHAY_PHAN_TICH.do truyền vào (thu / kiemtra / chinhthuc) ghi đè hai
+* cờ trên. Chạy 00_master.do trực tiếp (không có chế độ) thì giữ nguyên hai cờ.
+if "$RUN_MODE" == "thu" {
+    global USE_SYNTHETIC 1
+}
+else if "$RUN_MODE" == "kiemtra" {
+    global USE_SYNTHETIC 0
+    global STOP_BEFORE_MODELS 1
+}
+else if "$RUN_MODE" == "chinhthuc" {
+    global USE_SYNTHETIC 0
+    global STOP_BEFORE_MODELS 0
+}
+global SYNTH_FILE      "tests/synthetic_kobo.csv"   // dữ liệu giả lập định dạng Kobo, có sẵn trong repo
 
 * ---- Thư mục ----------------------------------------------------------------
 global DERIVED "data/derived"
@@ -55,9 +74,12 @@ global CONC_FATIGUE_ITEM "conc4"   // câu "mệt mỏi do phải kiểm soát t
 
 * Mã "không muốn trả lời" trong các biến nhân khẩu học và mã "không áp dụng"
 global CODE_PNTA 9
+* Mã của phương án không có thứ bậc trong biến thứ bậc ("không áp dụng/không rõ"
+* ở quy mô nơi làm việc). Khi gộp mức thưa, mã này được xử lý như mã 9.
+global CODE_NONSUBST 97
 
 * Mã position của quản lý cấp cao (dùng cho cờ thông tin mâu thuẫn)
-global SENIOR_POSITION_CODES "5"
+global SENIOR_POSITION_CODES "4"   // qlcc: quản lý cấp cao/ban điều hành (config/value_map.csv)
 
 * Mẫu dùng để lấy trung vị S trong số người đã gặp kỳ thị (E1). Chốt 5/10/2026: mẫu chính 278.
 global E1_MEDIAN_SAMPLE "in_main"

@@ -1,6 +1,13 @@
 # Codebook — tên biến chuẩn
 
-Dữ liệu xuất từ KoboToolbox có tên biến riêng. `config/variable_map.csv` ánh xạ `raw_name` sang `std_name` dưới đây. Mã trong `code/` chỉ dùng tên chuẩn. Các mã số giá trị trong bảng là **mặc định** của bộ dữ liệu giả lập. Nếu tệp Kobo dùng mã khác, khai báo bảng chuyển mã trong `01_import_clean.do`, mục “recode theo bảng hỏi”.
+Tệp xuất từ Kobo dùng tên cột riêng và **mã chữ** cho phương án (ví dụ `co`, `1824`, `kmtl`). `config/variable_map.csv` ánh xạ tên cột sang tên chuẩn dưới đây. `config/value_map.csv` ánh xạ mã chữ sang mã số, kèm nhãn. `01_import_clean.do` dừng nếu gặp mã chữ chưa có trong bảng. Hai bảng đã được đối chiếu với tệp thật ngày 5/10/2026: không có giá trị chưa ánh xạ, và luồng mẫu khớp đề cương (850 → 727 → 640 (340/300) → 601 (323/278) → 278 → 256/247 → 243).
+
+Ghi chú về mã:
+- `agegrp` 4 = 45+: gộp hai phương án 45–54 và từ 55 của bảng hỏi, như codebook và đề cương.
+- `orient` 7 = đang tự xác định/chưa chắc chắn (bảng hỏi có, codebook cũ chưa có). Mã 7 không được tính là xu hướng không dị tính trong `lgbt_consistent`.
+- `orgsize` 97 = không áp dụng/không rõ; khi gộp mức thưa, mã này được xử lý như mã 9.
+- `position` 4 = quản lý cấp cao (dùng cho `flag_contra`); 6 = không áp dụng/khác.
+- PHQ-4: bảng hỏi đặt câu "buồn bã, chán nản" ở vị trí 3 và "ít hứng thú" ở vị trí 4. `phqi3` và `phqi4` được ánh xạ theo nội dung câu, nên tổng PHQ-2 không đổi.
 
 ## Sàng lọc và nhận diện
 

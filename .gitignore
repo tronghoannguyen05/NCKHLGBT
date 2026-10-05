@@ -12,6 +12,8 @@ data/**
 *.csv
 !config/*.csv
 !output/tables/*.csv
+# Dữ liệu GIẢ LẬP (mã phiếu SYN...), được kiểm tra bởi tests/check_no_data.sh
+!tests/synthetic_kobo.csv
 
 # --- Kết quả sinh tự động ---
 output/logs/**

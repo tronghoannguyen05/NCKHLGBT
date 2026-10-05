@@ -1,9 +1,12 @@
 * =============================================================================
 * 00_master.do — chạy toàn bộ pipeline
-* Cách dùng: trong Stata 17, cd tới thư mục gốc của repo, rồi: do code/00_master.do
+* Cách dùng: mở CHAY_PHAN_TICH.do ở thư mục gốc và bấm Do (khuyến nghị).
+* Hoặc: cd tới thư mục gốc của repo, rồi: do code/00_master.do [thu|kiemtra|chinhthuc]
 * =============================================================================
+args run_mode
 version 17
 clear all
+global RUN_MODE "`run_mode'"
 set more off
 set varabbrev off
 
@@ -36,6 +39,14 @@ do "code/02_build_indices.do"
 do "code/03_sample_flow.do"
 do "code/04_descriptives.do"
 do "code/04b_collapse_levels.do"
+
+if $STOP_BEFORE_MODELS == 1 & $USE_SYNTHETIC == 0 {
+    di as result "Đã dừng sau 04b vì STOP_BEFORE_MODELS = 1 (config/settings.do)."
+    di as result "Kiểm tra luồng mẫu ở $TAB, đăng ký OSF, rồi đặt STOP_BEFORE_MODELS = 0 và chạy lại."
+    log close master
+    exit
+}
+
 do "code/05_main_models.do"
 do "code/06_path_H3.do"
 do "code/07_exploratory.do"

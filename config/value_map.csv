@@ -1,0 +1,100 @@
+std_name,raw_value,code,label
+age18,co,1,Có
+age18,khong,0,Không
+has_job,co,1,Có
+has_job,khong,0,Không
+lgbt_self,co,1,LGBT
+lgbt_self,khong,0,Không phải LGBT
+lgbt_self,khong_chac,8,Không chắc/đang tự xác định
+lgbt_self,kmtl,9,Không muốn trả lời
+orient,di_tinh,1,Dị tính
+orient,gay,2,Đồng tính nam
+orient,lesbian,3,Đồng tính nữ
+orient,bisexual,4,Song tính
+orient,pansexual,5,Toàn tính
+orient,khac,6,Khác
+orient,dang_tu_xd,7,Đang tự xác định
+orient,kmtl,9,Không muốn trả lời
+gender_id,nam,1,Nam
+gender_id,nu,2,Nữ
+gender_id,nam_ctg,3,Nam chuyển giới
+gender_id,nu_ctg,4,Nữ chuyển giới
+gender_id,phi_nhi_nguyen,5,Phi nhị nguyên
+gender_id,khac,6,Khác
+gender_id,kmtl,9,Không muốn trả lời
+sex_birth,nam,1,Nam
+sex_birth,nu,2,Nữ
+sex_birth,kmtl,9,Không muốn trả lời
+agegrp,1824,1,18-24
+agegrp,2534,2,25-34
+agegrp,3544,3,35-44
+agegrp,4554,4,45+
+agegrp,tu55,4,45+
+agegrp,kmtl,9,Không muốn trả lời
+educ,thpt,1,THPT trở xuống
+educ,cd,2,Cao đẳng
+educ,dh,3,Đại học
+educ,sdh,4,Sau đại học
+educ,kmtl,9,Không muốn trả lời
+relstat,doc_than,1,Không có bạn đời
+relstat,co_bandoi,2,Có bạn đời/kết hôn/sống chung
+relstat,ly_than,3,Ly thân/ly hôn/góa
+relstat,kmtl,9,Không muốn trả lời
+region,hn,1,Hà Nội
+region,hcm,2,TP.HCM
+region,dn,3,Đà Nẵng
+region,khac,4,Nơi khác
+region,kmtl,9,Không muốn trả lời
+exper,duoi1,1,Dưới 1 năm
+exper,13,2,1 đến dưới 3 năm
+exper,35,3,3 đến dưới 5 năm
+exper,510,4,5 đến dưới 10 năm
+exper,tu10,5,Từ 10 năm
+exper,kmtl,9,Không muốn trả lời
+industry,tcnh,1,Tài chính - ngân hàng - bảo hiểm
+industry,cntt,2,Công nghệ thông tin
+industry,gd,3,Giáo dục - đào tạo
+industry,yt,4,Y tế
+industry,tmdv,5,Thương mại - dịch vụ
+industry,sxcn,6,Sản xuất - công nghiệp
+industry,ttmkt,7,Truyền thông - marketing - sáng tạo
+industry,dlnhks,10,Du lịch - nhà hàng - khách sạn
+industry,khac,11,Khác
+industry,kmtl,9,Không muốn trả lời
+position,nv,1,Nhân viên/chuyên viên
+position,tn_gs,2,Trưởng nhóm/giám sát
+position,qlct,3,Quản lý cấp trung
+position,qlcc,4,Quản lý cấp cao/ban điều hành
+position,kad_khac,6,Không áp dụng/khác
+position,kmtl,9,Không muốn trả lời
+emptype,tt_luong,1,Toàn thời gian hưởng lương
+emptype,bt_luong,2,Bán thời gian hưởng lương
+emptype,thoivu,3,Thời vụ/ngắn hạn
+emptype,ctv,4,Cộng tác viên/hợp đồng dịch vụ
+emptype,freelancer,5,Freelancer
+emptype,khac,7,Khác
+emptype,kmtl,9,Không muốn trả lời
+orgtype,nn,1,Nhà nước
+orgtype,tn_trongnuoc,2,Tư nhân trong nước
+orgtype,fdi,3,FDI/vốn nước ngoài
+orgtype,ngo,4,NGO/phi lợi nhuận
+orgtype,tudoanh,5,Tự doanh/hộ kinh doanh
+orgtype,khac,6,Khác
+orgtype,kmtl,9,Không muốn trả lời
+orgsize,duoi50,1,Dưới 50 người
+orgsize,50199,2,50-199 người
+orgsize,200499,3,200-499 người
+orgsize,tu500,4,Từ 500 người
+orgsize,kad_kr,97,Không áp dụng/không rõ
+orgsize,kmtl,9,Không muốn trả lời
+socins,co,1,Có
+socins,khong,2,Không
+socins,kad,3,Không áp dụng
+socins,kr,4,Không rõ
+socins,kmtl,9,Không muốn trả lời
+hours,duoi20,1,Dưới 20 giờ
+hours,2035,2,20 đến dưới 35 giờ
+hours,3545,3,35 đến dưới 45 giờ
+hours,4555,4,45 đến dưới 55 giờ
+hours,tu55,5,Từ 55 giờ
+hours,kxd_kmtl,9,Không xác định/không muốn trả lời
