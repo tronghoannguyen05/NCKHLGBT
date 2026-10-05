@@ -49,6 +49,21 @@ lincom S_attr - S_event
 post_value, handle(res_expl) analysis("E2_contrast") depvar("phq4") spec("attribution_minus_event") ///
     coef("diff") b(`r(estimate)') se(`r(se)') lb(`r(lb)') ub(`r(ub)') p(`r(p)') nobs(`e(N)')
 
+* ---- Lo âu so với trầm cảm: kiểm định trực tiếp hiệu hai hệ số -----------------
+* Bổ sung chốt 5/10/2026 (D10). THĂM DÒ. Không có giả thuyết về chiều của hiệu;
+* mọi so sánh H2a với H2b trong bài chỉ dựa vào kiểm định này (Gelman & Stern, 2006).
+* suest cần mô hình ước lượng không có vce(); suest tự tính sai số chuẩn vững.
+quietly regress gad2 S i.(${XD}) if in_xd_main
+estimates store m_gad
+quietly regress phq2 S i.(${XD}) if in_xd_main
+estimates store m_phq
+suest m_gad m_phq, vce(robust)
+lincom [m_gad_mean]S - [m_phq_mean]S
+post_value, handle(res_expl) analysis("E_anx_vs_dep") depvar("gad2-phq2") spec("suest_diff") ///
+    coef("S") b(`r(estimate)') se(`r(se)') lb(`r(lb)') ub(`r(ub)') p(`r(p)') ///
+    note("Hiệu hệ số S: GAD-2 trừ PHQ-2; suest, vce(robust)")
+estimates drop m_gad m_phq
+
 * ---- E4: khác biệt theo giới tính khi sinh và xu hướng tính dục ---------------
 local _xd $XD
 local _sx sex_birth

@@ -111,7 +111,9 @@ if !_rc {
         if "`v'" == "educ" local educ_dum `these'
     }
     unab sexd : _x_sex_birth_*
-    sensemakr phq4 S `xd_dum', treat(S) benchmark(`sexd') kd(1 2 3)
+    * Mốc so sánh theo nhóm: mọi biến giả của một biến được đưa vào cùng lúc (chốt 5/10/2026, D11).
+    * Lưu ý: RV với alpha dùng sai số chuẩn cổ điển của OLS, không phải HC3.
+    sensemakr phq4 S `xd_dum', treat(S) gbenchmark(`sexd') gname(sex_birth) kd(1 2 3)
     sensemakr phq4 S `xd_dum', treat(S) gbenchmark(`educ_dum') gname(educ) kd(1 2 3)
     restore
     di as text "Ghi giá trị độ bền RV_q và RV_qa từ bảng sensemakr ở trên vào báo cáo."

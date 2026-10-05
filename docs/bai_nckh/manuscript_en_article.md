@@ -192,6 +192,7 @@ Both equations are estimated on the same respondents. The data are considered co
 - *E2, attribution contrast.* A single model enters two sub-indices together: the mean of the event-based situations and the mean of the attribution-dependent situations (situation 4 is included only if at least 10 respondents experienced it). It tests the difference between their coefficients directly. An association confined to attribution-dependent situations would suggest attribution or recall bias. Testing the difference avoids reading a significant coefficient beside a non-significant one as evidence that the two differ (Gelman & Stern, 2006).
 - *E3* describes the distribution of PHQ-4 scores among non-LGBT workers, LGBT workers without reported stigma, and LGBT workers with reported stigma, without hypothesis tests. The comparison is not balanced: non-LGBT workers were not asked about negative experiences at work, minority stress outside work was not measured, and LGBT workers without reported stigma may be concealing their identity.
 - *E4* adds the interaction of *S* with sex assigned at birth (159 respondents assigned female and 97 assigned male at birth), and separately with sexual orientation group (103 bisexual or pansexual, 64 lesbian, and 64 gay respondents). Respondents outside these three orientation groups are excluded from the orientation model only.
+- *Anxiety versus depressive symptoms.* The hypotheses do not predict that stigma is more strongly associated with one dimension than the other. Any comparison of H2a with H2b is therefore exploratory and rests on a direct test of the difference between the two coefficients, estimated jointly by seemingly unrelated estimation with robust standard errors, not on their separate significance (Gelman & Stern, 2006).
 - *E5* estimates PHQᵢ = α + η·Sᵢ + δ·Qᵢ + κ·(Sᵢ × Qᵢ) + γ′Xᵢᴰ + εᵢ, where a negative κ is consistent with a weaker association where enforcement is perceived to be stronger. Because tests of interaction in observational data have low power (McClelland & Judd, 1993), E5 is descriptive of conditional associations, not a test of moderation.
 
 **Inference and decision rules.** All coefficients are reported with 95% confidence intervals. Results with *p* values above .05 are not described as approaching significance.
@@ -223,12 +224,14 @@ Selection could bias η in either direction:
 - participation may depend jointly on experiences of stigma and on psychological distress (Hernán et al., 2004);
 - the eligibility criterion of current employment excludes workers who left their jobs because of stigma and distress.
 
+Two further limitations concern inference and measurement. Snowball recruitment may produce correlated errors among respondents from the same network or workplace. No network or workplace identifier was recorded, so standard errors cannot be clustered and may be understated. The anxiety and depression subscales have only two items each, so they are measured with more error than the PHQ-4, and H2a and H2b have less power than H1.
+
 We quantify sensitivity to unmeasured confounding with the omitted-variable bias framework of Cinelli and Hazlett (2020). We report:
 - the partial *R*² of *S* with the PHQ-4;
 - the robustness value at which an omitted confounder would reduce η to zero;
 - the robustness value at which it would make the 95% interval include zero.
 
-These values are compared with the explanatory power of sex assigned at birth and, as a group of dummy variables, education, at one, two, and three times their strength.
+These values are compared with the explanatory power of sex assigned at birth and of education, each entered as a group of dummy variables, at one, two, and three times their strength.
 
 We did not use four other approaches:
 - *instrumental variables*, because no available variable plausibly affects stigma without affecting symptoms directly;

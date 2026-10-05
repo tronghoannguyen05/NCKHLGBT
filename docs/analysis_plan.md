@@ -112,8 +112,11 @@ Các quyết định này được đưa ra khi chưa chạy mô hình chính, H
 | D7 | **Bỏ kiểm định White** | Chỉ có giá trị mô tả, nhiều bậc tự do, không ảnh hưởng đến lựa chọn HC3 |
 | D8 | **BH:** E2 và E4 là hai họ riêng. **E4:** 25 người không thuộc 3 nhóm xu hướng tính dục không vào mô hình `orient3`. **Đường cong đặc tả:** các mức ở mục 6 | Chốt các điểm đề cương chưa nêu |
 | D9 | **Gán giá trị đa lần** giữ đúng như đề cương: 300 người LGBT của mẫu phân tích; gán PHQ-4, S, C, Q và Xᴰ bị khuyết thật; 20 bộ | Không đổi so với đề cương |
+| D10 | **Lo âu so với trầm cảm (thăm dò):** kiểm định trực tiếp hiệu η_GAD-2 − η_PHQ-2 bằng `suest` (sai số chuẩn vững), ngoài các họ hiệu chỉnh | Giả thuyết không dự báo chiều của hiệu. Hai thang có cùng phạm vi 0–6. Không được kết luận "mạnh hơn" chỉ vì một hệ số có ý nghĩa, hệ số kia không |
+| D11 | **sensemakr:** cả giới tính khi sinh và học vấn dùng mốc so sánh theo nhóm (mọi biến giả của biến đó cùng lúc), k = 1, 2, 3. Báo cáo R² riêng phần của S với PHQ-4, RV_q=1 và RV_q=1,α=0,05 | Biến có nhiều mức phải được so sánh như một khối. RV với α dùng sai số chuẩn cổ điển, nên được diễn giải như một chỉ báo, không phải kiểm định HC3 |
 
 **Hạn chế phải nêu trong bài, không có phân tích tương ứng:**
 - Phần kỳ thị (Câu 19–20) nằm ngay trước PHQ-4 (Câu 21). Việc vừa nhớ lại các sự kiện kỳ thị có thể làm tăng điểm triệu chứng tự đánh giá (Schwarz, 1999). Lập luận "phân tách về thủ tục" ở đề cương mục 3.6.3 vì vậy chỉ đúng một phần.
 - Sai lệch do chọn mẫu: việc tham gia có thể phụ thuộc cả trải nghiệm kỳ thị lẫn tình trạng tâm lý (Hernán và cộng sự, 2004). Tiêu chí "có việc làm" loại những người đã nghỉ việc vì kỳ thị và triệu chứng.
-- Mẫu quả cầu tuyết làm các quan sát có thể không độc lập. Không có biến cụm để điều chỉnh sai số chuẩn.
+- Mẫu quả cầu tuyết làm các quan sát có thể không độc lập. Không có biến cụm (mạng lưới, nơi làm việc) để điều chỉnh sai số chuẩn, nên sai số chuẩn có thể bị đánh giá thấp.
+- GAD-2 và PHQ-2 mỗi thang chỉ có hai câu, nên sai số đo lớn hơn PHQ-4 và độ mạnh của H2a, H2b thấp hơn H1.
