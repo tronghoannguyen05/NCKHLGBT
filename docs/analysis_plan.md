@@ -2,7 +2,7 @@
 
 Tệp này chép lại đặc tả của đề cương lần 2 (mục 2–3) dưới dạng mã có thể đối chiếu. Thứ tự ưu tiên khi có mâu thuẫn: **bản đăng ký OSF > tệp này > đề cương**. Chỗ đề cương chưa đủ chi tiết được đánh dấu `TODO(OSF)` và có giá trị mặc định trong `config/settings.do`. Khi xác nhận được với OSF thì sửa mặc định và xóa dấu.
 
-- Bản đăng ký OSF: **chưa đăng ký** (tác giả xác nhận ngày 5/10/2026). Đăng ký tệp này, gồm mục 8, **trước khi chạy `05_main_models.do`**, rồi dán đường dẫn và ngày đăng ký vào đây.
+- Bản đăng ký OSF: **chưa đăng ký**. Theo quyết định của tác giả ngày 5/10/2026, mô hình được chạy trước và kế hoạch sẽ được đăng ký sau (`docs/deviations.md`, dòng 1). Khi đăng ký, nộp đúng bản chốt ngày 5/10/2026 của tệp này, ghi rõ ngày nộp sau ước lượng, rồi dán đường dẫn và ngày đăng ký vào đây.
 - Bản chốt ngày 5/10/2026: mọi chỗ trước đây đánh dấu `TODO(OSF)` đã được quyết định. Các quyết định và bổ sung nằm ở mục 8. Vì chưa đăng ký, chúng là một phần của kế hoạch, không phải lệch kế hoạch.
 - Những phân tích đã chạy trước khi đăng ký (bằng Python/statsmodels, HC1, cả Xᴰ và Xᴶ) được liệt kê ở đề cương mục 3.11. Không chạy lại chúng như thể là kết quả mới.
 
@@ -99,7 +99,7 @@ Không đặt ngưỡng “bao nhiêu đặc tả cùng dấu thì vững”. B�
 
 ## 8. Quyết định chốt ngày 5/10/2026 (trước khi ước lượng mô hình chính)
 
-Các quyết định này được đưa ra khi chưa chạy mô hình chính, H2a, H2b, E2, E4, E5 và các kiểm tra độ bền (đề cương mục 3.11). Chúng phải có trong bản đăng ký OSF.
+Các quyết định này được đưa ra khi chưa chạy mô hình chính, H2a, H2b, E2, E4, E5 và các kiểm tra độ bền (đề cương mục 3.11). Chúng phải có trong bản đăng ký OSF. Các mô hình được ước lượng lần đầu ngày 5/10/2026, sau khi chốt.
 
 | Mã | Quyết định | Lý do |
 |---|---|---|

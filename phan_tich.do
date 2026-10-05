@@ -16,9 +16,8 @@ set linesize 120
 global DATA "D:/NCKH chủ đề LGBT/Kỳ_thị_tại_nơi_làm_việc_và_bất_lợi_thu_nhập_-_Khảo_sát_người_lao_động_tại_Việt_Nam_n850.xlsx"
 global OUT  "D:/NCKH chủ đề LGBT/ket_qua"
 
-* 0: dữ liệu, luồng mẫu, thống kê mô tả. 1: chạy thêm toàn bộ mô hình.
-* Chỉ đặt 1 sau khi đã đăng ký kế hoạch phân tích trên OSF.
-global RUN_MODELS 0
+* 1: chạy toàn bộ. 0: chỉ dữ liệu, luồng mẫu và thống kê mô tả.
+global RUN_MODELS 1
 
 global SEED      20260928
 global MIN_CELL  10
@@ -170,16 +169,19 @@ program define tabsafe
         gen byte suppressed = (n > 0 & n < $MIN_CELL)
         bysort _group: egen n_supp = total(suppressed)
         gen double _key = cond(suppressed | n == 0, ., n)
-        bysort _group (_key): replace suppressed = 1 if n_supp == 1 & _n == 1 & !missing(_key)
+        gen byte secondary = 0
+        bysort _group (_key): replace secondary = 1 if n_supp == 1 & _n == 1 & !missing(_key)
         gen str12 n_show = string(n)
         replace n_show = "<$MIN_CELL" if suppressed
-        gen str8 pct_show = cond(suppressed, "", string(pct, "%5.1f"))
+        replace n_show = "ẩn" if secondary
+        gen str8 pct_show = cond(suppressed | secondary, "", string(pct, "%5.1f"))
         gen str32 variable = "`varlist'"
         if "`vlab'" != "" {
             label values _level `vlab'
             decode _level, gen(level)
         }
         else gen str32 level = string(_level)
+        replace level = "Khuyết" if missing(_level)
         if "`blab'" != "" {
             label values _group `blab'
             decode _group, gen(group)
@@ -192,6 +194,17 @@ program define tabsafe
         save "`saving'", replace
     }
     restore
+end
+
+* Cronbach's alpha trên các quan sát đủ câu, kèm số quan sát
+capture program drop rel_post
+program define rel_post
+    syntax varlist [if], NAME(string) SAMPLE(string)
+    marksample touse
+    quietly alpha `varlist' if `touse'
+    local a = r(alpha)
+    quietly count if `touse'
+    post rel ("`name'") ("`sample'") (`a') (.) (r(N))
 end
 
 * Gộp mức có dưới min người trong mẫu ước lượng (chỉ dựa trên số đếm)
@@ -548,26 +561,20 @@ collapse (mean) tb_phq4=phq4 tb_gad2=gad2 tb_phq2=phq2 (sd) sd_phq4=phq4 sd_gad2
 xl_out "TrieuChung"
 restore
 
-tempname R
-tempfile rel
-postfile `R' str32 thang_do str12 mau double(alpha r_2cau) long N using "`rel'", replace
-quietly alpha $PHQI if in_e3
-post `R' ("PHQ-4") ("E3") (r(alpha)) (.) (r(N))
+tempfile relfile
+postfile rel str40 thang_do str12 mau double(alpha r_2cau) long N using "`relfile'", replace
+rel_post $PHQI if in_e3, name("PHQ-4") sample("E3")
 quietly corr phqi1 phqi2 if in_e3
-post `R' ("GAD-2") ("E3") (.) (r(rho)) (r(N))
+post rel ("GAD-2") ("E3") (.) (r(rho)) (r(N))
 quietly corr phqi3 phqi4 if in_e3
-post `R' ("PHQ-2") ("E3") (.) (r(rho)) (r(N))
-quietly alpha $CONC if lgbt == 1 & in_analytic, casewise
-post `R' ("Che giấu (4 câu)") ("LGBT") (r(alpha)) (.) (r(N))
-quietly alpha $DEI if in_analytic, casewise
-post `R' ("DEI (4 câu)") ("Phân tích") (r(alpha)) (.) (r(N))
-quietly alpha $STIG7 if lgbt == 1 & in_analytic, casewise
-post `R' ("Kỳ thị 7 câu (tham khảo)") ("LGBT") (r(alpha)) (.) (r(N))
-quietly alpha $STIG8 if lgbt == 1 & in_analytic, casewise
-post `R' ("Kỳ thị 8 câu (tham khảo)") ("LGBT") (r(alpha)) (.) (r(N))
-postclose `R'
+post rel ("PHQ-2") ("E3") (.) (r(rho)) (r(N))
+rel_post $CONC if lgbt == 1 & in_analytic, name("Che giấu (4 câu)") sample("LGBT")
+rel_post $DEI if in_analytic, name("DEI (4 câu)") sample("Phân tích")
+rel_post $STIG7 if lgbt == 1 & in_analytic, name("Kỳ thị 7 câu (tham khảo)") sample("LGBT")
+rel_post $STIG8 if lgbt == 1 & in_analytic, name("Kỳ thị 8 câu (tham khảo)") sample("LGBT")
+postclose rel
 preserve
-use "`rel'", clear
+use "`relfile'", clear
 xl_out "DoTinCay"
 restore
 
@@ -589,24 +596,61 @@ use "`prev'", clear
 xl_out "TyLeKyThi"
 restore
 
-tempfile lvfile
-postfile lv str24 bien double(muc_cu muc_moi) str8 so_nguoi using "`lvfile'", replace
-
-* Bảng 6: PHQ-4 theo đặc điểm nhân khẩu học (mô tả, chưa có biến kỳ thị)
-tempfile resfile
-postfile res str20 part str16 outcome str40 spec str40 term double(b se lb ub p) long N str120 note ///
-    using "`resfile'", replace
-regress phq4 i.($XD) if in_xd_main, vce(hc3)
-matrix RT = r(table)
-local cn : colnames RT
-foreach c of local cn {
-    if "`c'" == "_cons" | strpos("`c'", "b.") continue
-    post_coef, part("Bang6") outcome("phq4") spec("XD") coef(`c') table(RT)
+* Các biến nghiên cứu trong mẫu chính đủ XD: trung bình, độ lệch chuẩn, tương quan từng cặp
+preserve
+keep if in_xd_main
+tempname MB
+tempfile mbfile
+postfile `MB' str12 bien long n double(tb sd trung_vi nho_nhat lon_nhat) using "`mbfile'", replace
+foreach v in phq4 gad2 phq2 S C Q {
+    quietly summarize `v', detail
+    post `MB' ("`v'") (r(N)) (r(mean)) (r(sd)) (r(p50)) (r(min)) (r(max))
 }
+quietly count if S > 0
+post `MB' ("ty_le_S>0") (r(N)) (100 * r(N) / _N) (.) (.) (.) (.)
+quietly count if phq4 >= 6
+post `MB' ("ty_le_PHQ>=6") (r(N)) (100 * r(N) / _N) (.) (.) (.) (.)
+postclose `MB'
+quietly pwcorr phq4 gad2 phq2 S C Q
+matrix TQ = r(C)
+use "`mbfile'", clear
+xl_out "MoTaBien"
+clear
+svmat TQ, names(col)
+gen str8 bien = ""
+local i 0
+foreach v in phq4 gad2 phq2 S C Q {
+    local ++i
+    quietly replace bien = "`v'" in `i'
+}
+order bien
+xl_out "TuongQuan"
+restore
+
+* So sánh người thiếu và đủ dữ liệu
+preserve
+keep if in_analytic & lgbt == 1
+gen byte co_phq4 = !missing(phq4)
+collapse (mean) tb_S=S (count) n_S=S n=lgbt, by(co_phq4)
+gen so_sanh = "LGBT phân tích: có / không có PHQ-4"
+tempfile mis1
+save "`mis1'"
+restore
+preserve
+keep if in_main
+collapse (mean) tb_phq4=phq4 tb_S=S (sd) sd_phq4=phq4 sd_S=S (count) n=phq4, by(in_xd_main)
+gen so_sanh = "Mẫu chính: đủ / thiếu XD"
+append using "`mis1'"
+order so_sanh
+xl_out "SoSanhKhuyet"
+restore
 
 * -----------------------------------------------------------------------------
 * 5. Gộp mức thưa của biến kiểm soát
 * -----------------------------------------------------------------------------
+tempfile lvfile
+postfile lv str24 bien double(muc_cu muc_moi) str8 so_nguoi using "`lvfile'", replace
+
 foreach v of global XD {
     clonevar `v'_orig = `v'
 }
@@ -637,6 +681,18 @@ if _N == 0 {
 xl_out "GopMuc"
 restore
 
+* Bảng 6: PHQ-4 theo đặc điểm nhân khẩu học (mô tả, chưa có biến kỳ thị), sau khi gộp mức thưa
+tempfile resfile
+postfile res str20 part str16 outcome str60 spec str40 term double(b se lb ub p) long N str244 note ///
+    using "`resfile'", replace
+regress phq4 i.($XD) if in_xd_main, vce(hc3)
+matrix RT = r(table)
+local cn : colnames RT
+foreach c of local cn {
+    if "`c'" == "_cons" | strpos("`c'", "b.") continue
+    post_coef, part("Bang6") outcome("phq4") spec("XD") coef(`c') table(RT)
+}
+
 if $RUN_MODELS == 0 {
     postclose res
     preserve
@@ -644,7 +700,7 @@ if $RUN_MODELS == 0 {
     xl_out "Bang6"
     restore
     di as result "Xong phần dữ liệu và mô tả. Kết quả: $OUT/ket_qua.xlsx"
-    di as result "Để chạy mô hình: đăng ký OSF, đặt global RUN_MODELS 1, rồi chạy lại."
+    di as result "Để chạy mô hình: đặt global RUN_MODELS 1 rồi chạy lại."
     log close main
     exit
 }
@@ -704,14 +760,27 @@ foreach cv in C C3 {
     drop h3s
 }
 
+* Lỗi ở bước này không được làm dừng phần sau, và dữ liệu luôn được khôi phục
 preserve
 keep if in_xd_main & !missing(C)
-bootstrap ab = r(ab), reps($BOOT_REPS) seed($SEED) nodots: h3_ab
-estat bootstrap, percentile
-matrix CI = e(ci_percentile)
-post_val, part("H3_ab") outcome("phq4") spec("bootstrap percentile") coef("a*b") ///
-    b(`=_b[ab]') lb(`=CI[1,1]') ub(`=CI[2,1]') nobs(`e(N)') note("$BOOT_REPS lần; chỉ cho tài liệu bổ sung")
+capture noisily {
+    bootstrap ab = r(ab), reps($BOOT_REPS) seed($SEED) nodots: h3_ab
+    estat bootstrap, percentile
+    matrix CI = e(ci_percentile)
+    local bab = _b[ab]
+    local lab = CI[1,1]
+    local uab = CI[2,1]
+    local nab = e(N)
+}
+local rc = _rc
 restore
+if `rc' == 0 {
+    post_val, part("H3_ab") outcome("phq4") spec("bootstrap percentile") coef("a*b") ///
+        b(`bab') lb(`lab') ub(`uab') nobs(`nab') note("$BOOT_REPS lần; chỉ cho tài liệu bổ sung")
+}
+else {
+    post_val, part("H3_ab") outcome("phq4") spec("bootstrap percentile") coef("a*b") note("Lỗi Stata `rc'")
+}
 
 * -----------------------------------------------------------------------------
 * 8. Phân tích thăm dò E1-E5
@@ -794,7 +863,10 @@ post_coef, part("E4") outcome("phq4") spec("S x đồng tính nam") coef(3.orien
 
 * E5: mức thực thi DEI được cảm nhận
 regress phq4 c.S##c.Qc i.($XD) if in_e5, vce(hc3)
-post_coef, part("E5") outcome("phq4") spec("S x DEI") coef(c.S#c.Qc)
+matrix RT = r(table)
+post_coef, part("E5") outcome("phq4") spec("S x DEI") coef(c.S#c.Qc) table(RT)
+post_coef, part("E5_phu") outcome("phq4") spec("S tại DEI trung bình") coef(S) table(RT)
+post_coef, part("E5_phu") outcome("phq4") spec("DEI khi S = 0") coef(Qc) table(RT)
 
 * -----------------------------------------------------------------------------
 * 9. Chẩn đoán mô hình H1 (chỉ để mô tả)
@@ -887,12 +959,11 @@ post_coef, part("Ben_vung") outcome("phq4") spec("bỏ phiếu chất lượng t
 regress phq4 S i.($XD) if in_xd_main & flag_cook != 1, vce(hc3)
 post_coef, part("Ben_vung") outcome("phq4") spec("bỏ quan sát Cook > 4/n") coef(S)
 
-capture which boottest
+regress phq4 S i.($XD) if in_xd_main, vce(robust)
+local nW = e(N)
+local bW = _b[S]
+capture noisily boottest S, reps($WILD_REPS) weighttype(webb) seed($SEED) nograph
 if !_rc {
-    regress phq4 S i.($XD) if in_xd_main, vce(robust)
-    local nW = e(N)
-    local bW = _b[S]
-    boottest S, reps($WILD_REPS) weighttype(webb) seed($SEED) nograph
     local pW = r(p)
     local loW = .
     local hiW = .
@@ -904,6 +975,9 @@ if !_rc {
     post_val, part("Ben_vung") outcome("phq4") spec("wild bootstrap, Webb") coef("S") ///
         b(`bW') lb(`loW') ub(`hiW') p(`pW') nobs(`nW') note("$WILD_REPS lần")
 }
+else {
+    post_val, part("Ben_vung") outcome("phq4") spec("wild bootstrap, Webb") coef("S") note("Lỗi Stata `=_rc'")
+}
 
 gen byte orient4 = orient3
 replace orient4 = 4 if missing(orient3) & in_main
@@ -912,37 +986,48 @@ post_coef, part("Ben_vung") outcome("phq4") spec("thêm xu hướng tính dục 
 
 preserve
 keep if in_analytic & lgbt == 1
-mi set wide
-mi register imputed phq4 S C Q $XD
-mi impute chained (pmm, knn(5)) phq4 S C Q (mlogit, augment) $XD, add($MI_M) rseed($SEED)
-mi estimate, post: regress phq4 S i.($XD), vce(hc3)
-matrix DFM = e(df_mi)
-local dfS = DFM[1, colnumb(DFM, "S")]
-local bM = _b[S]
-local seM = _se[S]
-local nM = e(N)
-restore
-post_val, part("Ben_vung") outcome("phq4") spec("gán giá trị đa lần, m = $MI_M") coef("S") ///
-    b(`bM') se(`seM') lb(`=`bM' - invttail(`dfS', 0.025) * `seM'') ///
-    ub(`=`bM' + invttail(`dfS', 0.025) * `seM'') p(`=2 * ttail(`dfS', abs(`bM' / `seM'))') nobs(`nM')
-
-capture which sensemakr
-if !_rc {
-    preserve
-    keep if in_xd_main
-    local xd_dum
-    foreach v of global XD {
-        quietly tab `v', gen(sx_`v'_)
-        drop sx_`v'_1
-        unab these : sx_`v'_*
-        local xd_dum `xd_dum' `these'
-    }
-    unab sexd : sx_sex_birth_*
-    unab educd : sx_educ_*
-    sensemakr phq4 S `xd_dum', treat(S) gbenchmark(`sexd') gname(sex_birth) kd(1 2 3)
-    sensemakr phq4 S `xd_dum', treat(S) gbenchmark(`educd') gname(educ) kd(1 2 3)
-    restore
+capture noisily {
+    mi set wide
+    mi register imputed phq4 S C Q $XD
+    mi impute chained (pmm, knn(5)) phq4 S C Q (mlogit, augment) $XD, add($MI_M) rseed($SEED)
+    mi estimate, post: regress phq4 S i.($XD), vce(hc3)
+    matrix DFM = e(df_mi)
+    local dfS = DFM[1, colnumb(DFM, "S")]
+    local bM = _b[S]
+    local seM = _se[S]
+    local nM = e(N)
 }
+local rc = _rc
+restore
+if `rc' == 0 {
+    post_val, part("Ben_vung") outcome("phq4") spec("gán giá trị đa lần, m = $MI_M") coef("S") ///
+        b(`bM') se(`seM') lb(`=`bM' - invttail(`dfS', 0.025) * `seM'') ///
+        ub(`=`bM' + invttail(`dfS', 0.025) * `seM'') p(`=2 * ttail(`dfS', abs(`bM' / `seM'))') ///
+        nobs(`nM') note("df = `: display %6.1f `dfS''")
+}
+else {
+    post_val, part("Ben_vung") outcome("phq4") spec("gán giá trị đa lần, m = $MI_M") coef("S") note("Lỗi Stata `rc'")
+}
+
+* sensemakr chỉ in kết quả ra nhật ký
+preserve
+keep if in_xd_main
+local xd_dum
+foreach v of global XD {
+    quietly tab `v', gen(sx_`v'_)
+    drop sx_`v'_1
+    unab these : sx_`v'_*
+    local xd_dum `xd_dum' `these'
+}
+unab sexd : sx_sex_birth_*
+unab educd : sx_educ_*
+foreach g in sex_birth educ {
+    local gb = cond("`g'" == "educ", "`educd'", "`sexd'")
+    di as text _n "{hline 60}" _n "sensemakr, mốc so sánh: `g'" _n "{hline 60}"
+    capture noisily sensemakr phq4 S `xd_dum', treat(S) gbenchmark(`gb') gname(`g') kd(1 2 3)
+    if _rc capture noisily sensemakr phq4 `xd_dum', treat(S) gbenchmark(`gb') gname(`g') kd(1 2 3)
+}
+restore
 
 * -----------------------------------------------------------------------------
 * 11. Đường cong đặc tả (32 đặc tả)

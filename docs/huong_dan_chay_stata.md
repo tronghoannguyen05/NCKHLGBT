@@ -15,17 +15,14 @@ Toàn bộ phân tích nằm trong một tệp: **`phan_tich.do`** ở thư mụ
 
 Lần chạy đầu cần Internet để cài `sensemakr` và `boottest`. Nếu đang mở `ket_qua.xlsx` trong Excel, hãy đóng lại trước khi chạy.
 
-## Hai giai đoạn
+## Chạy một phần
 
-| `RUN_MODELS` | Chạy gì | Khi nào |
-|---|---|---|
-| `0` (mặc định) | Nhập và mã hóa dữ liệu, đối chiếu luồng mẫu với đề cương, thống kê mô tả, độ tin cậy, gộp mức thưa | Ngay bây giờ |
-| `1` | Thêm toàn bộ mô hình: H1–H3, E1–E5, chẩn đoán, độ bền, đường cong đặc tả | Sau khi đã đăng ký `docs/analysis_plan.md` trên OSF |
+Mặc định `RUN_MODELS 1`: chạy toàn bộ. Đặt `global RUN_MODELS 0` nếu chỉ muốn nhập dữ liệu, đối chiếu luồng mẫu và xuất thống kê mô tả. Toàn bộ mất vài phút (bootstrap 5.000 lần, wild bootstrap 9.999 lần, 20 bộ gán giá trị).
 
 ## Kết quả
 
 Kết quả nằm trong thư mục `OUT`:
-- `ket_qua.xlsx`, mỗi phần một sheet: LuongMau, MoTaMau, TrieuChung, DoTinCay, TyLeKyThi, GopMuc, Bang6, E3, ChanDoan, DuongCongDacTa, KetQua. Sheet KetQua có p hiệu chỉnh Holm (`p_holm`) và BH (`p_bh`).
+- `ket_qua.xlsx`, mỗi phần một sheet: LuongMau, MoTaMau, TrieuChung, DoTinCay, TyLeKyThi, MoTaBien, TuongQuan, SoSanhKhuyet, GopMuc, E3, ChanDoan, DuongCongDacTa, KetQua. Sheet KetQua chứa mọi hệ số (cả Bảng 6), kèm p hiệu chỉnh Holm (`p_holm`) và BH (`p_bh`). Trong MoTaMau, `<10` là ô dưới 10 người, `ẩn` là ô bị ẩn kèm để không suy ngược được ô nhỏ.
 - `spec_curve.png`: hình đường cong đặc tả.
 - `nhat_ky.log`: toàn bộ nhật ký chạy. Kết quả sensemakr được in ở đây.
 
@@ -38,5 +35,6 @@ Nếu Stata báo lỗi khác, gửi Claude đoạn cuối của `nhat_ky.log`. K
 
 ## Lưu ý
 
-- Mã chưa từng được chạy trên Stata (môi trường soạn mã không có Stata). Phần nhập và mã hóa dữ liệu đã được đối chiếu bằng Python trên tệp thật, chỉ xem số đếm: không có mã chưa ánh xạ, và luồng mẫu khớp đề cương.
+- Mục 0–5 đã chạy thành công trên máy tác giả (5/10/2026). Mục 6–12 chưa chạy trên Stata.
+- Toàn bộ mục 1–12 đã được tái lập bằng Python trên tệp thật (`tests/doi_chieu_python/`, chỉ xuất số tổng hợp). Phần mô tả và hồi quy HC3 khớp kết quả Stata của tác giả đến 6 chữ số. Kết quả Python nằm ở `output/tables/doi_chieu_python/`. Sau khi chạy Stata, đối chiếu sheet KetQua với `KetQua.csv`: các phần tất định phải khớp, riêng bootstrap, wild bootstrap và gán giá trị đa lần chỉ khớp gần đúng vì khác bộ sinh số ngẫu nhiên.
 - Không đưa tệp dữ liệu hay tệp kết quả có dữ liệu cá nhân lên GitHub.
