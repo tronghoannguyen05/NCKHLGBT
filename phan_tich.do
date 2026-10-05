@@ -123,9 +123,12 @@ end
 capture program drop post_val
 program define post_val
     syntax, PART(string) OUTCOME(string) SPEC(string) COEF(string) ///
-        [B(real .) SE(real .) LB(real .) UB(real .) P(real .) NOBS(real .) NOTE(string)]
-    post res ("`part'") ("`outcome'") ("`spec'") ("`coef'") (`b') (`se') (`lb') (`ub') (`p') ///
-        (`nobs') (`"`note'"')
+        [EST(string) STDERR(string) LOWER(string) UPPER(string) PVAL(string) NOBS(string) NOTE(string)]
+    foreach x in est stderr lower upper pval nobs {
+        if `"``x''"' == "" local `x' .
+    }
+    post res ("`part'") ("`outcome'") ("`spec'") ("`coef'") (`est') (`stderr') (`lower') (`upper') ///
+        (`pval') (`nobs') (`"`note'"')
 end
 
 * Holm và Benjamini-Hochberg theo họ kiểm định
@@ -726,8 +729,8 @@ foreach y in phq4 gad2 phq2 {
         local p2 = 1 - ttail(`df', (`bS' - $SESOI) / `seS')
         local ptost = max(`p1', `p2')
         local kl = cond(`lo90' > -$SESOI & `hi90' < $SESOI, "tương đương", "không kết luận được tương đương")
-        post_val, part("H1_TOST") outcome("phq4") spec("XD, CI 90%") coef("S") b(`bS') se(`seS') ///
-            lb(`lo90') ub(`hi90') p(`ptost') nobs(`e(N)') note("SESOI +/-$SESOI; `kl'")
+        post_val, part("H1_TOST") outcome("phq4") spec("XD, CI 90%") coef("S") est(`bS') stderr(`seS') ///
+            lower(`lo90') upper(`hi90') pval(`ptost') nobs(`e(N)') note("SESOI +/-$SESOI; `kl'")
     }
 
     regress `y' S i.($XD) i.($XJ) if in_xj, vce(hc3)
@@ -755,7 +758,7 @@ foreach cv in C C3 {
     post_coef, part("H3_c") outcome("phq4") spec("`cv'") coef(S) table(RB)
 
     quietly count if h3s
-    post_val, part("H3") outcome("phq4") spec("`cv'") coef("max(p_a, p_b)") p(`=max(`pa', `pb')') ///
+    post_val, part("H3") outcome("phq4") spec("`cv'") coef("max(p_a, p_b)") pval(`=max(`pa', `pb')') ///
         nobs(`r(N)') note("a>0: `apos'; b>0: `bpos'")
     drop h3s
 }
@@ -776,7 +779,7 @@ local rc = _rc
 restore
 if `rc' == 0 {
     post_val, part("H3_ab") outcome("phq4") spec("bootstrap percentile") coef("a*b") ///
-        b(`bab') lb(`lab') ub(`uab') nobs(`nab') note("$BOOT_REPS lần; chỉ cho tài liệu bổ sung")
+        est(`bab') lower(`lab') upper(`uab') nobs(`nab') note("$BOOT_REPS lần; chỉ cho tài liệu bổ sung")
 }
 else {
     post_val, part("H3_ab") outcome("phq4") spec("bootstrap percentile") coef("a*b") note("Lỗi Stata `rc'")
@@ -836,7 +839,7 @@ post_coef, part("E2_doi_chieu") outcome("phq4") spec("sự kiện") coef(S_event
 post_coef, part("E2_doi_chieu") outcome("phq4") spec("quy nguyên") coef(S_attr) table(RT) note("`attr'")
 lincom S_attr - S_event
 post_val, part("E2_doi_chieu") outcome("phq4") spec("quy nguyên - sự kiện") coef("hiệu") ///
-    b(`r(estimate)') se(`r(se)') lb(`r(lb)') ub(`r(ub)') p(`r(p)') nobs(`nE')
+    est(`r(estimate)') stderr(`r(se)') lower(`r(lb)') upper(`r(ub)') pval(`r(p)') nobs(`nE')
 
 * Lo âu so với trầm cảm: kiểm định trực tiếp hiệu hai hệ số
 quietly regress gad2 S i.($XD) if in_xd_main
@@ -847,7 +850,7 @@ suest m_gad m_phq, vce(robust)
 local nE = e(N)
 lincom [m_gad_mean]S - [m_phq_mean]S
 post_val, part("E_lo_au_tram_cam") outcome("gad2 - phq2") spec("suest") coef("S") ///
-    b(`r(estimate)') se(`r(se)') lb(`r(lb)') ub(`r(ub)') p(`r(p)') nobs(`nE')
+    est(`r(estimate)') stderr(`r(se)') lower(`r(lb)') upper(`r(ub)') pval(`r(p)') nobs(`nE')
 estimates drop m_gad m_phq
 
 * E4: theo giới tính khi sinh và nhóm xu hướng tính dục
@@ -950,8 +953,8 @@ local nF = e(N)
 margins, dydx(S) post
 nlcom (ame12: _b[S] * 12), post
 post_val, part("Ben_vung") outcome("phq4") spec("fracreg logit, AME x 12") coef("S") ///
-    b(`=_b[ame12]') se(`=_se[ame12]') lb(`=_b[ame12] - invnormal(0.975) * _se[ame12]') ///
-    ub(`=_b[ame12] + invnormal(0.975) * _se[ame12]') p(`=2 * normal(-abs(_b[ame12] / _se[ame12]))') nobs(`nF')
+    est(`=_b[ame12]') stderr(`=_se[ame12]') lower(`=_b[ame12] - invnormal(0.975) * _se[ame12]') ///
+    upper(`=_b[ame12] + invnormal(0.975) * _se[ame12]') pval(`=2 * normal(-abs(_b[ame12] / _se[ame12]))') nobs(`nF')
 
 regress phq4 S i.($XD) if in_xd_main & flag_quality == 0, vce(hc3)
 post_coef, part("Ben_vung") outcome("phq4") spec("bỏ phiếu chất lượng thấp") coef(S)
@@ -973,7 +976,7 @@ if !_rc {
         local hiW = WCI[1,2]
     }
     post_val, part("Ben_vung") outcome("phq4") spec("wild bootstrap, Webb") coef("S") ///
-        b(`bW') lb(`loW') ub(`hiW') p(`pW') nobs(`nW') note("$WILD_REPS lần")
+        est(`bW') lower(`loW') upper(`hiW') pval(`pW') nobs(`nW') note("$WILD_REPS lần")
 }
 else {
     post_val, part("Ben_vung") outcome("phq4") spec("wild bootstrap, Webb") coef("S") note("Lỗi Stata `=_rc'")
@@ -996,14 +999,15 @@ capture noisily {
     local bM = _b[S]
     local seM = _se[S]
     local nM = e(N)
+    local dfS_s : display %6.1f `dfS'
 }
 local rc = _rc
 restore
 if `rc' == 0 {
     post_val, part("Ben_vung") outcome("phq4") spec("gán giá trị đa lần, m = $MI_M") coef("S") ///
-        b(`bM') se(`seM') lb(`=`bM' - invttail(`dfS', 0.025) * `seM'') ///
-        ub(`=`bM' + invttail(`dfS', 0.025) * `seM'') p(`=2 * ttail(`dfS', abs(`bM' / `seM'))') ///
-        nobs(`nM') note("df = `: display %6.1f `dfS''")
+        est(`bM') stderr(`seM') lower(`=`bM' - invttail(`dfS', 0.025) * `seM'') ///
+        upper(`=`bM' + invttail(`dfS', 0.025) * `seM'') pval(`=2 * ttail(`dfS', abs(`bM' / `seM'))') ///
+        nobs(`nM') note("df = `dfS_s'")
 }
 else {
     post_val, part("Ben_vung") outcome("phq4") spec("gán giá trị đa lần, m = $MI_M") coef("S") note("Lỗi Stata `rc'")
