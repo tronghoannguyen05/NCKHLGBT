@@ -5,7 +5,7 @@ Toàn bộ phân tích nằm trong một tệp: **`phan_tich.do`** ở thư mụ
 ## Cách chạy
 
 1. Mở `phan_tich.do` trong Stata 17 trở lên.
-2. Kiểm tra hai dòng đường dẫn ở mục 0:
+2. Đặt **bản xuất gốc từ Kobo** (tệp giữ nguyên mã phiếu, chưa chỉnh sửa) ở đường dẫn `DATA`, hoặc sửa `DATA` cho đúng tên tệp. Kiểm tra hai dòng đường dẫn ở mục 0:
    ```
    global DATA "D:/NCKH chủ đề LGBT/Kỳ_thị_tại_nơi_làm_việc_và_bất_lợi_thu_nhập_-_Khảo_sát_người_lao_động_tại_Việt_Nam_n850.xlsx"
    global OUT  "D:/NCKH chủ đề LGBT/ket_qua"
@@ -19,7 +19,7 @@ Mặc định `RUN_MODELS 1`: chạy toàn bộ. Đặt `global RUN_MODELS 0` n�
 ## Kết quả
 
 Trong thư mục `OUT`:
-- `results.xlsx`: mỗi bảng của bài một sheet (`Table1` đến `Table7`, `TableS1`, `TableS2`, `TableS4` đến `TableS6`). Sheet `AllResults` chứa mọi hệ số, kèm p hiệu chỉnh Holm và BH, cột `paper_table` cho biết hệ số thuộc bảng nào.
+- `results.xlsx`: mỗi bảng của bài một sheet (`Table1` đến `Table7`, `TableS1`, `TableS2`, `TableS4` đến `TableS7`). Sheet `AllResults` chứa mọi hệ số, kèm p hiệu chỉnh Holm và BH, cột `paper_table` cho biết hệ số thuộc bảng nào.
 - `figure2.png`: Hình 2 (đường cong đặc tả).
 - `analysis.log`: nhật ký đầy đủ. Bảng S3 (sensemakr) được in ở mục "Table S3".
 
@@ -33,7 +33,8 @@ Bảng đầy đủ ánh xạ sheet với bảng của bài nằm trong `README.
 
 ## Lịch sử chạy
 
-- 5/10/2026: chạy đủ hai lần trên máy tác giả, không lỗi; kết quả tổng hợp lưu ở `output/tables/stata/`. Mọi ước lượng không phụ thuộc số ngẫu nhiên khớp bản tái lập Python (`tests/doi_chieu_python/`) đến 10⁻⁹.
-- 9/10/2026: chuyển chú thích, nhãn và tên sheet sang tiếng Anh, xuất mỗi bảng của bài thành một sheet, thêm Bảng 2 và Hình 2 đúng như trong bài. Logic tính toán không đổi. Cần chạy lại một lần để kiểm tra bản mới.
+- 5/10/2026: chạy đủ hai lần trên máy tác giả, không lỗi; kết quả tổng hợp lưu ở `output/tables/stata/`. Mọi ước lượng không phụ thuộc số ngẫu nhiên khớp bản tái lập Python (`tests/python_replication/`) đến 10⁻⁹.
+- 9/10/2026 (lần 1): chuyển chú thích, nhãn và tên sheet sang tiếng Anh, xuất mỗi bảng của bài thành một sheet, thêm Bảng 2 và Hình 2. Tác giả chạy lại cùng ngày, không lỗi; 59/59 dòng của `AllResults` giống hệt kết quả ngày 5/10.
+- 9/10/2026 (lần 2): đọc bản xuất gốc; thêm Bảng S7 (bốn mô hình độ nhạy làm sau khi có kết quả) và hệ số trên một độ lệch chuẩn của S ở Bảng 4; vẽ lại Hình 2 thành một đồ thị để các cột thẳng hàng. Các ghi chép ở `docs/deviations.md`. **Cần chạy lại một lần.** Số cần ra (bản Python): Bảng S7 lần lượt 1,53; 1,81; 1,78; 1,68; hiệu ứng trên một độ lệch chuẩn của S là 0,82 điểm PHQ-4. Kiểm tra bằng `tests/python_replication/compare.py`.
 
 Không đưa tệp dữ liệu hay tệp kết quả có dữ liệu cá nhân lên GitHub.

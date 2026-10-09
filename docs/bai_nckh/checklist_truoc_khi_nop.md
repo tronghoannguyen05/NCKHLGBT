@@ -4,7 +4,7 @@ Bài: `docs/bai_nckh/manuscript_en_article.md` (bản gốc) và `manuscript_en_
 
 ## Bắt buộc
 
-1. **Chạy lại `phan_tich.do` bản tiếng Anh (9/10/2026) một lần.** Logic không đổi, nhưng tên sheet, nhãn, Bảng 2 và Hình 2 là mã mới. Đối chiếu sheet `AllResults` với `output/tables/stata/KetQua.csv`: mọi hệ số phải giống hệt.
+1. **Chạy lại `phan_tich.do` (bản 9/10/2026, lần 2) một lần trên bản xuất gốc.** Mã mới gồm Bảng S7, hệ số trên một độ lệch chuẩn của S và Hình 2 vẽ lại. Đối chiếu bằng `tests/python_replication/compare.py`: mọi dòng tất định phải khớp.
 2. **Hồ sơ đạo đức.** Điền tên hội đồng, số và ngày phê duyệt ở mục *Ethics Approval*. Đây là vấn đề lớn nhất (`docs/ethics_data_protection.md`). Hầu hết tạp chí Q1 không nhận bài thiếu mục này.
 3. **Đăng ký OSF.** Nộp `docs/analysis_plan.md` bản ngày 5/10/2026, ghi rõ nộp sau ước lượng. Điền đường dẫn vào hai chỗ `[registration link]` (mục *Analysis history and registration* và *Data Availability*).
 4. **Trang đầu.** Tên tác giả, đơn vị, tác giả liên hệ, email, ORCID.

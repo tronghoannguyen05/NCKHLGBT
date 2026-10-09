@@ -6,7 +6,7 @@ This repository contains the code that produces every table and figure of the ar
 
 ## Data availability
 
-The analysis uses a cross-sectional survey of 850 workers in Vietnam. The data include sexual orientation, gender identity, and mental health, which are sensitive personal data under Vietnam's Law on Personal Data Protection (Law No. 91/2025/QH15) and Decree No. 356/2025/ND-CP. Individual-level data are therefore not publicly available and are not included in this repository. Aggregate results, with cells of fewer than 10 respondents suppressed, are in `output/tables/stata/`.
+The analysis uses a cross-sectional survey of workers in Vietnam (850 responses). The data include sexual orientation, gender identity, and mental health, which are sensitive personal data under Vietnam's Law on Personal Data Protection (Law No. 91/2025/QH15) and Decree No. 356/2025/ND-CP. Individual-level data are therefore not publicly available and are not included in this repository. Aggregate results, with cells of fewer than 10 respondents suppressed, are in `output/tables/stata/`.
 
 ## Computational requirements
 
@@ -16,10 +16,10 @@ The analysis uses a cross-sectional survey of 850 workers in Vietnam. The data i
 
 ## Instructions
 
-1. Open `phan_tich.do` and set two paths in Section 0: `DATA` (the survey export, .xlsx) and `OUT` (an output folder).
-2. Run the whole file.
+1. Open `phan_tich.do` and set two paths in Section 0: `DATA` (the survey export, .xlsx, as downloaded and unedited) and `OUT` (an output folder).
+2. Run the whole file. A full run takes a few minutes; most of the time is spent on the bootstrap, the wild bootstrap and the multiple imputation.
 
-The file checks the sample flow against the counts reported in Table 1 and stops if they differ.
+After import the file keeps only the analysis variables, so submission IDs, timestamps, income and free-text answers never enter the analysis data. It checks the sample flow against the counts reported in Table 1 and stops if they differ.
 
 ## Output
 
@@ -30,7 +30,7 @@ All output is written to `OUT`.
 | `results.xlsx`, sheet `Table1` | Table 1, sample flow |
 | `Table2` | Table 2, sample characteristics |
 | `Table3_Descriptives`, `Table3_Correlations` | Table 3 |
-| `Table4` | Table 4, H1, H2a, H2b |
+| `Table4` | Table 4, H1, H2a, H2b, including the estimates per standard deviation of the stigma index |
 | `Table5` | Table 5, H3 |
 | `Table6` | Table 6, exploratory analyses E1, E2, E4, E5 |
 | `Table7` | Table 7, robustness checks |
@@ -40,6 +40,7 @@ All output is written to `OUT`.
 | `TableS4` | Table S4, E3 |
 | `TableS5` | Table S5, indirect product *a* × *b* |
 | `TableS6` | Table S6, all specifications of the specification curve |
+| `TableS7` | Table S7, post hoc sensitivity analyses |
 | `figure2.png` | Figure 2, specification curve |
 | `Symptoms`, `Reliability`, `Prevalence`, `MissingData`, `MergedCategories` | Values reported in the Methods and Results text |
 | `AllResults` | Every estimate, with Holm and Benjamini-Hochberg adjusted *p* values |
@@ -59,14 +60,15 @@ All output is written to `OUT`.
 | 8 | Exploratory analyses |
 | 9 | Diagnostics |
 | 10 | Robustness checks and sensitivity analysis |
-| 11 | Specification curve |
-| 12 | Multiple-testing adjustment and export |
+| 11 | Post hoc sensitivity analyses |
+| 12 | Specification curve |
+| 13 | Multiple-testing adjustment and export |
 
 ## Other material
 
 - `docs/analysis_plan.md`: the analysis plan, finalized on 5 October 2026 before estimation.
 - `docs/deviations.md`: departures from the plan.
 - `docs/codebook.md`: variables and coding rules.
-- `tests/doi_chieu_python/`: an independent Python replication used to check the Stata results; it reproduces every estimate that does not depend on random draws.
+- `tests/python_replication/`: an independent Python replication used to check the Stata results. It reproduces every estimate that does not depend on random draws. Run `prep.py`, `desc.py` and `models.py` with the environment variable `LGBT_DATA` set to the survey export, then `compare.py` with `STATA_RESULTS` set to `results.xlsx`.
 - `code/`: an earlier modular version of the pipeline, kept for reference. It is not used for the article.
 - `tests/check_no_data.sh`: refuses commits that contain individual-level data.

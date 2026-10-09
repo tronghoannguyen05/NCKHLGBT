@@ -1,4 +1,4 @@
-tinh_huong,n_hop_le,n_gap,ty_le
+situation,n_valid,n_exposed,pct
 stig1,273,69,25.3
 stig2,266,87,32.7
 stig3,260,40,15.4
@@ -7,4 +7,4 @@ stig5,241,22,9.1
 stig6,260,31,11.9
 stig7,259,39,15.1
 stig8,215,13,6.0
-S>0 (7 câu),278,153,55.0
+any of 1-7,278,153,55.0

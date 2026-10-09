@@ -1,4 +1,4 @@
-# --- Dữ liệu cá nhân nhạy cảm: KHÔNG BAO GIỜ commit (Luật 91/2025/QH15; NĐ 356/2025/NĐ-CP) ---
+# --- Sensitive personal data: NEVER commit (Law 91/2025/QH15; Decree 356/2025/ND-CP) ---
 data/**
 !data/**/
 !data/README.md
@@ -8,20 +8,20 @@ data/**
 *.xlsx
 *.xls
 *.parquet
-# CSV chỉ được phép trong config/ và output/tables/ (bảng đã ẩn ô nhỏ)
+# CSV files are allowed only in config/ and output/tables/ (tables with small cells suppressed)
 *.csv
 !config/*.csv
 !output/tables/*.csv
-!output/tables/doi_chieu_python/*.csv
+!output/tables/python_replication/*.csv
 !output/tables/stata/*.csv
-# Dữ liệu GIẢ LẬP (mã phiếu SYN...), được kiểm tra bởi tests/check_no_data.sh
+# SYNTHETIC data (record IDs SYN...), checked by tests/check_no_data.sh
 !tests/synthetic_kobo.csv
 
-# --- Kết quả sinh tự động ---
+# --- Generated output ---
 output/logs/**
 !output/**/.gitkeep
 
-# --- Tệp tạm ---
+# --- Temporary files ---
 *.stswp
 *.smcl
 *.tmp

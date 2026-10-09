@@ -5,7 +5,7 @@ from reg import build, ols
 
 
 def ols_safe(y, X, names, vce='hc3', level=0.95):
-    # HC3 kiểu Stata: quan sát có đòn bẩy 1 không đóng góp vào phần giữa
+    # Stata-style HC3: observations with leverage 1 contribute nothing to the middle term
     f = ols(y, X, names, 'ols', level)
     n, k = X.shape
     e, h, XtXi = f.e, f.h, f.XtXi

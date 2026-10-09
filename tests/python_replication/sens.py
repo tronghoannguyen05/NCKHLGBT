@@ -1,4 +1,4 @@
-# sensemakr (Cinelli & Hazlett, 2020), sai số chuẩn cổ điển, mốc so sánh theo nhóm biến giả
+# sensemakr (Cinelli & Hazlett, 2020) with classical standard errors and group benchmarks of dummies
 import numpy as np
 import pandas as pd
 from scipy import stats
@@ -31,7 +31,7 @@ def sensemakr(d, touse, XD, groups, kd=(1, 2, 3)):
     f = ols(y, X, names, 'ols')
     est, se, dof = f.b['S'], f.se['S'], f.df
     t = est / se
-    out = [dict(muc='S', k=np.nan, est=est, se=se, t=t, dof=dof,
+    out = [dict(benchmark='S', k=np.nan, est=est, se=se, t=t, dof=dof,
                 r2yd_x=t ** 2 / (t ** 2 + dof), rv_q1=rv(t, dof), rv_q1_a05=rv(t, dof, 1, 0.05),
                 r2dz_x=np.nan, r2yz_dx=np.nan, adj_est=np.nan, adj_se=np.nan, adj_lb=np.nan, adj_ub=np.nan)]
     jS = names.index('S')
@@ -52,7 +52,7 @@ def sensemakr(d, touse, XD, groups, kd=(1, 2, 3)):
             adj = np.sign(est) * (abs(est) - bias)
             adj_se = np.sqrt((1 - r2yz) / (1 - r2dz)) * se * np.sqrt(dof / (dof - 1))
             q = stats.t.ppf(0.975, dof - 1)
-            out.append(dict(muc=gname, k=k, est=est, se=se, t=t, dof=dof, r2yd_x=np.nan, rv_q1=np.nan,
+            out.append(dict(benchmark=gname, k=k, est=est, se=se, t=t, dof=dof, r2yd_x=np.nan, rv_q1=np.nan,
                             rv_q1_a05=np.nan, r2dxj_x=r2dxj, r2yxj_dx=r2yxj, r2dz_x=r2dz, r2yz_dx=r2yz,
                             adj_est=adj, adj_se=adj_se, adj_lb=adj - q * adj_se, adj_ub=adj + q * adj_se))
     return pd.DataFrame(out)

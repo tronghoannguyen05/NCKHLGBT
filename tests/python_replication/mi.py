@@ -1,5 +1,5 @@
-# Gán giá trị đa lần theo chuỗi điều kiện (FCS), gần với mi impute chained của Stata:
-# PMM knn(5) cho phq4 S C Q; logit đa thức (phạt nhẹ thay cho augment) cho các biến Xᴰ.
+# Multiple imputation by chained equations, close to Stata's mi impute chained:
+# PMM with knn(5) for phq4 S C Q; multinomial logit (light penalty in place of augment) for the XD variables.
 import numpy as np
 import pandas as pd
 from scipy import stats, optimize
@@ -93,7 +93,7 @@ def run_mi(d, XD, m=20, seed=1, burnin=10):
     for imp in range(m):
         D = D0.copy()
         done = [v for v in allv if miss[v].sum() == 0]
-        # khởi tạo: chỉ dùng biến đã đủ hoặc đã gán
+        # start: use only variables that are complete or already imputed
         for v in order:
             if miss[v].sum() == 0:
                 continue
@@ -129,5 +129,5 @@ def run_mi(d, XD, m=20, seed=1, burnin=10):
     nu = 1 / (1 / nu_m + 1 / nu_obs)
     se = np.sqrt(T)
     qt = stats.t.ppf(0.975, nu)
-    note = f'df {nu:.1f}; FMI~{lam:.3f}; thiếu: ' + ', '.join(f'{v} {int(miss[v].sum())}' for v in allv)
+    note = f'df {nu:.1f}; FMI~{lam:.3f}; missing: ' + ', '.join(f'{v} {int(miss[v].sum())}' for v in allv)
     return qbar, se, qbar - qt * se, qbar + qt * se, 2 * stats.t.sf(abs(qbar / se), nu), ests[0][3], note

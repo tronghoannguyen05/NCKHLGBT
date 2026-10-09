@@ -1,16 +1,16 @@
 #!/usr/bin/env python3
-"""Sinh dữ liệu GIẢ LẬP có cùng cấu trúc với tệp xuất từ Kobo (tên cột gốc trong
-config/variable_map.csv, mã chữ của phương án trong config/value_map.csv) để chạy
-thử pipeline Stata mà không cần dữ liệu thật. Dữ liệu được dựng bằng mã số chuẩn
-(docs/codebook.md) rồi đổi ngược sang định dạng Kobo khi ghi tệp, nên lần chạy thử
-đi qua đúng bước nhập của dữ liệu thật.
+"""Generates SYNTHETIC data with the structure of the survey export (column names
+in config/variable_map.csv, answer codes in config/value_map.csv), so that the
+Stata code can be run without the real data. Records are built in the standard
+numeric codes (docs/codebook.md) and converted back to the export format when the
+file is written, so a test run goes through the same import step as the real data.
 
-Số đếm của luồng mẫu được dựng khớp đề cương (Bảng 2): 850 -> 727 -> 640
-(340/300) -> 601 (323/278) -> 278 -> 256 / 247 -> 243. Quan hệ giữa các biến
-là bịa, KHÔNG mang ý nghĩa thực nghiệm nào.
+The sample flow matches the documented counts: 850 -> 727 -> 640 (340/300)
+-> 601 (323/278) -> 278 -> 256 / 247 -> 243. Associations between variables are
+invented and have NO empirical meaning.
 
-Chạy:  python3 tests/make_synthetic_data.py [--out tests/synthetic_kobo.csv]
-Chỉ dùng thư viện chuẩn.
+Run:  python3 tests/make_synthetic_data.py [--out tests/synthetic_kobo.csv]
+Standard library only.
 """
 import argparse
 import csv
@@ -56,7 +56,7 @@ def person(kind):
     r["socins"] = rng.choice([1, 2])
     r["hours"] = rng.randint(1, 4)
 
-    # Kỳ thị (chỉ người LGBT)
+    # Stigma situations (LGBT respondents only)
     S = 0.0
     if is_lgbt:
         exposed = rng.random() < 0.7
@@ -70,7 +70,7 @@ def person(kind):
         S = sum(vals) / 7
         for j in range(1, 5):
             r[f"conc{j}"] = likert(2.5 + 0.6 * S, 1, 5)
-    # PHQ-4 phụ thuộc S (bịa)
+    # PHQ-4 depends on S (invented)
     total = clip(rng.gauss(3.0 + 1.2 * S, 3.0), 0, 12)
     gad = clip(int(round(total * rng.uniform(0.4, 0.6))), 0, 6)
     dep = clip(int(round(total)) - gad, 0, 6)
@@ -100,13 +100,13 @@ for r in _read_csv("config/value_map.csv"):
 
 
 def to_kobo(r):
-    """Đổi một dòng mã số chuẩn sang tên cột và mã chữ của Kobo."""
+    """Convert one record in standard codes to the column names and text codes of the export."""
     out = {}
     for std, val in r.items():
         if std in INVVAL and val != "":
             code = int(val)
             if code not in INVVAL[std]:
-                raise ValueError(f"{std}: mã {code} không có trong config/value_map.csv")
+                raise ValueError(f"{std}: code {code} not in config/value_map.csv")
             val = INVVAL[std][code]
         out[VARMAP[std]] = val
     return out
@@ -125,33 +125,33 @@ def main():
     rng.shuffle(non)
     rng.shuffle(lg)
 
-    # Non-LGBT: 17 người thiếu ít nhất một câu PHQ -> 323 đủ PHQ-4
+    # Non-LGBT: 17 respondents miss at least one PHQ item -> 323 with complete PHQ-4
     for r in non[:17]:
         r["phqi" + str(rng.randint(1, 4))] = ""
-    # LGBT: 3 người bỏ cả phần kỳ thị và thiếu PHQ; thêm 19 người chỉ thiếu PHQ -> 278
+    # LGBT: 3 skip the stigma section and miss PHQ items; 19 more miss only PHQ items -> 278
     for r in lg[:3]:
         for j in range(1, 9):
             r[f"stig{j}"] = ""
         r["phqi2"] = ""
     for r in lg[3:22]:
         r["phqi" + str(rng.randint(1, 4))] = ""
-    main_ = lg[22:]                       # 278 người, đủ PHQ-4, có >= 5 câu kỳ thị hợp lệ
-    # 65 trong 297 người trả lời phần kỳ thị chọn "không áp dụng" ở câu 8
+    main_ = lg[22:]                       # 278 with complete PHQ-4 and >= 5 valid stigma items
+    # 65 of the 297 who answer the stigma section mark situation 8 "not applicable"
     for r in lg[3:68]:
         r["stig8"] = PNTA
-    # vài câu kỳ thị "không muốn trả lời" (vẫn >= 5 câu hợp lệ)
+    # a few stigma items "prefer not to answer" (still >= 5 valid items)
     for r in main_[:30]:
         r[f"stig{rng.randint(1, 7)}"] = PNTA
-    # 22 người thiếu thật một biến Xᴰ (không phải sex_birth) -> 256
+    # 22 truly miss one XD variable (not sex_birth) -> 256
     for r in main_[:22]:
         r[rng.choice(["agegrp", "educ", "relstat", "region"])] = ""
-    # 9 người có mã 9 ở một biến Xᴰ -> 247 theo quy tắc thay thế
+    # 9 have code 9 on one XD variable -> 247 under the alternative rule
     for r in main_[22:31]:
         r[rng.choice(["agegrp", "educ", "relstat", "region"])] = PNTA
-    # 13 người thiếu >= 2 câu DEI -> 243
+    # 13 miss >= 2 DEI items -> 243
     for r in main_[31:44]:
         r["dei1"], r["dei2"] = PNTA, ""
-    # một ít thiếu ở Xᴶ
+    # a few missing XJ values
     for r in main_[44:60]:
         r[rng.choice(["exper", "industry", "orgsize", "hours"])] = ""
 
@@ -164,7 +164,7 @@ def main():
         w = csv.DictWriter(f, fieldnames=list(rows[0].keys()))
         w.writeheader()
         w.writerows(rows)
-    print(f"Đã ghi {len(rows)} dòng giả lập vào {a.out}")
+    print(f"Wrote {len(rows)} synthetic records to {a.out}")
 
 
 if __name__ == "__main__":

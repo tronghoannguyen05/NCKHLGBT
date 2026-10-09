@@ -1,5 +1,6 @@
-# Tái lập mục 1-5 của phan_tich.do. Chỉ in số tổng hợp.
-# Đường dẫn tệp dữ liệu: biến môi trường LGBT_DATA.
+# Replicates sections 1-5 of phan_tich.do (import, coding, samples, merging of
+# sparse categories). Prints aggregate figures only.
+# Path to the survey export: environment variable LGBT_DATA.
 import os
 import numpy as np
 import pandas as pd
@@ -99,7 +100,7 @@ def collapse_sparse(d, v, touse, kind, log, special=(9, 97), pooled=98, mn=MIN_L
 
 def load():
     if not os.path.isfile(RAW):
-        raise SystemExit('Đặt biến môi trường LGBT_DATA trỏ tới tệp .xlsx')
+        raise SystemExit('Set the environment variable LGBT_DATA to the survey export (.xlsx)')
     r = pd.read_excel(RAW, dtype=str, keep_default_na=False)
     r = r.apply(lambda c: c.str.strip())
     d = pd.DataFrame(index=r.index)
@@ -125,6 +126,7 @@ def load():
     d['orgsize'] = map_codes(r.c9_employer_size, 'duoi50 50199 200499 tu500 kad_kr kmtl', [1, 2, 3, 4, 97, 9])
     d['socins'] = map_codes(r.c7_social_insurance, 'co khong kad kr kmtl', [1, 2, 3, 4, 9])
     d['hours'] = map_codes(r.c13_hours, 'duoi20 2035 3545 4555 tu55 kxd_kmtl', [1, 2, 3, 4, 5, 9])
+    d['disclose'] = map_codes(r.c18_disclosure, 'chua_ck vai_dn dn_va_ql rong_rai kad_kmtl', [1, 2, 4, 5, 9])
     d['phqi1'] = num(r.c21_1)
     d['phqi2'] = num(r.c21_2)
     d['phqi3'] = num(r.c21_4)
@@ -140,7 +142,7 @@ def load():
     assert d[CONC].stack().dropna().between(1, 5).all()
     assert d[DEI].stack().dropna().isin([1, 2, 3, 4, 5, 9]).all()
 
-    # mục 2
+    # section 2: derived variables and sample indicators
     d['eligible'] = ((d.age18 == 1) & (d.has_job == 1)).astype(int)
     d['lgbt'] = np.where(d.lgbt_self == 1, 1, np.where(d.lgbt_self == 0, 0, np.nan))
     d['in_analytic'] = (d.eligible == 1) & d.lgbt.notna()
@@ -153,8 +155,8 @@ def load():
     for v in XD:
         d[v + '_alt'] = d[v].where(d[v] != 9)
 
-    d['phq_n'] = d[PHQI].notna().sum(1)
-    d['phq4'] = d[PHQI].sum(1, min_count=4).where(d.phq_n == 4)
+    d['phq_n'] = d[PHQI].notna().sum(axis=1)
+    d['phq4'] = d[PHQI].sum(axis=1, min_count=4).where(d.phq_n == 4)
     d['gad2'] = d.phqi1 + d.phqi2
     d['phq2'] = d.phqi3 + d.phqi4
     d['phq4_frac'] = d.phq4 / 12
@@ -162,11 +164,11 @@ def load():
     d['phq4_zero'] = (d.phq4 == 0).astype(float).where(d.phq4.notna())
 
     L = d.lgbt == 1
-    d['S_n'] = d[STIG7].notna().sum(1)
-    d['S'] = d[STIG7].mean(1).where((d.S_n >= 4) & L)
-    d['S8_n'] = d[STIG8].notna().sum(1)
-    d['S8'] = d[STIG8].mean(1).where((d.S8_n >= 4) & L)
-    d['S_count7'] = d[STIG7].isin([1, 2, 3, 4]).sum(1).astype(float).where((d.S_n >= 4) & L)
+    d['S_n'] = d[STIG7].notna().sum(axis=1)
+    d['S'] = d[STIG7].mean(axis=1).where((d.S_n >= 4) & L)
+    d['S8_n'] = d[STIG8].notna().sum(axis=1)
+    d['S8'] = d[STIG8].mean(axis=1).where((d.S8_n >= 4) & L)
+    d['S_count7'] = d[STIG7].isin([1, 2, 3, 4]).sum(axis=1).astype(float).where((d.S_n >= 4) & L)
     d['S_complete7'] = d.S.where(d.S_n == 7)
     for j in range(1, 9):
         d[f'stig{j}_any'] = (d[f'stig{j}'] >= 1).astype(float).where(d[f'stig{j}'].notna())
@@ -174,22 +176,22 @@ def load():
     d['S_exposed'] = np.where(d.ever_exposed == 1, d.S, 0.0)
     d.loc[d.S.isna(), 'S_exposed'] = np.nan
 
-    d['C'] = d[CONC].mean(1).where((d[CONC].notna().sum(1) == 4) & L)
-    d['C3'] = d[CONC3].mean(1).where((d[CONC3].notna().sum(1) == 3) & L)
-    d['Q'] = d[DEI].mean(1).where(d[DEI].notna().sum(1) >= 3)
+    d['C'] = d[CONC].mean(axis=1).where((d[CONC].notna().sum(axis=1) == 4) & L)
+    d['C3'] = d[CONC3].mean(axis=1).where((d[CONC3].notna().sum(axis=1) == 3) & L)
+    d['Q'] = d[DEI].mean(axis=1).where(d[DEI].notna().sum(axis=1) >= 3)
 
     def flat(cols):
-        full = d[cols].notna().sum(1) == len(cols)
-        return full & (d[cols].std(1, ddof=1) == 0)
+        full = d[cols].notna().sum(axis=1) == len(cols)
+        return full & (d[cols].std(axis=1, ddof=1) == 0)
     d['flag_straight'] = flat(PHQI) & flat(CONC) & flat(DEI)
     d['flag_contra'] = (d.agegrp == 1) & (d.position == 4)
     d['flag_quality'] = (d.flag_straight | d.flag_contra).astype(int)
 
     d['in_e3'] = d.in_analytic & (d.phq_n == 4)
     d['in_main'] = d.in_analytic & L & d.phq4.notna() & d.S.notna()
-    d['in_xd_main'] = d.in_main & d[XD].notna().all(1)
-    d['in_xd_alt'] = d.in_main & d[[v + '_alt' for v in XD]].notna().all(1)
-    d['in_xj'] = d.in_xd_main & d[XJ].notna().all(1)
+    d['in_xd_main'] = d.in_main & d[XD].notna().all(axis=1)
+    d['in_xd_alt'] = d.in_main & d[[v + '_alt' for v in XD]].notna().all(axis=1)
+    d['in_xj'] = d.in_xd_main & d[XJ].notna().all(axis=1)
     d['in_e5'] = d.in_xd_main & d.Q.notna()
     d['Qc'] = d.Q - d.loc[d.in_e5, 'Q'].mean()
 
@@ -198,9 +200,11 @@ def load():
     d.loc[d.S.isna(), 'S3'] = np.nan
     d['lgbt_consistent'] = L & (d.orient.between(2, 6) | (d.gender_minority == 1))
 
-    # mục 5: gộp mức thưa
+    # section 5: merging sparse covariate categories
     for v in XD:
         d[v + '_orig'] = d[v].copy()
+    d['exper_s7'] = d.exper.copy()
+    d['disclose_s7'] = d.disclose.copy()
     log = []
     for v in XD:
         collapse_sparse(d, v, d.in_xd_main, 'ordered' if v in ORDERED else 'nominal', log)
@@ -208,6 +212,10 @@ def load():
         collapse_sparse(d, v + '_alt', d.in_xd_alt, 'ordered' if v in ORDERED else 'nominal', log)
     for v in XJ:
         collapse_sparse(d, v, d.in_xj, 'ordered' if v in ORDERED else 'nominal', log)
+    d['s7_exper'] = d.in_xd_main & d.exper_s7.notna()
+    d['s7_disc'] = d.in_xd_main & d.disclose_s7.notna()
+    collapse_sparse(d, 'exper_s7', d.s7_exper, 'ordered', log)
+    collapse_sparse(d, 'disclose_s7', d.s7_disc, 'ordered', log)
     d.attrs['collapse_log'] = log
     d.attrs['S_med_exposed'] = med
     return d
@@ -226,7 +234,7 @@ if __name__ == '__main__':
     def alpha(X):
         X = X.dropna()
         k = X.shape[1]
-        return k / (k - 1) * (1 - X.var(ddof=1).sum() / X.sum(1).var(ddof=1)), len(X)
+        return k / (k - 1) * (1 - X.var(ddof=1).sum() / X.sum(axis=1).var(ddof=1)), len(X)
     print('alpha phq4', alpha(e3[PHQI]))
     print('r gad2', e3[['phqi1', 'phqi2']].corr().iloc[0, 1], 'r phq2', e3[['phqi3', 'phqi4']].corr().iloc[0, 1])
     la = d[d.in_analytic & (d.lgbt == 1)]

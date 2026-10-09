@@ -1,4 +1,4 @@
-# Hồi quy kiểu Stata: biến giả cho i.var (mức nền là mức nhỏ nhất), HC3 / HC1 / OLS, kiểm định t với df_r.
+# Stata-style regression: dummies for i.var (lowest level as base), HC3 / HC1 / OLS, t tests with df_r.
 import numpy as np
 import pandas as pd
 from scipy import stats
@@ -9,7 +9,7 @@ class Fit:
 
 
 def build(d, touse, cont=(), factors=(), inter=(), base=None, extra=None):
-    """cont: biến liên tục; factors: biến phân loại; inter: (factor, cont) -> f#c.cont và c.a#c.b."""
+    """cont: continuous terms; factors: categorical terms; inter: (factor, cont) -> f#c.cont and c.a#c.b."""
     base = base or {}
     cols = list(cont) + list(factors) + [x for t in inter for x in t]
     if extra:
@@ -44,7 +44,7 @@ def build(d, touse, cont=(), factors=(), inter=(), base=None, extra=None):
     X.append(np.ones(len(D)))
     names.append('_cons')
     X = np.column_stack(X)
-    # bỏ cột cộng tuyến như Stata (giữ cột đầu)
+    # drop collinear columns as Stata does (the first column is kept)
     keep = []
     for j in range(X.shape[1]):
         cand = keep + [j]
@@ -90,7 +90,7 @@ def ols(y, X, names, vce='hc3', level=0.95):
 
 
 def lincom(f, w):
-    """w: dict tên -> trọng số."""
+    """w: dict of term name -> weight."""
     g = pd.Series(0.0, f.b.index)
     for k, v in w.items():
         g[k] = v

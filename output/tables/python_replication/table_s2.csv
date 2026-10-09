@@ -1,9 +1,9 @@
-kiem_dinh,thong_ke,df,p,ghi_chu
+diagnostic,statistic,df,p,note
 Breusch-Pagan,13.82942208763505,1.0,0.00020017693035103844,
 Ramsey RESET,2.174200637809842,3.0,0.09172437212384546,"F(3,238)"
-Số quan sát Cook > 4/n,22.0,,,
-Số quan sát đòn bẩy > 2k/n,15.0,,,
-Đòn bẩy lớn nhất,0.22429702854909986,,,
+Cook's distance > 4/n,22.0,,,
+Leverage > 2k/n,15.0,,,
+Largest leverage,0.22429702854909986,,,
 GVIF S,1.031285438043555,1.0,,GVIF^(1/(2df)) = 1.016
 GVIF agegrp,1.4044056098320865,3.0,,GVIF^(1/(2df)) = 1.058
 GVIF sex_birth,1.0747825555423414,1.0,,GVIF^(1/(2df)) = 1.037

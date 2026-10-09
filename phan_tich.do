@@ -6,8 +6,11 @@
 *
 * Requirements  Stata 17 or later. User-written packages sensemakr and boottest
 *               (installed from SSC on the first run if missing).
-* Input         Survey export (.xlsx). Set its path in DATA below. The data
-*               contain sensitive personal information and are not public.
+* Input         Survey export (.xlsx) as downloaded from the survey platform.
+*               Set its path in DATA below. The data contain sensitive personal
+*               information and are not public. Only the analysis variables are
+*               kept after import; submission IDs, timestamps, income and
+*               free-text answers are dropped.
 * Output (OUT)  results.xlsx   one sheet per table of the article
 *               figure2.png    specification curve (Figure 2)
 *               analysis.log   full log; Table S3 (sensemakr) is printed here
@@ -340,7 +343,6 @@ foreach v of varlist _all {
     quietly replace `v' = strtrim(`v')
 }
 
-rename _id resp_id
 map_codes s1_age18,               gen(age18)     from(co khong) to(1 0)
 map_codes s2_has_job,             gen(has_job)   from(co khong) to(1 0)
 map_codes c17_lgbt_self_id,       gen(lgbt_self) from(co khong khong_chac kmtl) to(1 0 8 9)
@@ -359,6 +361,7 @@ map_codes c8_employer_type,       gen(orgtype)   from(nn tn_trongnuoc fdi ngo tu
 map_codes c9_employer_size,       gen(orgsize)   from(duoi50 50199 200499 tu500 kad_kr kmtl) to(1 2 3 4 97 9)
 map_codes c7_social_insurance,    gen(socins)    from(co khong kad kr kmtl) to(1 2 3 4 9)
 map_codes c13_hours,              gen(hours)     from(duoi20 2035 3545 4555 tu55 kxd_kmtl) to(1 2 3 4 5 9)
+map_codes c18_disclosure,         gen(disclose)  from(chua_ck vai_dn dn_va_ql rong_rai kad_kmtl) to(1 2 4 5 9)
 
 * PHQ-4 items: positions 1-2 are the GAD-2 items; in the questionnaire,
 * position 3 is "feeling down" and position 4 is "little interest"
@@ -374,7 +377,7 @@ forvalues j = 1/4 {
     destring c24_`j', gen(dei`j')
 }
 
-keep resp_id age18 has_job lgbt_self orient gender_id $XD $XJ $PHQI $STIG8 $CONC $DEI
+keep age18 has_job lgbt_self orient gender_id disclose $XD $XJ $PHQI $STIG8 $CONC $DEI
 
 foreach v of global PHQI {
     assert inrange(`v', 0, 3) | missing(`v')
@@ -401,6 +404,8 @@ label define educ_lb     1 "Upper secondary or below" 2 "College" 3 "University"
                          9 "Prefer not to answer"
 label define rel_lb      1 "No partner" 2 "Partner" 3 "Separated, divorced, or widowed" 9 "Prefer not to answer"
 label define region_lb   1 "Hanoi" 2 "Ho Chi Minh City" 3 "Da Nang" 4 "Elsewhere" 9 "Prefer not to answer"
+label define disc_lb     1 "Not disclosed at work" 2 "A few close colleagues" 3 "Some colleagues, not the manager" ///
+                         4 "Colleagues and direct manager" 5 "Widely disclosed" 9 "Not applicable or prefer not to answer"
 label values age18 has_job yesno_lb
 label values lgbt_self lgbtself_lb
 label values orient orient_lb
@@ -410,11 +415,13 @@ label values agegrp age_lb
 label values educ educ_lb
 label values relstat rel_lb
 label values region region_lb
+label values disclose disc_lb
 label variable agegrp    "Age group"
 label variable sex_birth "Sex assigned at birth"
 label variable educ      "Education"
 label variable relstat   "Relationship status"
 label variable region    "Region of work"
+label variable disclose  "Disclosure at work"
 
 * -----------------------------------------------------------------------------
 * 2. Derived variables and sample indicators
@@ -704,6 +711,9 @@ postfile lv str24 variable double(old_code new_code) str8 n using "`lvfile'", re
 foreach v of global XD {
     clonevar `v'_orig = `v'
 }
+* Copies for the post hoc sensitivity analyses (Table S7), merged in their own samples
+clonevar exper_s7 = exper
+clonevar disclose_s7 = disclose
 local ordered $ORDERED
 foreach v of global XD {
     local isord : list v in ordered
@@ -721,6 +731,10 @@ foreach v of global XJ {
     local kind = cond(`isord', "ordered", "nominal")
     collapse_sparse `v', touse(in_xj) min($MIN_LEVEL) kind(`kind') special(9 97) pooled(98)
 }
+gen byte s7_exper = in_xd_main & !missing(exper_s7)
+gen byte s7_disc  = in_xd_main & !missing(disclose_s7)
+collapse_sparse exper_s7,    touse(s7_exper) min($MIN_LEVEL) kind(ordered) special(9 97) pooled(98)
+collapse_sparse disclose_s7, touse(s7_disc)  min($MIN_LEVEL) kind(ordered) special(9 97) pooled(98)
 postclose lv
 preserve
 use "`lvfile'", clear
@@ -773,6 +787,20 @@ foreach y in phq4 gad2 phq2 {
     matrix RT = r(table)
     local mde = string(2.8 * _se[S], "%5.2f")
     post_coef, part("`h'") outcome("`y'") spec("XD") coef(S) table(RT) note("MDE approx. `mde'")
+
+    * The same estimate per standard deviation of S, and fully standardized
+    local nH = e(N)
+    local j = colnumb(RT, "S")
+    quietly summarize S if e(sample)
+    local sdS = r(sd)
+    quietly summarize `y' if e(sample)
+    local sdY = r(sd)
+    local sdS_s : display %5.3f `sdS'
+    local std_s : display %5.3f RT[1,`j'] * `sdS' / `sdY'
+    post_val, part("PerSD") outcome("`y'") spec("XD, per SD of S") coef("S") ///
+        est(`=RT[1,`j'] * `sdS'') stderr(`=RT[2,`j'] * `sdS'') lower(`=RT[5,`j'] * `sdS'') ///
+        upper(`=RT[6,`j'] * `sdS'') pval(`=RT[4,`j']') nobs(`nH') ///
+        note("SD of S = `sdS_s'; standardized coefficient = `std_s'")
 
     * Two one-sided tests against the smallest effect size of interest
     if "`y'" == "phq4" {
@@ -1105,7 +1133,22 @@ foreach g in sex_birth educ {
 restore
 
 * -----------------------------------------------------------------------------
-* 11. Specification curve (Figure 2; Table S6)
+* 11. Post hoc sensitivity analyses, specified after the main results (Table S7)
+* -----------------------------------------------------------------------------
+regress phq4 S if in_xd_main, vce(hc3)
+post_coef, part("PostHoc") outcome("phq4") spec("unadjusted") coef(S)
+
+regress phq4 S i.($XD) i.disclose_s7 if s7_disc, vce(hc3)
+post_coef, part("PostHoc") outcome("phq4") spec("adding disclosure at work") coef(S)
+
+regress phq4 S i.($XD) i.exper_s7 if s7_exper, vce(hc3)
+post_coef, part("PostHoc") outcome("phq4") spec("adding work experience") coef(S)
+
+regress phq4 S i.agegrp i.sex_birth i.educ if in_xd_main, vce(hc3)
+post_coef, part("PostHoc") outcome("phq4") spec("XD without relationship status and region") coef(S)
+
+* -----------------------------------------------------------------------------
+* 12. Specification curve (Figure 2; Table S6)
 * -----------------------------------------------------------------------------
 tempname SP
 tempfile specfile
@@ -1141,35 +1184,60 @@ gen byte main = spec == "S|XD|self|keep"
 split spec, parse("|") gen(choice)
 sort b_sd
 gen rank = _n
-gen byte r1 = 1 if choice1 == "S"
-gen byte r2 = 2 if choice1 == "S8"
-gen byte r3 = 3 if choice1 == "S_count7"
-gen byte r4 = 4 if choice1 == "S_complete7"
-gen byte r5 = 5 if choice2 == "XDXJ"
-gen byte r6 = 6 if choice3 == "consistent"
-gen byte r7 = 7 if choice4 == "drop"
+
+* Estimates in the upper part and the choices of each specification in the
+* lower part share one plot region, so that the columns line up
+quietly summarize lb_sd
+local lo = min(r(min), 0)
+quietly summarize ub_sd
+local hi = ceil(2 * r(max)) / 2
+local sep = `lo' - 0.25
+local step 0.3
+local rl1 "Index: 7-situation mean"
+local rl2 "Index: 8-situation mean"
+local rl3 "Index: count of situations"
+local rl4 "Index: complete 7 only"
+local rl5 "Covariates: X{sup:D} + X{sup:J}"
+local rl6 "LGBT: self-identification + SOGI"
+local rl7 "Transgender/nonbinary excluded"
+local ylab
+local grid
+foreach v of numlist 0(0.5)`hi' {
+    local vl = cond(`v' == floor(`v'), string(`v'), string(`v', "%3.1f"))
+    local ylab `"`ylab' `v' "`vl'""'
+    if `v' > 0 local grid `grid' `v'
+}
+forvalues k = 1/7 {
+    local pos`k' = `sep' - `step' * `k'
+    local ylab `"`ylab' `pos`k'' "`rl`k''""'
+}
+local ymin = `pos7' - `step' / 2
+gen double y1 = `pos1' if choice1 == "S"
+gen double y2 = `pos2' if choice1 == "S8"
+gen double y3 = `pos3' if choice1 == "S_count7"
+gen double y4 = `pos4' if choice1 == "S_complete7"
+gen double y5 = `pos5' if choice2 == "XDXJ"
+gen double y6 = `pos6' if choice3 == "consistent"
+gen double y7 = `pos7' if choice4 == "drop"
 twoway (rcap lb_sd ub_sd rank, lcolor(gs10)) ///
        (scatter b_sd rank if !main, mcolor(navy) msize(small)) ///
-       (scatter b_sd rank if main, mcolor(cranberry) msymbol(D)), ///
-       yline(0, lpattern(dash) lcolor(gs8)) ///
-       ytitle("PHQ-4 difference per SD" "of the stigma index (95% CI)") xtitle("") xlabel(none) ///
-       legend(order(2 "Other specifications" 3 "Main specification") ring(0) pos(11) cols(1) region(lstyle(none))) ///
-       graphregion(color(white)) fysize(58) name(g_top, replace) nodraw
-twoway (scatter r1 r2 r3 r4 r5 r6 r7 rank, msymbol(S S S S S S S) msize(small small small small small small small) ///
-           mcolor(navy navy navy navy navy navy navy)), ///
-       ylabel(1 "Index: 7-situation mean" 2 "Index: 8-situation mean" 3 "Index: count of situations" ///
-              4 "Index: complete 7 only" 5 "Covariates: X{sup:D} + X{sup:J}" 6 "LGBT: self-identification + SOGI" ///
-              7 "Transgender/nonbinary excluded", angle(0) labsize(small) nogrid) ///
-       yscale(reverse range(0.5 7.5)) ytitle("") xtitle("Specification (ranked by estimate)") legend(off) ///
-       graphregion(color(white)) fysize(42) name(g_bottom, replace) nodraw
-graph combine g_top g_bottom, cols(1) xcommon imargin(zero) graphregion(color(white))
+       (scatter b_sd rank if main, mcolor(cranberry) msymbol(D)) ///
+       (scatter y1 y2 y3 y4 y5 y6 y7 rank, msymbol(S S S S S S S) ///
+           mcolor(navy navy navy navy navy navy navy) msize(vsmall vsmall vsmall vsmall vsmall vsmall vsmall)), ///
+       yline(`grid', lcolor(gs14) lwidth(vthin)) yline(0, lpattern(dash) lcolor(gs8)) ///
+       yline(`sep', lcolor(black) lwidth(thin)) ///
+       ylabel(`ylab', angle(0) labsize(small) nogrid) yscale(range(`ymin' `hi')) ytitle("") ///
+       xlabel(1 8 16 24 32) xscale(range(0.5 32.5)) xtitle("Specification (ranked by estimate)") ///
+       title("PHQ-4 difference per SD of the stigma index (95% CI)", size(medsmall) position(11) span) ///
+       legend(order(2 "Other specifications" 3 "Main specification") position(6) rows(1) region(lstyle(none))) ///
+       graphregion(color(white)) xsize(10) ysize(7)
 graph export "$OUT/figure2.png", replace width(2400)
-drop r1-r7 choice1-choice4 rank main
+drop y1-y7 choice1-choice4 rank main
 xl_out "TableS6"
 restore
 
 * -----------------------------------------------------------------------------
-* 12. Multiple-testing adjustment and export
+* 13. Multiple-testing adjustment and export
 * -----------------------------------------------------------------------------
 postclose res
 preserve
@@ -1194,11 +1262,12 @@ drop p_tmp fam_holm fam_bh
 
 gen str10 paper_table = ""
 replace paper_table = "Table S1" if part == "TableS1"
-replace paper_table = "Table 4"  if inlist(part, "H1", "H1_TOST", "H2a", "H2b")
+replace paper_table = "Table 4"  if inlist(part, "H1", "H1_TOST", "PerSD", "H2a", "H2b")
 replace paper_table = "Table 5"  if inlist(part, "H3_a", "H3_b", "H3_c", "H3")
 replace paper_table = "Table S5" if part == "H3_ab"
 replace paper_table = "Table 6"  if inlist(part, "E1", "E2", "E2_notest", "E2_contrast", "AnxDep", "E4", "E5", "E5_aux")
 replace paper_table = "Table 7"  if part == "Robust"
+replace paper_table = "Table S7" if part == "PostHoc"
 
 sort row_id
 drop row_id
@@ -1206,7 +1275,7 @@ order paper_table part outcome spec term b se lb ub p p_holm p_bh N note
 tempfile allres
 save "`allres'"
 xl_out "AllResults"
-foreach t in "Table 4" "Table 5" "Table 6" "Table 7" "Table S1" "Table S5" {
+foreach t in "Table 4" "Table 5" "Table 6" "Table 7" "Table S1" "Table S5" "Table S7" {
     local sheet : subinstr local t " " "", all
     use if paper_table == "`t'" using "`allres'", clear
     xl_out "`sheet'"
