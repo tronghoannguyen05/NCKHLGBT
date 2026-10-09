@@ -1,7 +1,16 @@
 * =============================================================================
-* Kỳ thị tại nơi làm việc và sức khỏe tâm thần của người lao động LGBT
-* Stata 17 trở lên. Mở tệp và bấm Do.
-* Kết quả: ket_qua.xlsx, spec_curve.png và nhat_ky.log trong thư mục OUT.
+* Pathology or Prejudice? Workplace Stigma and Mental Health among LGBT Workers
+* in Vietnam
+*
+* Replication code for all tables and figures of the article.
+*
+* Requirements  Stata 17 or later. User-written packages sensemakr and boottest
+*               (installed from SSC on the first run if missing).
+* Input         Survey export (.xlsx). Set its path in DATA below. The data
+*               contain sensitive personal information and are not public.
+* Output (OUT)  results.xlsx   one sheet per table of the article
+*               figure2.png    specification curve (Figure 2)
+*               analysis.log   full log; Table S3 (sensemakr) is printed here
 * =============================================================================
 
 version 17
@@ -11,22 +20,23 @@ set varabbrev off
 set linesize 120
 
 * -----------------------------------------------------------------------------
-* 0. Thiết lập
+* 0. Settings
 * -----------------------------------------------------------------------------
 global DATA "D:/NCKH chủ đề LGBT/Kỳ_thị_tại_nơi_làm_việc_và_bất_lợi_thu_nhập_-_Khảo_sát_người_lao_động_tại_Việt_Nam_n850.xlsx"
 global OUT  "D:/NCKH chủ đề LGBT/ket_qua"
 
-* 1: chạy toàn bộ. 0: chỉ dữ liệu, luồng mẫu và thống kê mô tả.
+* 1 = full analysis; 0 = data preparation, sample flow and descriptive tables
 global RUN_MODELS 1
 
-global SEED      20260928
-global MIN_CELL  10
-global MIN_LEVEL 5
-global SESOI     1.0
+global SEED      20260928    // bootstrap, wild bootstrap, multiple imputation
+global MIN_CELL  10          // disclosure control: smallest reportable cell
+global MIN_LEVEL 5           // covariate categories below this size are merged
+global SESOI     1.0         // smallest effect size of interest, PHQ-4 points per unit of S
 global MI_M      20
 global BOOT_REPS 5000
 global WILD_REPS 9999
 
+* Pre-exposure (XD) and job (XJ) characteristics
 global XD      "agegrp sex_birth educ relstat region"
 global XJ      "exper industry position emptype orgtype orgsize socins hours"
 global ORDERED "agegrp educ exper orgsize hours"
@@ -39,44 +49,36 @@ global DEI     "dei1 dei2 dei3 dei4"
 
 capture mkdir "$OUT"
 capture log close _all
-log using "$OUT/nhat_ky.log", replace text name(main)
+log using "$OUT/analysis.log", replace text name(main)
+display "Stata " c(stata_version) ", " c(current_date) " " c(current_time)
 
-capture confirm file "$DATA"
-if _rc {
-    di as text "Không thấy tệp dữ liệu theo đường dẫn DATA. Hãy chọn tệp trong hộp thoại."
-    global PICK ""
-    capture window fopen PICK "Chọn tệp dữ liệu (.xlsx)" "Excel (*.xlsx)|*.xlsx"
-    if _rc | `"$PICK"' == "" {
-        di as error "Chưa có tệp dữ liệu. Sửa đường dẫn ở dòng global DATA rồi chạy lại."
-        exit 601
-    }
-    global DATA `"$PICK"'
-}
+confirm file "$DATA"
 
 foreach p in sensemakr boottest {
     capture which `p'
-    if _rc {
-        capture noisily ssc install `p', replace
-    }
+    if _rc capture noisily ssc install `p'
+    capture noisily which `p'
 }
 
-capture erase "$OUT/ket_qua.xlsx"
-capture confirm file "$OUT/ket_qua.xlsx"
+capture erase "$OUT/results.xlsx"
+capture confirm file "$OUT/results.xlsx"
 if !_rc {
-    di as error "Hãy đóng tệp ket_qua.xlsx trong Excel rồi chạy lại."
+    display as error "Close results.xlsx in Excel and run again."
     exit 608
 }
 
 * -----------------------------------------------------------------------------
-* Chương trình dùng chung
+* Programs
 * -----------------------------------------------------------------------------
+
+* Recode a string variable through a list of codes; stops on any unmapped value
 capture program drop map_codes
 program define map_codes
     syntax varname(string), GENerate(name) FROM(string) TO(numlist)
     local nf : word count `from'
     local nt : word count `to'
     if `nf' != `nt' {
-        di as error "map_codes `varlist': from() và to() khác số phần tử"
+        display as error "map_codes `varlist': from() and to() differ in length"
         exit 198
     }
     quietly gen double `generate' = .
@@ -87,24 +89,26 @@ program define map_codes
     }
     quietly count if `varlist' != "" & missing(`generate')
     if r(N) > 0 {
-        di as error "map_codes: `varlist' có giá trị chưa được mã hóa"
+        display as error "map_codes: `varlist' has unmapped values"
         tab `varlist' if `varlist' != "" & missing(`generate')
         exit 459
     }
 end
 
+* Write the data in memory to one sheet of results.xlsx
 capture program drop xl_out
 program define xl_out
     args sheet
-    capture confirm file "$OUT/ket_qua.xlsx"
+    capture confirm file "$OUT/results.xlsx"
     if _rc {
-        export excel using "$OUT/ket_qua.xlsx", sheet("`sheet'") firstrow(variables) replace
+        export excel using "$OUT/results.xlsx", sheet("`sheet'") firstrow(variables) replace
     }
     else {
-        export excel using "$OUT/ket_qua.xlsx", sheet("`sheet'") firstrow(variables) sheetreplace
+        export excel using "$OUT/results.xlsx", sheet("`sheet'") firstrow(variables) sheetreplace
     }
 end
 
+* Post one coefficient from r(table), or from a stored copy of it, to the results file
 capture program drop post_coef
 program define post_coef
     syntax, PART(string) OUTCOME(string) SPEC(string) COEF(string) [NOTE(string) TABLE(name)]
@@ -113,13 +117,14 @@ program define post_coef
     else matrix `T' = r(table)
     local j = colnumb(`T', "`coef'")
     if missing(`j') {
-        di as error "post_coef: không thấy hệ số `coef'"
+        display as error "post_coef: coefficient `coef' not found"
         exit 111
     }
     post res ("`part'") ("`outcome'") ("`spec'") ("`coef'") (`T'[1,`j']) (`T'[2,`j']) ///
         (`T'[5,`j']) (`T'[6,`j']) (`T'[4,`j']) (e(N)) (`"`note'"')
 end
 
+* Post values computed elsewhere; empty options are stored as missing
 capture program drop post_val
 program define post_val
     syntax, PART(string) OUTCOME(string) SPEC(string) COEF(string) ///
@@ -131,7 +136,7 @@ program define post_val
         (`pval') (`nobs') (`"`note'"')
 end
 
-* Holm và Benjamini-Hochberg theo họ kiểm định
+* Holm and Benjamini-Hochberg adjustment within families of tests
 capture program drop padjust
 program define padjust
     syntax varname(numeric), GENerate(name) Method(string) [BY(varname)]
@@ -154,52 +159,46 @@ program define padjust
     gen double `generate' = `raw'
 end
 
-* Bảng tần số theo nhóm, ẩn ô dưới MIN_CELL (kèm ẩn thứ cấp), cộng dồn vào tệp dta
-capture program drop tabsafe
-program define tabsafe
-    syntax varname [if], BY(varname) SAVing(string)
-    marksample touse, novarlist
-    preserve
-    quietly {
-        keep if `touse'
-        local vlab : value label `varlist'
-        local blab : value label `by'
-        gen _level = `varlist'
-        gen _group = `by'
-        contract _group _level, freq(n) zero
-        bysort _group: egen long total = total(n)
-        gen double pct = 100 * n / total
-        gen byte suppressed = (n > 0 & n < $MIN_CELL)
-        bysort _group: egen n_supp = total(suppressed)
-        gen double _key = cond(suppressed | n == 0, ., n)
-        gen byte secondary = 0
-        bysort _group (_key): replace secondary = 1 if n_supp == 1 & _n == 1 & !missing(_key)
-        gen str12 n_show = string(n)
-        replace n_show = "<$MIN_CELL" if suppressed
-        replace n_show = "ẩn" if secondary
-        gen str8 pct_show = cond(suppressed | secondary, "", string(pct, "%5.1f"))
-        gen str32 variable = "`varlist'"
-        if "`vlab'" != "" {
-            label values _level `vlab'
-            decode _level, gen(level)
-        }
-        else gen str32 level = string(_level)
-        replace level = "Khuyết" if missing(_level)
-        if "`blab'" != "" {
-            label values _group `blab'
-            decode _group, gen(group)
-        }
-        else gen str32 group = string(_group)
-        keep variable group level n_show pct_show total
-        order variable group level n_show pct_show total
-        capture confirm file "`saving'"
-        if !_rc append using "`saving'"
-        save "`saving'", replace
+* Rows of Table 2 for one characteristic. Cells below MIN_CELL are suppressed.
+* Stops if a single suppressed cell could be recovered from the column total.
+capture program drop t2_rows
+program define t2_rows
+    syntax varname, CODES(numlist) [LGBTONLY]
+    local title : variable label `varlist'
+    post t2 (`"`title'"') ("") ("") ("")
+    foreach g in 1 0 {
+        quietly count if t2_col == `g'
+        local tot`g' = r(N)
+        local shown`g' 0
+        local nsupp`g' 0
     }
-    restore
+    foreach c of local codes {
+        local lab : label (`varlist') `c'
+        foreach g in 1 0 {
+            if "`lgbtonly'" != "" & `g' == 0 {
+                local cell`g' "-"
+                continue
+            }
+            quietly count if t2_col == `g' & `varlist' == `c'
+            local n = r(N)
+            local shown`g' = `shown`g'' + `n'
+            if `n' > 0 & `n' < $MIN_CELL {
+                local cell`g' "<$MIN_CELL"
+                local ++nsupp`g'
+            }
+            else local cell`g' = string(`n') + " (" + strtrim(string(100 * `n' / `tot`g'', "%5.1f")) + ")"
+        }
+        post t2 ("") (`"`lab'"') ("`cell1'") ("`cell0'")
+    }
+    foreach g in 1 0 {
+        if `nsupp`g'' == 1 & `shown`g'' == `tot`g'' {
+            display as error "Table 2, `varlist': a suppressed cell can be recovered from the column total"
+            exit 459
+        }
+    }
 end
 
-* Cronbach's alpha trên các quan sát đủ câu, kèm số quan sát
+* Cronbach's alpha on respondents who answered every item
 capture program drop rel_post
 program define rel_post
     syntax varlist [if], NAME(string) SAMPLE(string)
@@ -210,7 +209,7 @@ program define rel_post
     post rel ("`name'") ("`sample'") (`a') (.) (r(N))
 end
 
-* Gộp mức có dưới min người trong mẫu ước lượng (chỉ dựa trên số đếm)
+* Largest category of a variable in the estimation sample
 capture program drop modal_level
 program define modal_level, rclass
     syntax varname, Touse(varname) [Exclude(numlist)]
@@ -229,6 +228,10 @@ program define modal_level, rclass
     return scalar level = `best'
 end
 
+* Merge categories with fewer than min respondents in the estimation sample.
+* Ordered variables: adjacent category nearer the median. Nominal variables:
+* pooled category. Special codes (prefer not to answer): pooled category if it
+* exists, otherwise the largest category. Decisions use counts only.
 capture program drop collapse_sparse
 program define collapse_sparse
     syntax varname, Touse(varname) Min(integer) Kind(string) Special(numlist) Pooled(integer)
@@ -237,7 +240,7 @@ program define collapse_sparse
     while 1 {
         local ++guard
         if `guard' > 50 {
-            di as error "collapse_sparse: quá nhiều vòng lặp ở `v'"
+            display as error "collapse_sparse: too many iterations for `v'"
             exit 498
         }
         quietly levelsof `v' if `touse', local(levs)
@@ -291,12 +294,12 @@ program define collapse_sparse
         post lv ("`v'") (`l') (`target') ("<`min'")
         local lbl : value label `v'
         if "`lbl'" != "" & `target' == `pooled' {
-            capture label define `lbl' `pooled' "Khác (gộp)", add
+            capture label define `lbl' `pooled' "Other (pooled)", add
         }
     }
 end
 
-* Hiệu ứng gián tiếp a*b cho bootstrap
+* Indirect product a*b of the concealment pathway, for the bootstrap
 capture program drop h3_ab
 program define h3_ab, rclass
     quietly regress C S i.($XD)
@@ -305,7 +308,7 @@ program define h3_ab, rclass
     return scalar ab = `a' * _b[C]
 end
 
-* VIF tổng quát cho nhóm biến giả (Fox & Monette, 1992)
+* Generalized variance inflation factors for groups of dummies (Fox & Monette, 1992)
 mata:
 real rowvector gvif(string scalar vars, string scalar touse, real rowvector sizes)
 {
@@ -330,7 +333,7 @@ real rowvector gvif(string scalar vars, string scalar touse, real rowvector size
 end
 
 * -----------------------------------------------------------------------------
-* 1. Nhập dữ liệu và mã hóa
+* 1. Import and coding
 * -----------------------------------------------------------------------------
 import excel using "$DATA", firstrow allstring clear
 foreach v of varlist _all {
@@ -357,7 +360,8 @@ map_codes c9_employer_size,       gen(orgsize)   from(duoi50 50199 200499 tu500 
 map_codes c7_social_insurance,    gen(socins)    from(co khong kad kr kmtl) to(1 2 3 4 9)
 map_codes c13_hours,              gen(hours)     from(duoi20 2035 3545 4555 tu55 kxd_kmtl) to(1 2 3 4 5 9)
 
-* Câu 21: vị trí 3 là "buồn bã", vị trí 4 là "ít hứng thú"
+* PHQ-4 items: positions 1-2 are the GAD-2 items; in the questionnaire,
+* position 3 is "feeling down" and position 4 is "little interest"
 destring c21_1, gen(phqi1)
 destring c21_2, gen(phqi2)
 destring c21_4, gen(phqi3)
@@ -385,17 +389,18 @@ foreach v of global DEI {
     assert inrange(`v', 1, 5) | `v' == 9 | missing(`v')
 }
 
-label define yesno_lb   0 "Không" 1 "Có"
-label define lgbtself_lb 0 "Không" 1 "Có" 8 "Không chắc" 9 "Không muốn trả lời"
-label define orient_lb  1 "Dị tính" 2 "Đồng tính nam" 3 "Đồng tính nữ" 4 "Song tính" 5 "Toàn tính" ///
-                        6 "Khác" 7 "Đang tự xác định" 9 "Không muốn trả lời"
-label define gender_lb  1 "Nam" 2 "Nữ" 3 "Nam chuyển giới" 4 "Nữ chuyển giới" 5 "Phi nhị nguyên" ///
-                        6 "Khác" 9 "Không muốn trả lời"
-label define sex_lb     1 "Nam" 2 "Nữ" 9 "Không muốn trả lời"
-label define age_lb     1 "18-24" 2 "25-34" 3 "35-44" 4 "45+" 9 "Không muốn trả lời"
-label define educ_lb    1 "THPT trở xuống" 2 "Cao đẳng" 3 "Đại học" 4 "Sau đại học" 9 "Không muốn trả lời"
-label define rel_lb     1 "Không có bạn đời" 2 "Có bạn đời" 3 "Ly thân/ly hôn/góa" 9 "Không muốn trả lời"
-label define region_lb  1 "Hà Nội" 2 "TP.HCM" 3 "Đà Nẵng" 4 "Nơi khác" 9 "Không muốn trả lời"
+label define yesno_lb    0 "No" 1 "Yes"
+label define lgbtself_lb 0 "No" 1 "Yes" 8 "Unsure" 9 "Prefer not to answer"
+label define orient_lb   1 "Heterosexual" 2 "Gay" 3 "Lesbian" 4 "Bisexual" 5 "Pansexual" ///
+                         6 "Other" 7 "Questioning" 9 "Prefer not to answer"
+label define gender_lb   1 "Man" 2 "Woman" 3 "Transgender man" 4 "Transgender woman" 5 "Nonbinary" ///
+                         6 "Other" 9 "Prefer not to answer"
+label define sex_lb      1 "Male" 2 "Female" 9 "Prefer not to answer"
+label define age_lb      1 "18-24" 2 "25-34" 3 "35-44" 4 "45 or older" 9 "Prefer not to answer"
+label define educ_lb     1 "Upper secondary or below" 2 "College" 3 "University" 4 "Postgraduate" ///
+                         9 "Prefer not to answer"
+label define rel_lb      1 "No partner" 2 "Partner" 3 "Separated, divorced, or widowed" 9 "Prefer not to answer"
+label define region_lb   1 "Hanoi" 2 "Ho Chi Minh City" 3 "Da Nang" 4 "Elsewhere" 9 "Prefer not to answer"
 label values age18 has_job yesno_lb
 label values lgbt_self lgbtself_lb
 label values orient orient_lb
@@ -405,9 +410,14 @@ label values agegrp age_lb
 label values educ educ_lb
 label values relstat rel_lb
 label values region region_lb
+label variable agegrp    "Age group"
+label variable sex_birth "Sex assigned at birth"
+label variable educ      "Education"
+label variable relstat   "Relationship status"
+label variable region    "Region of work"
 
 * -----------------------------------------------------------------------------
-* 2. Biến dựng và cờ mẫu
+* 2. Derived variables and sample indicators
 * -----------------------------------------------------------------------------
 gen byte eligible = (age18 == 1 & has_job == 1)
 gen byte lgbt = .
@@ -422,12 +432,14 @@ gen byte orient3 = .
 replace orient3 = 1 if inlist(orient, 4, 5)
 replace orient3 = 2 if orient == 3
 replace orient3 = 3 if orient == 2
-label define orient3_lb 1 "Song tính/toàn tính" 2 "Đồng tính nữ" 3 "Đồng tính nam"
+label define orient3_lb 1 "Bisexual or pansexual" 2 "Lesbian" 3 "Gay"
 label values orient3 orient3_lb
 
+* "Not applicable or prefer not to answer" on the stigma and DEI items is missing
 foreach v of varlist $STIG8 $DEI {
     replace `v' = . if `v' == 9
 }
+* Alternative rule: "prefer not to answer" on a covariate is missing
 foreach v of global XD {
     gen `v'_alt = `v'
     replace `v'_alt = . if `v' == 9
@@ -441,6 +453,7 @@ gen double phq4_frac = phq4 / 12
 gen byte phq_ge6 = phq4 >= 6 if !missing(phq4)
 gen byte phq4_zero = phq4 == 0 if !missing(phq4)
 
+* Stigma index S: mean of situations 1-7, at least four answered
 egen byte S_n = rownonmiss($STIG7)
 egen double S_raw = rowmean($STIG7)
 gen double S = S_raw if S_n >= 4 & lgbt == 1
@@ -456,6 +469,7 @@ forvalues j = 1/8 {
 gen byte ever_exposed = S > 0 if !missing(S)
 gen double S_exposed = cond(ever_exposed == 1, S, 0) if !missing(S)
 
+* Concealment C (all four statements) and C3 (fatigue statement omitted)
 egen byte C_n = rownonmiss($CONC)
 egen double C_raw = rowmean($CONC)
 gen double C = C_raw if C_n == 4 & lgbt == 1
@@ -463,10 +477,12 @@ egen byte C3_n = rownonmiss($CONC3)
 egen double C3_raw = rowmean($CONC3)
 gen double C3 = C3_raw if C3_n == 3 & lgbt == 1
 
+* Perceived DEI enforcement Q: at least three statements answered
 egen byte Q_n = rownonmiss($DEI)
 egen double Q_raw = rowmean($DEI)
 gen double Q = Q_raw if Q_n >= 3
 
+* Response quality: identical answers on all three scales, or contradictory answers
 foreach sc in PHQI CONC DEI {
     egen double sd_`sc' = rowsd(${`sc'})
     egen byte n_`sc' = rownonmiss(${`sc'})
@@ -496,27 +512,28 @@ drop xd_miss xda_miss xj_miss
 quietly summarize Q if in_e5
 gen double Qc = Q - r(mean) if !missing(Q)
 
+* E1: cut at the median of S among exposed respondents of the main sample
 quietly summarize S if in_main & S > 0, detail
 scalar S_med_exposed = r(p50)
 gen byte S3 = .
 replace S3 = 0 if S == 0
 replace S3 = 1 if S > 0 & S <= S_med_exposed & !missing(S)
 replace S3 = 2 if S > S_med_exposed & !missing(S)
-label define S3_lb 0 "Không gặp" 1 "Thấp" 2 "Cao"
+label define S3_lb 0 "None" 1 "Low" 2 "High"
 label values S3 S3_lb
 
 gen byte lgbt_consistent = lgbt == 1 & (inrange(orient, 2, 6) | gender_minority == 1)
 
 * -----------------------------------------------------------------------------
-* 3. Luồng mẫu
+* 3. Sample flow (Table 1)
 * -----------------------------------------------------------------------------
 tempname F
 tempfile flow
-postfile `F' str48 buoc long(n_tong n_non n_lgbt ky_vong) using "`flow'", replace
+postfile `F' str80 step long(n_total n_nonlgbt n_lgbt expected) using "`flow'", replace
 quietly count
-post `F' ("Tổng số phiếu") (r(N)) (.) (.) (850)
+post `F' ("Responses received") (r(N)) (.) (.) (850)
 quietly count if eligible
-post `F' ("Đủ điều kiện") (r(N)) (.) (.) (727)
+post `F' ("Eligible: aged 18 or older with a main income-generating job") (r(N)) (.) (.) (727)
 foreach s in in_analytic in_e3 in_main in_xd_main in_xd_alt in_e5 {
     quietly count if `s'
     local a = r(N)
@@ -524,135 +541,165 @@ foreach s in in_analytic in_e3 in_main in_xd_main in_xd_alt in_e5 {
     local b = r(N)
     quietly count if `s' & lgbt == 1
     local c = r(N)
-    if "`s'" == "in_analytic" post `F' ("Mẫu phân tích") (`a') (`b') (`c') (640)
-    if "`s'" == "in_e3"       post `F' ("Đủ PHQ-4") (`a') (`b') (`c') (601)
-    if "`s'" == "in_main"     post `F' ("Mẫu chính") (`a') (`b') (`c') (278)
-    if "`s'" == "in_xd_main"  post `F' ("Mẫu chính, đủ XD (quy tắc chính)") (`a') (`b') (`c') (256)
-    if "`s'" == "in_xd_alt"   post `F' ("Mẫu chính, đủ XD (quy tắc thay thế)") (`a') (`b') (`c') (247)
-    if "`s'" == "in_e5"       post `F' ("Mẫu E5") (`a') (`b') (`c') (243)
+    if "`s'" == "in_analytic" post `F' ("Analytic sample") (`a') (`b') (`c') (640)
+    if "`s'" == "in_e3"       post `F' ("Complete PHQ-4 (E3)") (`a') (`b') (`c') (601)
+    if "`s'" == "in_main"     post `F' ("Main sample: complete PHQ-4 and valid stigma index") (`a') (`b') (`c') (278)
+    if "`s'" == "in_xd_main"  post `F' ("Main sample, complete covariates, main rule") (`a') (`b') (`c') (256)
+    if "`s'" == "in_xd_alt"   post `F' ("Main sample, complete covariates, alternative rule") (`a') (`b') (`c') (247)
+    if "`s'" == "in_e5"       post `F' ("Main rule with a valid DEI enforcement score (E5)") (`a') (`b') (`c') (243)
 }
 postclose `F'
 preserve
 use "`flow'", clear
-gen byte khop = n_tong == ky_vong
+gen byte match = n_total == expected
 list, noobs abbreviate(20)
-xl_out "LuongMau"
-quietly count if !khop
+xl_out "Table1"
+quietly count if !match
 local nmis = r(N)
 restore
 if `nmis' > 0 {
-    di as error "Luồng mẫu khác đề cương ở `nmis' bước. Kiểm tra lại dữ liệu đầu vào."
+    display as error "Sample flow differs from the documented counts at `nmis' step(s). Check the input file."
     exit 9
 }
 
 * -----------------------------------------------------------------------------
-* 4. Thống kê mô tả
+* 4. Descriptive statistics
 * -----------------------------------------------------------------------------
-tempfile t5
-foreach v in agegrp sex_birth gender_minority orient educ relstat region {
-    tabsafe `v' if in_e3, by(lgbt) saving("`t5'")
-}
+
+* Table 2: LGBT main sample and non-LGBT respondents with complete PHQ-4
+gen byte t2_col = .
+replace t2_col = 1 if in_main
+replace t2_col = 0 if in_e3 & lgbt == 0
+gen byte orient_t2 = orient if inlist(orient, 2, 3, 4, 5)
+replace orient_t2 = 0 if missing(orient_t2)
+label define orient_t2_lb 2 "Gay" 3 "Lesbian" 4 "Bisexual" 5 "Pansexual" 0 "Other, questioning, or not reported"
+label values orient_t2 orient_t2_lb
+label variable orient_t2 "Sexual orientation"
+
+tempfile t2file
+postfile t2 str60 characteristic str60 category str24 lgbt_main str24 non_lgbt using "`t2file'", replace
+quietly count if t2_col == 1
+local n1 = r(N)
+quietly count if t2_col == 0
+local n0 = r(N)
+post t2 ("n") ("") ("`n1'") ("`n0'")
+t2_rows agegrp,    codes(1 2 3 4)
+t2_rows sex_birth, codes(1 2)
+t2_rows educ,      codes(1 2 3 4)
+t2_rows relstat,   codes(1 2 3 9)
+t2_rows region,    codes(1 2 3 4)
+t2_rows orient_t2, codes(2 3 4 5 0) lgbtonly
+postclose t2
 preserve
-use "`t5'", clear
-xl_out "MoTaMau"
+use "`t2file'", clear
+xl_out "Table2"
 restore
 
+* PHQ-4 scores by group (Methods)
 preserve
 keep if in_e3
-collapse (mean) tb_phq4=phq4 tb_gad2=gad2 tb_phq2=phq2 (sd) sd_phq4=phq4 sd_gad2=gad2 sd_phq2=phq2 ///
-    (count) n=phq4 (mean) ty_le_0=phq4_zero, by(lgbt)
-xl_out "TrieuChung"
+collapse (mean) mean_phq4=phq4 mean_gad2=gad2 mean_phq2=phq2 (sd) sd_phq4=phq4 sd_gad2=gad2 ///
+    sd_phq2=phq2 (count) n=phq4 (mean) share_zero=phq4_zero, by(lgbt)
+xl_out "Symptoms"
 restore
 
+* Reliability (Methods)
 tempfile relfile
-postfile rel str40 thang_do str12 mau double(alpha r_2cau) long N using "`relfile'", replace
+postfile rel str40 scale str16 sample double(alpha r_items) long N using "`relfile'", replace
 rel_post $PHQI if in_e3, name("PHQ-4") sample("E3")
 quietly corr phqi1 phqi2 if in_e3
 post rel ("GAD-2") ("E3") (.) (r(rho)) (r(N))
 quietly corr phqi3 phqi4 if in_e3
 post rel ("PHQ-2") ("E3") (.) (r(rho)) (r(N))
-rel_post $CONC if lgbt == 1 & in_analytic, name("Che giấu (4 câu)") sample("LGBT")
-rel_post $DEI if in_analytic, name("DEI (4 câu)") sample("Phân tích")
-rel_post $STIG7 if lgbt == 1 & in_analytic, name("Kỳ thị 7 câu (tham khảo)") sample("LGBT")
-rel_post $STIG8 if lgbt == 1 & in_analytic, name("Kỳ thị 8 câu (tham khảo)") sample("LGBT")
+rel_post $CONC if lgbt == 1 & in_analytic, name("Concealment (4 statements)") sample("LGBT")
+rel_post $DEI if in_analytic, name("DEI enforcement (4 statements)") sample("Analytic")
+rel_post $STIG7 if lgbt == 1 & in_analytic, name("Stigma, 7 situations") sample("LGBT")
+rel_post $STIG8 if lgbt == 1 & in_analytic, name("Stigma, 8 situations") sample("LGBT")
 postclose rel
 preserve
 use "`relfile'", clear
-xl_out "DoTinCay"
+xl_out "Reliability"
 restore
 
+* Share of the main sample reporting each situation at least once (Results)
 tempname P
 tempfile prev
-postfile `P' str8 tinh_huong long n_hop_le str12 n_gap str8 ty_le using "`prev'", replace
+postfile `P' str16 situation long n_valid str12 n_exposed str8 pct using "`prev'", replace
 forvalues j = 1/8 {
     quietly count if in_main & !missing(stig`j'_any)
     local nv = r(N)
     quietly count if in_main & stig`j'_any == 1
     local na = r(N)
     local nshow = cond(`na' > 0 & `na' < $MIN_CELL, "<$MIN_CELL", string(`na'))
-    local pshow = cond(`na' > 0 & `na' < $MIN_CELL, "", string(100 * `na' / `nv', "%5.1f"))
-    post `P' ("stig`j'") (`nv') ("`nshow'") ("`pshow'")
+    local pshow = cond(`na' > 0 & `na' < $MIN_CELL, "", strtrim(string(100 * `na' / `nv', "%5.1f")))
+    post `P' ("situation `j'") (`nv') ("`nshow'") ("`pshow'")
 }
+quietly count if in_main
+local nv = r(N)
+quietly count if in_main & S > 0
+local na = r(N)
+local pshow = strtrim(string(100 * `na' / `nv', "%5.1f"))
+post `P' ("any of 1-7") (`nv') ("`na'") ("`pshow'")
 postclose `P'
 preserve
 use "`prev'", clear
-xl_out "TyLeKyThi"
+xl_out "Prevalence"
 restore
 
-* Các biến nghiên cứu trong mẫu chính đủ XD: trung bình, độ lệch chuẩn, tương quan từng cặp
+* Table 3: study variables in the main-rule sample
 preserve
 keep if in_xd_main
 tempname MB
 tempfile mbfile
-postfile `MB' str12 bien long n double(tb sd trung_vi nho_nhat lon_nhat) using "`mbfile'", replace
+postfile `MB' str16 variable long n double(mean sd median min max) using "`mbfile'", replace
 foreach v in phq4 gad2 phq2 S C Q {
     quietly summarize `v', detail
     post `MB' ("`v'") (r(N)) (r(mean)) (r(sd)) (r(p50)) (r(min)) (r(max))
 }
 quietly count if S > 0
-post `MB' ("ty_le_S>0") (r(N)) (100 * r(N) / _N) (.) (.) (.) (.)
+post `MB' ("pct S > 0") (r(N)) (100 * r(N) / _N) (.) (.) (.) (.)
 quietly count if phq4 >= 6
-post `MB' ("ty_le_PHQ>=6") (r(N)) (100 * r(N) / _N) (.) (.) (.) (.)
+post `MB' ("pct PHQ-4 >= 6") (r(N)) (100 * r(N) / _N) (.) (.) (.) (.)
 postclose `MB'
 quietly pwcorr phq4 gad2 phq2 S C Q
 matrix TQ = r(C)
 use "`mbfile'", clear
-xl_out "MoTaBien"
+xl_out "Table3_Descriptives"
 clear
 svmat TQ, names(col)
-gen str8 bien = ""
+gen str8 variable = ""
 local i 0
 foreach v in phq4 gad2 phq2 S C Q {
     local ++i
-    quietly replace bien = "`v'" in `i'
+    quietly replace variable = "`v'" in `i'
 }
-order bien
-xl_out "TuongQuan"
+order variable
+xl_out "Table3_Correlations"
 restore
 
-* So sánh người thiếu và đủ dữ liệu
+* Respondents with and without complete data (Results)
 preserve
 keep if in_analytic & lgbt == 1
-gen byte co_phq4 = !missing(phq4)
-collapse (mean) tb_S=S (count) n_S=S n=lgbt, by(co_phq4)
-gen so_sanh = "LGBT phân tích: có / không có PHQ-4"
+gen byte has_phq4 = !missing(phq4)
+collapse (mean) mean_S=S (count) n_S=S n=lgbt, by(has_phq4)
+gen comparison = "LGBT analytic sample: with / without PHQ-4"
 tempfile mis1
 save "`mis1'"
 restore
 preserve
 keep if in_main
-collapse (mean) tb_phq4=phq4 tb_S=S (sd) sd_phq4=phq4 sd_S=S (count) n=phq4, by(in_xd_main)
-gen so_sanh = "Mẫu chính: đủ / thiếu XD"
+collapse (mean) mean_phq4=phq4 mean_S=S (sd) sd_phq4=phq4 sd_S=S (count) n=phq4, by(in_xd_main)
+gen comparison = "Main sample: with / without complete covariates"
 append using "`mis1'"
-order so_sanh
-xl_out "SoSanhKhuyet"
+order comparison
+xl_out "MissingData"
 restore
 
 * -----------------------------------------------------------------------------
-* 5. Gộp mức thưa của biến kiểm soát
+* 5. Merging sparse covariate categories
 * -----------------------------------------------------------------------------
 tempfile lvfile
-postfile lv str24 bien double(muc_cu muc_moi) str8 so_nguoi using "`lvfile'", replace
+postfile lv str24 variable double(old_code new_code) str8 n using "`lvfile'", replace
 
 foreach v of global XD {
     clonevar `v'_orig = `v'
@@ -679,16 +726,16 @@ preserve
 use "`lvfile'", clear
 if _N == 0 {
     set obs 1
-    replace bien = "Không có mức nào cần gộp"
+    replace variable = "No category merged"
 }
-xl_out "GopMuc"
+xl_out "MergedCategories"
 restore
 
-* Bảng 6: PHQ-4 theo đặc điểm nhân khẩu học (mô tả, chưa có biến kỳ thị), sau khi gộp mức thưa
+* Table S1: PHQ-4 by pre-exposure characteristics. Categories with fewer than
+* MIN_CELL respondents are estimated but not reported.
 tempfile resfile
 postfile res str20 part str16 outcome str60 spec str40 term double(b se lb ub p) long N str244 note ///
     using "`resfile'", replace
-* Hệ số của mức có dưới MIN_CELL người không được xuất
 regress phq4 i.($XD) if in_xd_main, vce(hc3)
 matrix RT = r(table)
 local cn : colnames RT
@@ -698,10 +745,10 @@ foreach c of local cn {
     local var = substr("`c'", strpos("`c'", ".") + 1, .)
     quietly count if e(sample) & `var' == `lev'
     if r(N) < $MIN_CELL {
-        post_val, part("Bang6") outcome("phq4") spec("XD") coef("`c'") note("Dưới $MIN_CELL người: không xuất")
+        post_val, part("TableS1") outcome("phq4") spec("XD") coef("`c'") note("Fewer than $MIN_CELL respondents: not reported")
     }
     else {
-        post_coef, part("Bang6") outcome("phq4") spec("XD") coef(`c') table(RT)
+        post_coef, part("TableS1") outcome("phq4") spec("XD") coef(`c') table(RT)
     }
 }
 
@@ -709,16 +756,15 @@ if $RUN_MODELS == 0 {
     postclose res
     preserve
     use "`resfile'", clear
-    xl_out "Bang6"
+    xl_out "TableS1"
     restore
-    di as result "Xong phần dữ liệu và mô tả. Kết quả: $OUT/ket_qua.xlsx"
-    di as result "Để chạy mô hình: đặt global RUN_MODELS 1 rồi chạy lại."
+    display as result "Data preparation and descriptive tables finished: $OUT/results.xlsx"
     log close main
     exit
 }
 
 * -----------------------------------------------------------------------------
-* 6. H1, H2a, H2b
+* 6. H1, H2a, H2b (Table 4)
 * -----------------------------------------------------------------------------
 foreach y in phq4 gad2 phq2 {
     local h = cond("`y'" == "phq4", "H1", cond("`y'" == "gad2", "H2a", "H2b"))
@@ -726,8 +772,9 @@ foreach y in phq4 gad2 phq2 {
     regress `y' S i.($XD) if in_xd_main, vce(hc3)
     matrix RT = r(table)
     local mde = string(2.8 * _se[S], "%5.2f")
-    post_coef, part("`h'") outcome("`y'") spec("XD") coef(S) table(RT) note("MDE ~ `mde'")
+    post_coef, part("`h'") outcome("`y'") spec("XD") coef(S) table(RT) note("MDE approx. `mde'")
 
+    * Two one-sided tests against the smallest effect size of interest
     if "`y'" == "phq4" {
         local df = e(df_r)
         local bS = _b[S]
@@ -737,19 +784,19 @@ foreach y in phq4 gad2 phq2 {
         local p1 = ttail(`df', (`bS' + $SESOI) / `seS')
         local p2 = 1 - ttail(`df', (`bS' - $SESOI) / `seS')
         local ptost = max(`p1', `p2')
-        local kl = cond(`lo90' > -$SESOI & `hi90' < $SESOI, "tương đương", "không kết luận được tương đương")
-        post_val, part("H1_TOST") outcome("phq4") spec("XD, CI 90%") coef("S") est(`bS') stderr(`seS') ///
-            lower(`lo90') upper(`hi90') pval(`ptost') nobs(`e(N)') note("SESOI +/-$SESOI; `kl'")
+        local eq = cond(`lo90' > -$SESOI & `hi90' < $SESOI, "yes", "no")
+        post_val, part("H1_TOST") outcome("phq4") spec("XD, 90% CI") coef("S") est(`bS') stderr(`seS') ///
+            lower(`lo90') upper(`hi90') pval(`ptost') nobs(`e(N)') note("SESOI +/-$SESOI; equivalence: `eq'")
     }
 
     regress `y' S i.($XD) i.($XJ) if in_xj, vce(hc3)
     post_coef, part("`h'") outcome("`y'") spec("XD + XJ") coef(S)
 }
 regress phq4 S i.(`xdalt') if in_xd_alt, vce(hc3)
-post_coef, part("H1") outcome("phq4") spec("XD, PNTA = missing") coef(S)
+post_coef, part("H1") outcome("phq4") spec("XD, prefer not to answer as missing") coef(S)
 
 * -----------------------------------------------------------------------------
-* 7. H3: kỳ thị -> che giấu -> PHQ-4
+* 7. H3: stigma, concealment, PHQ-4 (Table 5; Table S5)
 * -----------------------------------------------------------------------------
 foreach cv in C C3 {
     gen byte h3s = in_xd_main & !missing(`cv')
@@ -766,13 +813,14 @@ foreach cv in C C3 {
     post_coef, part("H3_b") outcome("phq4") spec("`cv'") coef(`cv') table(RB)
     post_coef, part("H3_c") outcome("phq4") spec("`cv'") coef(S) table(RB)
 
+    * Intersection-union test: the larger of the two p values
     quietly count if h3s
     post_val, part("H3") outcome("phq4") spec("`cv'") coef("max(p_a, p_b)") pval(`=max(`pa', `pb')') ///
-        nobs(`r(N)') note("a>0: `apos'; b>0: `bpos'")
+        nobs(`r(N)') note("a > 0: `apos'; b > 0: `bpos'")
     drop h3s
 }
 
-* Lỗi ở bước này không được làm dừng phần sau, và dữ liệu luôn được khôi phục
+* A failure in a resampling step is recorded and the data are always restored
 preserve
 keep if in_xd_main & !missing(C)
 capture noisily {
@@ -787,55 +835,58 @@ capture noisily {
 local rc = _rc
 restore
 if `rc' == 0 {
-    post_val, part("H3_ab") outcome("phq4") spec("bootstrap percentile") coef("a*b") ///
-        est(`bab') lower(`lab') upper(`uab') nobs(`nab') note("$BOOT_REPS lần; chỉ cho tài liệu bổ sung")
+    post_val, part("H3_ab") outcome("phq4") spec("percentile bootstrap") coef("a*b") ///
+        est(`bab') lower(`lab') upper(`uab') nobs(`nab') note("$BOOT_REPS resamples")
 }
 else {
-    post_val, part("H3_ab") outcome("phq4") spec("bootstrap percentile") coef("a*b") note("Lỗi Stata `rc'")
+    post_val, part("H3_ab") outcome("phq4") spec("percentile bootstrap") coef("a*b") note("Stata error `rc'")
 }
 
 * -----------------------------------------------------------------------------
-* 8. Phân tích thăm dò E1-E5
+* 8. Exploratory analyses E1-E5 (Table 6; Table S4)
 * -----------------------------------------------------------------------------
-* E3: phân bố PHQ-4 theo ba nhóm (chỉ mô tả)
+
+* E3: distribution of PHQ-4 scores in three groups, descriptive only
 gen byte e3_group = .
 replace e3_group = 0 if in_e3 & lgbt == 0
 replace e3_group = 1 if in_e3 & lgbt == 1 & ever_exposed == 0
 replace e3_group = 2 if in_e3 & lgbt == 1 & ever_exposed == 1
-label define e3_lb 0 "Non-LGBT" 1 "LGBT, chưa gặp kỳ thị" 2 "LGBT, đã gặp kỳ thị"
+label define e3_lb 0 "Non-LGBT" 1 "LGBT, no reported stigma" 2 "LGBT, at least one situation"
 label values e3_group e3_lb
 preserve
 keep if !missing(e3_group)
-collapse (mean) tb=phq4 (sd) sd=phq4 (p50) trung_vi=phq4 (mean) ty_le_ge6=phq_ge6 (count) n=phq4, by(e3_group)
-replace ty_le_ge6 = 100 * ty_le_ge6
-decode e3_group, gen(nhom)
+collapse (count) n=phq4 (mean) mean=phq4 (sd) sd=phq4 (p50) median=phq4 (mean) pct_ge6=phq_ge6, by(e3_group)
+replace pct_ge6 = 100 * pct_ge6
+decode e3_group, gen(group)
 drop e3_group
-order nhom
-xl_out "E3"
+order group
+xl_out "TableS4"
 restore
 
-* E1: ba mức kỳ thị
+* E1: three levels of exposure
 regress phq4 i.S3 i.($XD) if in_xd_main, vce(hc3)
 matrix RT = r(table)
-post_coef, part("E1") outcome("phq4") spec("thấp so với không gặp") coef(1.S3) table(RT)
-post_coef, part("E1") outcome("phq4") spec("cao so với không gặp") coef(2.S3) table(RT)
+post_coef, part("E1") outcome("phq4") spec("low vs. none") coef(1.S3) table(RT)
+post_coef, part("E1") outcome("phq4") spec("high vs. none") coef(2.S3) table(RT)
 
-* E2: từng tình huống; tình huống có dưới MIN_CELL người ở một nhóm thì không ước lượng
+* E2: one model per situation; not estimated if fewer than MIN_CELL respondents
+* experienced it or did not experience it
 forvalues j = 1/8 {
     quietly count if in_xd_main & stig`j'_any == 1
     local nexp = r(N)
     quietly count if in_xd_main & stig`j'_any == 0
     local nun = r(N)
     if `nexp' < $MIN_CELL | `nun' < $MIN_CELL {
-        post_val, part("E2_bo_qua") outcome("phq4") spec("stig`j'") coef("1.stig`j'_any") ///
-            note("Dưới $MIN_CELL người ở một nhóm")
+        post_val, part("E2_notest") outcome("phq4") spec("situation `j'") coef("1.stig`j'_any") ///
+            note("Fewer than $MIN_CELL respondents in one group")
         continue
     }
     regress phq4 i.stig`j'_any i.($XD) if in_xd_main, vce(hc3)
-    post_coef, part("E2") outcome("phq4") spec("stig`j'") coef(1.stig`j'_any)
+    post_coef, part("E2") outcome("phq4") spec("situation `j'") coef(1.stig`j'_any)
 }
 
-* E2 đối chiếu: tình huống phụ thuộc quy nguyên so với tình huống sự kiện
+* E2 contrast: attribution-dependent (5, 6; 4 if experienced by at least
+* MIN_CELL respondents) versus event-based situations (1, 2, 3, 7)
 quietly count if in_xd_main & stig4_any == 1
 local attr "stig5 stig6"
 if r(N) >= $MIN_CELL local attr "stig4 stig5 stig6"
@@ -844,13 +895,13 @@ egen double S_event = rowmean(stig1 stig2 stig3 stig7)
 regress phq4 S_event S_attr i.($XD) if in_xd_main, vce(hc3)
 matrix RT = r(table)
 local nE = e(N)
-post_coef, part("E2_doi_chieu") outcome("phq4") spec("sự kiện") coef(S_event) table(RT)
-post_coef, part("E2_doi_chieu") outcome("phq4") spec("quy nguyên") coef(S_attr) table(RT) note("`attr'")
+post_coef, part("E2_contrast") outcome("phq4") spec("event-based") coef(S_event) table(RT)
+post_coef, part("E2_contrast") outcome("phq4") spec("attribution-dependent") coef(S_attr) table(RT) note("`attr'")
 lincom S_attr - S_event
-post_val, part("E2_doi_chieu") outcome("phq4") spec("quy nguyên - sự kiện") coef("hiệu") ///
+post_val, part("E2_contrast") outcome("phq4") spec("attribution-dependent minus event-based") coef("difference") ///
     est(`r(estimate)') stderr(`r(se)') lower(`r(lb)') upper(`r(ub)') pval(`r(p)') nobs(`nE')
 
-* Lo âu so với trầm cảm: kiểm định trực tiếp hiệu hai hệ số
+* Anxiety versus depression: direct test of the difference between the two coefficients
 quietly regress gad2 S i.($XD) if in_xd_main
 estimates store m_gad
 quietly regress phq2 S i.($XD) if in_xd_main
@@ -858,34 +909,34 @@ estimates store m_phq
 suest m_gad m_phq, vce(robust)
 local nE = e(N)
 lincom [m_gad_mean]S - [m_phq_mean]S
-post_val, part("E_lo_au_tram_cam") outcome("gad2 - phq2") spec("suest") coef("S") ///
+post_val, part("AnxDep") outcome("gad2 - phq2") spec("suest") coef("S") ///
     est(`r(estimate)') stderr(`r(se)') lower(`r(lb)') upper(`r(ub)') pval(`r(p)') nobs(`nE')
 estimates drop m_gad m_phq
 
-* E4: theo giới tính khi sinh và nhóm xu hướng tính dục
+* E4: sex assigned at birth and sexual orientation group
 local xd_all $XD
 local sx_one sex_birth
 local xd_nosex : list xd_all - sx_one
 regress phq4 ib1.sex_birth##c.S i.(`xd_nosex') if in_xd_main & sex_birth_orig != 9, vce(hc3)
-post_coef, part("E4") outcome("phq4") spec("S x nữ (giới tính khi sinh)") coef(2.sex_birth#c.S)
+post_coef, part("E4") outcome("phq4") spec("S x female (ref. male)") coef(2.sex_birth#c.S)
 regress phq4 ib1.orient3##c.S i.($XD) if in_xd_main & !missing(orient3), vce(hc3)
 matrix RT = r(table)
-post_coef, part("E4") outcome("phq4") spec("S x đồng tính nữ") coef(2.orient3#c.S) table(RT)
-post_coef, part("E4") outcome("phq4") spec("S x đồng tính nam") coef(3.orient3#c.S) table(RT)
+post_coef, part("E4") outcome("phq4") spec("S x lesbian (ref. bisexual or pansexual)") coef(2.orient3#c.S) table(RT)
+post_coef, part("E4") outcome("phq4") spec("S x gay (ref. bisexual or pansexual)") coef(3.orient3#c.S) table(RT)
 
-* E5: mức thực thi DEI được cảm nhận
+* E5: perceived DEI enforcement, centred on the E5 sample mean
 regress phq4 c.S##c.Qc i.($XD) if in_e5, vce(hc3)
 matrix RT = r(table)
-post_coef, part("E5") outcome("phq4") spec("S x DEI") coef(c.S#c.Qc) table(RT)
-post_coef, part("E5_phu") outcome("phq4") spec("S tại DEI trung bình") coef(S) table(RT)
-post_coef, part("E5_phu") outcome("phq4") spec("DEI khi S = 0") coef(Qc) table(RT)
+post_coef, part("E5") outcome("phq4") spec("S x Q") coef(c.S#c.Qc) table(RT)
+post_coef, part("E5_aux") outcome("phq4") spec("S at mean Q") coef(S) table(RT)
+post_coef, part("E5_aux") outcome("phq4") spec("Q at S = 0") coef(Qc) table(RT)
 
 * -----------------------------------------------------------------------------
-* 9. Chẩn đoán mô hình H1 (chỉ để mô tả)
+* 9. Diagnostics of the main model, descriptive only (Table S2)
 * -----------------------------------------------------------------------------
 tempname D
 tempfile diag
-postfile `D' str40 kiem_dinh double(thong_ke df p) str60 ghi_chu using "`diag'", replace
+postfile `D' str40 diagnostic double(statistic df p) str60 note using "`diag'", replace
 quietly regress phq4 S i.($XD) if in_xd_main
 local nD = e(N)
 local kD = e(df_m) + 1
@@ -898,11 +949,11 @@ predict double lev if e(sample), leverage
 gen byte flag_cook = cook > 4 / `nD' if !missing(cook)
 gen byte flag_lev  = lev > 2 * `kD' / `nD' if !missing(lev)
 quietly count if flag_cook == 1
-post `D' ("Số quan sát Cook > 4/n") (r(N)) (.) (.) ("")
+post `D' ("Cook's distance > 4/n") (r(N)) (.) (.) ("")
 quietly count if flag_lev == 1
-post `D' ("Số quan sát đòn bẩy > 2k/n") (r(N)) (.) (.) ("")
+post `D' ("Leverage > 2k/n") (r(N)) (.) (.) ("")
 quietly summarize lev
-post `D' ("Đòn bẩy lớn nhất") (r(max)) (.) (.) ("")
+post `D' ("Largest leverage") (r(max)) (.) (.) ("")
 
 local gvars S
 local gsizes 1
@@ -929,17 +980,20 @@ drop gv_*
 postclose `D'
 preserve
 use "`diag'", clear
-xl_out "ChanDoan"
+xl_out "TableS2"
 restore
 
 * -----------------------------------------------------------------------------
-* 10. Kiểm tra độ bền
+* 10. Robustness checks (Table 7) and sensitivity analysis (Table S3)
 * -----------------------------------------------------------------------------
+
+* Any exposure and intensity among exposed respondents
 regress phq4 i.ever_exposed S_exposed i.($XD) if in_xd_main, vce(hc3)
 matrix RT = r(table)
-post_coef, part("Ben_vung") outcome("phq4") spec("đã gặp kỳ thị") coef(1.ever_exposed) table(RT)
-post_coef, part("Ben_vung") outcome("phq4") spec("cường độ trong số đã gặp") coef(S_exposed) table(RT)
+post_coef, part("Robust") outcome("phq4") spec("any exposure") coef(1.ever_exposed) table(RT)
+post_coef, part("Robust") outcome("phq4") spec("intensity among exposed") coef(S_exposed) table(RT)
 
+* Restricted cubic spline, knots at the 10th, 50th and 90th percentiles among exposed
 quietly _pctile S if in_xd_main & S > 0, percentiles(10 50 90)
 local k1 = r(r1)
 local k2 = r(r2)
@@ -950,27 +1004,29 @@ if `k1' < `k2' & `k2' < `k3' {
     matrix RT = r(table)
     test Ssp2
     local pnl = string(r(p), "%5.3f")
-    post_coef, part("Ben_vung") outcome("phq4") spec("spline bậc ba") coef(Ssp1) table(RT) ///
-        note("Kiểm định phi tuyến: p = `pnl'")
+    post_coef, part("Robust") outcome("phq4") spec("restricted cubic spline") coef(Ssp1) table(RT) ///
+        note("test of nonlinearity: p = `pnl'")
 }
 else {
-    post_val, part("Ben_vung") outcome("phq4") spec("spline bậc ba") coef("-") note("Các nút trùng nhau")
+    post_val, part("Robust") outcome("phq4") spec("restricted cubic spline") coef("-") note("knots coincide")
 }
 
+* Fractional logit for PHQ-4/12; average marginal effect rescaled to PHQ-4 points
 fracreg logit phq4_frac S i.($XD) if in_xd_main
 local nF = e(N)
 margins, dydx(S) post
 nlcom (ame12: _b[S] * 12), post
-post_val, part("Ben_vung") outcome("phq4") spec("fracreg logit, AME x 12") coef("S") ///
+post_val, part("Robust") outcome("phq4") spec("fractional logit, AME x 12") coef("S") ///
     est(`=_b[ame12]') stderr(`=_se[ame12]') lower(`=_b[ame12] - invnormal(0.975) * _se[ame12]') ///
     upper(`=_b[ame12] + invnormal(0.975) * _se[ame12]') pval(`=2 * normal(-abs(_b[ame12] / _se[ame12]))') nobs(`nF')
 
 regress phq4 S i.($XD) if in_xd_main & flag_quality == 0, vce(hc3)
-post_coef, part("Ben_vung") outcome("phq4") spec("bỏ phiếu chất lượng thấp") coef(S)
+post_coef, part("Robust") outcome("phq4") spec("excluding flagged responses") coef(S)
 
 regress phq4 S i.($XD) if in_xd_main & flag_cook != 1, vce(hc3)
-post_coef, part("Ben_vung") outcome("phq4") spec("bỏ quan sát Cook > 4/n") coef(S)
+post_coef, part("Robust") outcome("phq4") spec("excluding Cook's distance > 4/n") coef(S)
 
+* Restricted wild bootstrap with Webb weights
 regress phq4 S i.($XD) if in_xd_main, vce(robust)
 local nW = e(N)
 local bW = _b[S]
@@ -984,18 +1040,20 @@ if !_rc {
         local loW = WCI[1,1]
         local hiW = WCI[1,2]
     }
-    post_val, part("Ben_vung") outcome("phq4") spec("wild bootstrap, Webb") coef("S") ///
-        est(`bW') lower(`loW') upper(`hiW') pval(`pW') nobs(`nW') note("$WILD_REPS lần")
+    post_val, part("Robust") outcome("phq4") spec("restricted wild bootstrap, Webb") coef("S") ///
+        est(`bW') lower(`loW') upper(`hiW') pval(`pW') nobs(`nW') note("$WILD_REPS replications")
 }
 else {
-    post_val, part("Ben_vung") outcome("phq4") spec("wild bootstrap, Webb") coef("S") note("Lỗi Stata `=_rc'")
+    post_val, part("Robust") outcome("phq4") spec("restricted wild bootstrap, Webb") coef("S") note("Stata error `=_rc'")
 }
 
+* Sexual orientation group added to the pre-exposure covariates
 gen byte orient4 = orient3
 replace orient4 = 4 if missing(orient3) & in_main
 regress phq4 S i.($XD) i.orient4 if in_xd_main, vce(hc3)
-post_coef, part("Ben_vung") outcome("phq4") spec("thêm xu hướng tính dục vào XD") coef(S)
+post_coef, part("Robust") outcome("phq4") spec("adding sexual orientation group") coef(S)
 
+* Multiple imputation by chained equations among the LGBT analytic sample
 preserve
 keep if in_analytic & lgbt == 1
 capture noisily {
@@ -1013,16 +1071,18 @@ capture noisily {
 local rc = _rc
 restore
 if `rc' == 0 {
-    post_val, part("Ben_vung") outcome("phq4") spec("gán giá trị đa lần, m = $MI_M") coef("S") ///
+    post_val, part("Robust") outcome("phq4") spec("multiple imputation, m = $MI_M") coef("S") ///
         est(`bM') stderr(`seM') lower(`=`bM' - invttail(`dfS', 0.025) * `seM'') ///
         upper(`=`bM' + invttail(`dfS', 0.025) * `seM'') pval(`=2 * ttail(`dfS', abs(`bM' / `seM'))') ///
         nobs(`nM') note("df = `dfS_s'")
 }
 else {
-    post_val, part("Ben_vung") outcome("phq4") spec("gán giá trị đa lần, m = $MI_M") coef("S") note("Lỗi Stata `rc'")
+    post_val, part("Robust") outcome("phq4") spec("multiple imputation, m = $MI_M") coef("S") note("Stata error `rc'")
 }
 
-* sensemakr chỉ in kết quả ra nhật ký
+* Sensitivity to unmeasured confounding (Table S3, printed in the log).
+* Benchmarks: sex assigned at birth and education. gbenchmark() needs at least
+* two variables, so a single dummy is passed to benchmark().
 preserve
 keep if in_xd_main
 local xd_dum
@@ -1034,23 +1094,22 @@ foreach v of global XD {
 }
 unab sexd : sx_sex_birth_*
 unab educd : sx_educ_*
-* gbenchmark() cần ít nhất hai biến; nhóm chỉ có một biến giả dùng benchmark()
 foreach g in sex_birth educ {
     local gb = cond("`g'" == "educ", "`educd'", "`sexd'")
     local ngb : word count `gb'
     if `ngb' > 1 local bopt "gbenchmark(`gb') gname(`g')"
     else local bopt "benchmark(`gb')"
-    di as text _n "{hline 60}" _n "sensemakr, mốc so sánh: `g'" _n "{hline 60}"
+    display as text _n "{hline 60}" _n "Table S3: sensemakr, benchmark `g'" _n "{hline 60}"
     capture noisily sensemakr phq4 S `xd_dum', treat(S) `bopt' kd(1 2 3)
 }
 restore
 
 * -----------------------------------------------------------------------------
-* 11. Đường cong đặc tả (32 đặc tả)
+* 11. Specification curve (Figure 2; Table S6)
 * -----------------------------------------------------------------------------
 tempname SP
 tempfile specfile
-postfile `SP' str40 dac_ta double(b se lb ub p sd_chi_so) long N using "`specfile'", replace
+postfile `SP' str40 spec double(b se lb ub p sd_index) long N using "`specfile'", replace
 foreach idx in S S8 S_count7 S_complete7 {
 foreach ctl in XD XDXJ {
 foreach def in self consistent {
@@ -1075,46 +1134,84 @@ foreach tg in keep drop {
 postclose `SP'
 preserve
 use "`specfile'", clear
-gen double b_sd  = b * sd_chi_so
-gen double lb_sd = lb * sd_chi_so
-gen double ub_sd = ub * sd_chi_so
-gen byte chinh = dac_ta == "S|XD|self|keep"
+gen double b_sd  = b * sd_index
+gen double lb_sd = lb * sd_index
+gen double ub_sd = ub * sd_index
+gen byte main = spec == "S|XD|self|keep"
+split spec, parse("|") gen(choice)
 sort b_sd
-gen thu_tu = _n
-twoway (rcap lb_sd ub_sd thu_tu, lcolor(gs10)) ///
-       (scatter b_sd thu_tu if !chinh, mcolor(navy) msize(small)) ///
-       (scatter b_sd thu_tu if chinh, mcolor(cranberry) msymbol(D)), ///
-       yline(0, lpattern(dash)) ytitle("Chênh lệch PHQ-4 trên 1 SD chỉ số kỳ thị") ///
-       xtitle("Đặc tả (sắp theo ước lượng)") legend(order(2 "Đặc tả khác" 3 "Đặc tả chính")) ///
-       graphregion(color(white))
-graph export "$OUT/spec_curve.png", replace width(2000)
-xl_out "DuongCongDacTa"
+gen rank = _n
+gen byte r1 = 1 if choice1 == "S"
+gen byte r2 = 2 if choice1 == "S8"
+gen byte r3 = 3 if choice1 == "S_count7"
+gen byte r4 = 4 if choice1 == "S_complete7"
+gen byte r5 = 5 if choice2 == "XDXJ"
+gen byte r6 = 6 if choice3 == "consistent"
+gen byte r7 = 7 if choice4 == "drop"
+twoway (rcap lb_sd ub_sd rank, lcolor(gs10)) ///
+       (scatter b_sd rank if !main, mcolor(navy) msize(small)) ///
+       (scatter b_sd rank if main, mcolor(cranberry) msymbol(D)), ///
+       yline(0, lpattern(dash) lcolor(gs8)) ///
+       ytitle("PHQ-4 difference per SD" "of the stigma index (95% CI)") xtitle("") xlabel(none) ///
+       legend(order(2 "Other specifications" 3 "Main specification") ring(0) pos(11) cols(1) region(lstyle(none))) ///
+       graphregion(color(white)) fysize(58) name(g_top, replace) nodraw
+twoway (scatter r1 r2 r3 r4 r5 r6 r7 rank, msymbol(S S S S S S S) msize(small small small small small small small) ///
+           mcolor(navy navy navy navy navy navy navy)), ///
+       ylabel(1 "Index: 7-situation mean" 2 "Index: 8-situation mean" 3 "Index: count of situations" ///
+              4 "Index: complete 7 only" 5 "Covariates: X{sup:D} + X{sup:J}" 6 "LGBT: self-identification + SOGI" ///
+              7 "Transgender/nonbinary excluded", angle(0) labsize(small) nogrid) ///
+       yscale(reverse range(0.5 7.5)) ytitle("") xtitle("Specification (ranked by estimate)") legend(off) ///
+       graphregion(color(white)) fysize(42) name(g_bottom, replace) nodraw
+graph combine g_top g_bottom, cols(1) xcommon imargin(zero) graphregion(color(white))
+graph export "$OUT/figure2.png", replace width(2400)
+drop r1-r7 choice1-choice4 rank main
+xl_out "TableS6"
 restore
 
 * -----------------------------------------------------------------------------
-* 12. Hiệu chỉnh kiểm định đa lần và xuất kết quả
+* 12. Multiple-testing adjustment and export
 * -----------------------------------------------------------------------------
 postclose res
 preserve
 use "`resfile'", clear
-gen long thu_tu = _n
-gen str8 ho_holm = ""
-replace ho_holm = "phu" if inlist(part, "H2a", "H2b") & spec == "XD"
-replace ho_holm = "phu" if part == "H3" & spec == "C"
-gen double p_tmp = p if ho_holm != ""
+gen long row_id = _n
+
+* Holm over the secondary family {H2a, H2b, H3}
+gen str8 fam_holm = ""
+replace fam_holm = "second" if inlist(part, "H2a", "H2b") & spec == "XD"
+replace fam_holm = "second" if part == "H3" & spec == "C"
+gen double p_tmp = p if fam_holm != ""
 padjust p_tmp, gen(p_holm) method(holm)
 drop p_tmp
-gen str8 ho_bh = ""
-replace ho_bh = "E2" if part == "E2"
-replace ho_bh = "E4" if part == "E4"
-gen double p_tmp = p if ho_bh != ""
-padjust p_tmp, gen(p_bh) method(bh) by(ho_bh)
-drop p_tmp ho_holm ho_bh
-sort thu_tu
-drop thu_tu
-order part outcome spec term b se lb ub p p_holm p_bh N note
-xl_out "KetQua"
+
+* Benjamini-Hochberg within the E2 family and within the E4 family
+gen str8 fam_bh = ""
+replace fam_bh = "E2" if part == "E2"
+replace fam_bh = "E4" if part == "E4"
+gen double p_tmp = p if fam_bh != ""
+padjust p_tmp, gen(p_bh) method(bh) by(fam_bh)
+drop p_tmp fam_holm fam_bh
+
+gen str10 paper_table = ""
+replace paper_table = "Table S1" if part == "TableS1"
+replace paper_table = "Table 4"  if inlist(part, "H1", "H1_TOST", "H2a", "H2b")
+replace paper_table = "Table 5"  if inlist(part, "H3_a", "H3_b", "H3_c", "H3")
+replace paper_table = "Table S5" if part == "H3_ab"
+replace paper_table = "Table 6"  if inlist(part, "E1", "E2", "E2_notest", "E2_contrast", "AnxDep", "E4", "E5", "E5_aux")
+replace paper_table = "Table 7"  if part == "Robust"
+
+sort row_id
+drop row_id
+order paper_table part outcome spec term b se lb ub p p_holm p_bh N note
+tempfile allres
+save "`allres'"
+xl_out "AllResults"
+foreach t in "Table 4" "Table 5" "Table 6" "Table 7" "Table S1" "Table S5" {
+    local sheet : subinstr local t " " "", all
+    use if paper_table == "`t'" using "`allres'", clear
+    xl_out "`sheet'"
+}
 restore
 
-di as result "Xong. Kết quả: $OUT/ket_qua.xlsx"
+display as result "Finished: $OUT/results.xlsx, $OUT/figure2.png, $OUT/analysis.log"
 log close main

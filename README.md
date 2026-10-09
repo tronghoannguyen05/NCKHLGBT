@@ -1,41 +1,72 @@
-# Kỳ thị nơi làm việc và sức khỏe tâm thần của người lao động LGBT tại Việt Nam
+# Replication package
 
-*Pathology or Prejudice? Workplace Stigma and Mental Health among LGBT Workers in Vietnam* — công trình NCKH sinh viên, Học viện Ngân hàng.
+**Pathology or Prejudice? Workplace Stigma and Mental Health among LGBT Workers in Vietnam**
 
-Đây là repo tái lập cho phân tích. **Dữ liệu cá nhân không bao giờ được commit** (xem `CLAUDE.md`, quy tắc 1).
+This repository contains the code that produces every table and figure of the article. Hướng dẫn chạy bằng tiếng Việt: `docs/huong_dan_chay_stata.md`.
 
-## Trạng thái
+## Data availability
 
-Đã dựng khung pipeline Stata theo đề cương lần 2. Mã **chưa được chạy thử** trên Stata. Việc đầu tiên là chạy trên dữ liệu giả lập (`tests/make_synthetic_data.py`), sửa lỗi nếu có, rồi mới chạy trên dữ liệu thật. Các việc đang mở được liệt kê trong `CLAUDE.md` và `docs/review_notes.md`.
+The analysis uses a cross-sectional survey of 850 workers in Vietnam. The data include sexual orientation, gender identity, and mental health, which are sensitive personal data under Vietnam's Law on Personal Data Protection (Law No. 91/2025/QH15) and Decree No. 356/2025/ND-CP. Individual-level data are therefore not publicly available and are not included in this repository. Aggregate results, with cells of fewer than 10 respondents suppressed, are in `output/tables/stata/`.
 
-## Chạy
+## Computational requirements
 
-```
-# 1. (tùy chọn) dữ liệu giả lập để thử pipeline
-python3 tests/make_synthetic_data.py          # tạo data/raw/synthetic.csv
+- Stata 17 or later (the results in the article were produced with Stata/MP 17.0).
+- User-written packages from SSC: `sensemakr` and `boottest`. The code installs them on the first run if they are missing, and the log records the installed versions.
+- Random-number seeds are fixed (`global SEED` in Section 0), so the bootstrap, wild bootstrap, and multiple imputation results are reproducible.
 
-# 2. trong Stata 17, từ thư mục gốc của repo
-do code/00_master.do
-```
+## Instructions
 
-Tham số nằm trong `config/settings.do`. Ánh xạ tên biến Kobo nằm trong `config/variable_map.csv`.
+1. Open `phan_tich.do` and set two paths in Section 0: `DATA` (the survey export, .xlsx) and `OUT` (an output folder).
+2. Run the whole file.
 
-## Pipeline
+The file checks the sample flow against the counts reported in Table 1 and stops if they differ.
 
-| Bước | Tệp | Ra |
-|---|---|---|
-| Nhập, sàng lọc, mã hóa giá trị đặc biệt | `01_import_clean.do` | `data/derived/clean.dta` |
-| Dựng chỉ số, cờ chất lượng | `02_build_indices.do` | `data/derived/analysis.dta` |
-| Luồng mẫu (Bảng 2) | `03_sample_flow.do` | `output/tables/T2_sample_flow.csv` |
-| Mô tả, độ tin cậy, E3, Bảng 5–6 | `04_descriptives.do` | `T5`, `T6`, `reliability` |
-| H1, H2a, H2b (Bảng 7) | `05_main_models.do` | `T7` |
-| H3 (Bảng 8) | `06_path_H3.do` | `T8`, `S_indirect_bootstrap` |
-| E1, E2, E4, E5 (Bảng 9) | `07_exploratory.do` | `T9`, `S_E1` |
-| Chẩn đoán | `08_diagnostics.do` | `S_diagnostics` |
-| Độ bền (Bảng 4 đề cương) | `09_robustness.do` | `S_robustness` |
-| Đường cong đặc tả | `10_spec_curve.do` | `S_spec_curve`, hình |
-| Hiệu chỉnh p theo họ, tổng hợp | `11_tables.do` | bảng cuối |
+## Output
 
-## Cấu trúc
+All output is written to `OUT`.
 
-`docs/` đề cương và tài liệu thiết kế · `config/` tham số · `code/` mã Stata · `tests/` dữ liệu giả lập và kiểm tra · `data/` (không commit) · `output/` kết quả.
+| File or sheet | Article |
+|---|---|
+| `results.xlsx`, sheet `Table1` | Table 1, sample flow |
+| `Table2` | Table 2, sample characteristics |
+| `Table3_Descriptives`, `Table3_Correlations` | Table 3 |
+| `Table4` | Table 4, H1, H2a, H2b |
+| `Table5` | Table 5, H3 |
+| `Table6` | Table 6, exploratory analyses E1, E2, E4, E5 |
+| `Table7` | Table 7, robustness checks |
+| `TableS1` | Table S1, PHQ-4 by pre-exposure characteristics |
+| `TableS2` | Table S2, diagnostics |
+| `analysis.log`, section "Table S3" | Table S3, sensitivity analysis (sensemakr) |
+| `TableS4` | Table S4, E3 |
+| `TableS5` | Table S5, indirect product *a* × *b* |
+| `TableS6` | Table S6, all specifications of the specification curve |
+| `figure2.png` | Figure 2, specification curve |
+| `Symptoms`, `Reliability`, `Prevalence`, `MissingData`, `MergedCategories` | Values reported in the Methods and Results text |
+| `AllResults` | Every estimate, with Holm and Benjamini-Hochberg adjusted *p* values |
+
+## Structure of `phan_tich.do`
+
+| Section | Content |
+|---|---|
+| 0 | Paths and parameters |
+| 1 | Import and coding of the survey export |
+| 2 | Indices, sample indicators, response-quality flags |
+| 3 | Sample flow |
+| 4 | Descriptive statistics, reliability, disclosure control |
+| 5 | Merging of sparse covariate categories; Table S1 |
+| 6 | H1, H2a, H2b, equivalence test |
+| 7 | H3 and the bootstrap of *a* × *b* |
+| 8 | Exploratory analyses |
+| 9 | Diagnostics |
+| 10 | Robustness checks and sensitivity analysis |
+| 11 | Specification curve |
+| 12 | Multiple-testing adjustment and export |
+
+## Other material
+
+- `docs/analysis_plan.md`: the analysis plan, finalized on 5 October 2026 before estimation.
+- `docs/deviations.md`: departures from the plan.
+- `docs/codebook.md`: variables and coding rules.
+- `tests/doi_chieu_python/`: an independent Python replication used to check the Stata results; it reproduces every estimate that does not depend on random draws.
+- `code/`: an earlier modular version of the pipeline, kept for reference. It is not used for the article.
+- `tests/check_no_data.sh`: refuses commits that contain individual-level data.
