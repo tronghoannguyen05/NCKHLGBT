@@ -1,0 +1,5 @@
+comparison,in_xd_main,mean_phq4,mean_S,sd_phq4,sd_S,n,has_phq4,n_S
+Main sample: with / without complete covariates,0.0,4.863636493682861,0.39545454545454545,3.783365249633789,0.49738866146982674,22,,
+Main sample: with / without complete covariates,1.0,3.3046875,0.33286830357142844,3.1932737827301025,0.4768196178719251,256,,
+LGBT analytic sample: with / without PHQ-4,,,0.18997493734335838,,,22,0.0,19.0
+LGBT analytic sample: with / without PHQ-4,,,0.3378211716341214,,,278,1.0,278.0

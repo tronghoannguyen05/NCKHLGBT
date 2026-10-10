@@ -36,5 +36,6 @@ Bảng đầy đủ ánh xạ sheet với bảng của bài nằm trong `README.
 - 5/10/2026: chạy đủ hai lần trên máy tác giả, không lỗi; kết quả tổng hợp lưu ở `output/tables/stata/`. Mọi ước lượng không phụ thuộc số ngẫu nhiên khớp bản tái lập Python (`tests/python_replication/`) đến 10⁻⁹.
 - 9/10/2026 (lần 1): chuyển chú thích, nhãn và tên sheet sang tiếng Anh, xuất mỗi bảng của bài thành một sheet, thêm Bảng 2 và Hình 2. Tác giả chạy lại cùng ngày, không lỗi; 59/59 dòng của `AllResults` giống hệt kết quả ngày 5/10.
 - 9/10/2026 (lần 2): đọc bản xuất gốc; thêm Bảng S7 (bốn mô hình độ nhạy làm sau khi có kết quả) và hệ số trên một độ lệch chuẩn của S ở Bảng 4; vẽ lại Hình 2 thành một đồ thị để các cột thẳng hàng. Các ghi chép ở `docs/deviations.md`. **Cần chạy lại một lần.** Số cần ra (bản Python): Bảng S7 lần lượt 1,53; 1,81; 1,78; 1,68; hiệu ứng trên một độ lệch chuẩn của S là 0,82 điểm PHQ-4. Kiểm tra bằng `tests/python_replication/compare.py`.
+- 10/10/2026: tác giả chạy bản trên, không lỗi. 62/62 dòng tất định khớp bản Python; 59 dòng có từ trước (kể cả bootstrap, wild bootstrap, gán giá trị đa lần) giống hệt lần chạy 9/10. Hình 2 thẳng cột. Kết quả tổng hợp lưu ở `output/tables/stata/` (tên tệp tiếng Anh).
 
 Không đưa tệp dữ liệu hay tệp kết quả có dữ liệu cá nhân lên GitHub.

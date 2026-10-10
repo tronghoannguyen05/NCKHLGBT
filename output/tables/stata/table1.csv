@@ -1,0 +1,9 @@
+step,n_total,n_nonlgbt,n_lgbt,expected,match
+Responses received,850,,,850,1
+Eligible: aged 18 or older with a main income-generating job,727,,,727,1
+Analytic sample,640,340.0,300.0,640,1
+Complete PHQ-4 (E3),601,323.0,278.0,601,1
+Main sample: complete PHQ-4 and valid stigma index,278,0.0,278.0,278,1
+"Main sample, complete covariates, main rule",256,0.0,256.0,256,1
+"Main sample, complete covariates, alternative rule",247,0.0,247.0,247,1
+Main rule with a valid DEI enforcement score (E5),243,0.0,243.0,243,1
