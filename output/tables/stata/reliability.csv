@@ -1,8 +1,8 @@
-scale,sample,alpha,r_items,N
-PHQ-4,E3,0.8094822698855418,,601
-GAD-2,E3,,0.48558530672294486,601
-PHQ-2,E3,,0.5649418553877743,601
-Concealment (4 statements),LGBT,0.7845905073630083,,290
-DEI enforcement (4 statements),Analytic,0.6630056527667074,,458
-"Stigma, 7 situations",LGBT,0.618052410860192,,182
-"Stigma, 8 situations",LGBT,0.6610146771283428,,142
+scale,alpha,N
+PHQ-4,0.8195350988537818,278
+"Stigma, situations 1-7",0.611695229338532,168
+"Stigma, situations 1-8",0.6657932322897523,129
+"Interpersonal stigma, situations 1-3",0.5119294298738964,243
+"Career-related stigma, situations 4-6",0.4026009211595772,197
+Concealment (4 statements),0.7845601349813658,274
+DEI enforcement (4 statements),0.6292582234651757,217

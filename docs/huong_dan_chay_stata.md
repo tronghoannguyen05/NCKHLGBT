@@ -39,6 +39,8 @@ Bảng đầy đủ ánh xạ sheet với bảng của bài nằm trong `README.
 - 10/10/2026: tác giả chạy bản trên, không lỗi. 62/62 dòng tất định khớp bản Python; 59 dòng có từ trước (kể cả bootstrap, wild bootstrap, gán giá trị đa lần) giống hệt lần chạy 9/10. Hình 2 thẳng cột. Kết quả tổng hợp lưu ở `output/tables/stata/` (tên tệp tiếng Anh).
 - 12/10/2026: sắp xếp lại theo góp ý của giảng viên hướng dẫn: H1 (kỳ thị và PHQ-4), RQ1 (ba nhóm tình huống kỳ thị, mới), H2 (chuỗi che giấu danh tính), H3 (thực thi DEI điều tiết, kèm hệ số của kỳ thị ở mức DEI thấp, trung bình, cao). Bỏ các phân tích không dùng trong bài; Bảng 2 và độ tin cậy chỉ tính trên mẫu chính. Ghi chép ở `docs/deviations.md`. **Cần chạy lại một lần.** Số cần ra (bản Python) ở mục "Số dự kiến" dưới đây. Kiểm tra bằng `tests/python_replication/compare.py`.
 
+- 13/10/2026: tác giả chạy bản trên, không lỗi. 68/68 dòng tất định khớp bản Python (sai khác lớn nhất 2·10⁻⁶, do điểm nút spline); 53 dòng có từ lần chạy 10/10 (kể cả bootstrap, wild bootstrap, gán giá trị đa lần) giống hệt; luồng mẫu khớp ở cả 9 bước. Kết quả tổng hợp lưu ở `output/tables/stata/`.
+
 ## Số dự kiến cho lần chạy 12/10/2026
 
 Các dòng giữ lại từ lần chạy 10/10 phải giống hệt (chỉ đổi tên nhãn). Các dòng mới, theo bản Python:
