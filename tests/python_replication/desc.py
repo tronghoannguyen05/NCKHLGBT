@@ -29,30 +29,25 @@ def cell(n, tot):
 
 
 d = load()
-e3 = d[d.in_e3].copy()
-e3['orient_g'] = e3.orient.where(e3.orient.isin([2, 3, 4, 5]), 0)
+m = d[d.in_main].copy()
+m['orient_g'] = m.orient.where(m.orient.isin([2, 3, 4, 5]), 0)
 rows = []
 for v, lab in LABELS.items():
-    for g, gname in [(1, 'LGBT'), (0, 'Non-LGBT')]:
-        sub = e3[e3.lgbt == g]
-        if v == 'orient_g' and g == 0:
-            continue
-        for code, name in lab.items():
-            n, p = cell(int((sub[v] == code).sum()), len(sub))
-            rows.append(dict(variable=v, level=name, group=gname, n=n, pct=p, total=len(sub)))
+    for code, name in lab.items():
+        n, p = cell(int((m[v] == code).sum()), len(m))
+        rows.append(dict(variable=v, level=name, n=n, pct=p, total=len(m)))
 pd.DataFrame(rows).to_csv(f'{OUT}/table2.csv', index=False)
 
 x = d[d.in_xd_main]
 out = []
-for v in ['phq4', 'gad2', 'phq2', 'S', 'C', 'Q']:
+for v in ['phq4', 'S', 'S_int', 'S_car', 'S_gen', 'C', 'Q']:
     s = x[v].dropna()
     out.append(dict(variable=v, n=len(s), mean=s.mean(), sd=s.std(), median=s.median(), min=s.min(), max=s.max()))
 out.append(dict(variable='pct S > 0', n=int((x.S > 0).sum()), mean=100 * (x.S > 0).mean()))
 out.append(dict(variable='pct PHQ-4 >= 6', n=int((x.phq4 >= 6).sum()), mean=100 * (x.phq4 >= 6).mean()))
 pd.DataFrame(out).to_csv(f'{OUT}/table3_descriptives.csv', index=False)
-x[['phq4', 'gad2', 'phq2', 'S', 'C', 'Q']].corr().to_csv(f'{OUT}/table3_correlations.csv')
+x[['phq4', 'S', 'S_int', 'S_car', 'S_gen', 'C', 'Q']].corr().to_csv(f'{OUT}/table3_correlations.csv')
 
-m = d[d.in_main]
 prev = []
 for j in range(1, 9):
     v = m[f'stig{j}_any']

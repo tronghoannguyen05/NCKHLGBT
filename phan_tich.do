@@ -1,6 +1,6 @@
 * =============================================================================
-* Pathology or Prejudice? Workplace Stigma and Mental Health among LGBT Workers
-* in Vietnam
+* Pathology or Prejudice? A Within-Group Test of Workplace Stigma and Anxiety
+* and Depressive Symptoms among LGBT Workers in Vietnam
 *
 * Replication code for all tables and figures of the article.
 *
@@ -8,9 +8,8 @@
 *               (installed from SSC on the first run if missing).
 * Input         Survey export (.xlsx) as downloaded from the survey platform.
 *               Set its path in DATA below. The data contain sensitive personal
-*               information and are not public. Only the analysis variables are
-*               kept after import; submission IDs, timestamps, income and
-*               free-text answers are dropped.
+*               information and are not public. Only the variables used in the
+*               analysis are kept after import.
 * Output (OUT)  results.xlsx   one sheet per table of the article
 *               figure2.png    specification curve (Figure 2)
 *               analysis.log   full log; Table S3 (sensemakr) is printed here
@@ -46,6 +45,9 @@ global ORDERED "agegrp educ exper orgsize hours"
 global PHQI    "phqi1 phqi2 phqi3 phqi4"
 global STIG7   "stig1 stig2 stig3 stig4 stig5 stig6 stig7"
 global STIG8   "stig1 stig2 stig3 stig4 stig5 stig6 stig7 stig8"
+global STIG_I  "stig1 stig2 stig3"
+global STIG_C  "stig4 stig5 stig6"
+global RQ1     "S_int S_car S_gen"
 global CONC    "conc1 conc2 conc3 conc4"
 global CONC3   "conc1 conc2 conc3"
 global DEI     "dei1 dei2 dei3 dei4"
@@ -162,54 +164,45 @@ program define padjust
     gen double `generate' = `raw'
 end
 
-* Rows of Table 2 for one characteristic. Cells below MIN_CELL are suppressed.
-* Stops if a single suppressed cell could be recovered from the column total.
+* Rows of Table 2 for one characteristic of the main sample. Cells below
+* MIN_CELL are suppressed. Stops if a single suppressed cell could be
+* recovered from the total.
 capture program drop t2_rows
 program define t2_rows
-    syntax varname, CODES(numlist) [LGBTONLY]
+    syntax varname, CODES(numlist)
     local title : variable label `varlist'
-    post t2 (`"`title'"') ("") ("") ("")
-    foreach g in 1 0 {
-        quietly count if t2_col == `g'
-        local tot`g' = r(N)
-        local shown`g' 0
-        local nsupp`g' 0
-    }
+    post t2 (`"`title'"') ("") ("")
+    quietly count if in_main
+    local tot = r(N)
+    local shown 0
+    local nsupp 0
     foreach c of local codes {
         local lab : label (`varlist') `c'
-        foreach g in 1 0 {
-            if "`lgbtonly'" != "" & `g' == 0 {
-                local cell`g' "-"
-                continue
-            }
-            quietly count if t2_col == `g' & `varlist' == `c'
-            local n = r(N)
-            local shown`g' = `shown`g'' + `n'
-            if `n' > 0 & `n' < $MIN_CELL {
-                local cell`g' "<$MIN_CELL"
-                local ++nsupp`g'
-            }
-            else local cell`g' = string(`n') + " (" + strtrim(string(100 * `n' / `tot`g'', "%5.1f")) + ")"
+        quietly count if in_main & `varlist' == `c'
+        local n = r(N)
+        local shown = `shown' + `n'
+        if `n' > 0 & `n' < $MIN_CELL {
+            local cell "<$MIN_CELL"
+            local ++nsupp
         }
-        post t2 ("") (`"`lab'"') ("`cell1'") ("`cell0'")
+        else local cell = string(`n') + " (" + strtrim(string(100 * `n' / `tot', "%5.1f")) + ")"
+        post t2 ("") (`"`lab'"') ("`cell'")
     }
-    foreach g in 1 0 {
-        if `nsupp`g'' == 1 & `shown`g'' == `tot`g'' {
-            display as error "Table 2, `varlist': a suppressed cell can be recovered from the column total"
-            exit 459
-        }
+    if `nsupp' == 1 & `shown' == `tot' {
+        display as error "Table 2, `varlist': a suppressed cell can be recovered from the total"
+        exit 459
     }
 end
 
 * Cronbach's alpha on respondents who answered every item
 capture program drop rel_post
 program define rel_post
-    syntax varlist [if], NAME(string) SAMPLE(string)
+    syntax varlist [if], NAME(string)
     marksample touse
     quietly alpha `varlist' if `touse'
     local a = r(alpha)
     quietly count if `touse'
-    post rel ("`name'") ("`sample'") (`a') (.) (r(N))
+    post rel ("`name'") (`a') (r(N))
 end
 
 * Largest category of a variable in the estimation sample
@@ -303,8 +296,8 @@ program define collapse_sparse
 end
 
 * Indirect product a*b of the concealment pathway, for the bootstrap
-capture program drop h3_ab
-program define h3_ab, rclass
+capture program drop h2_ab
+program define h2_ab, rclass
     quietly regress C S i.($XD)
     local a = _b[S]
     quietly regress phq4 C S i.($XD)
@@ -430,8 +423,6 @@ gen byte eligible = (age18 == 1 & has_job == 1)
 gen byte lgbt = .
 replace lgbt = 1 if lgbt_self == 1
 replace lgbt = 0 if lgbt_self == 0
-label define lgbt_lb 0 "Non-LGBT" 1 "LGBT"
-label values lgbt lgbt_lb
 gen byte in_analytic = eligible & !missing(lgbt)
 
 gen byte gender_minority = inlist(gender_id, 3, 4, 5, 6) if !missing(gender_id) & gender_id != 9
@@ -454,10 +445,7 @@ foreach v of global XD {
 
 egen byte phq_n = rownonmiss($PHQI)
 gen byte phq4 = phqi1 + phqi2 + phqi3 + phqi4 if phq_n == 4
-gen byte gad2 = phqi1 + phqi2 if !missing(phqi1, phqi2)
-gen byte phq2 = phqi3 + phqi4 if !missing(phqi3, phqi4)
 gen double phq4_frac = phq4 / 12
-gen byte phq_ge6 = phq4 >= 6 if !missing(phq4)
 gen byte phq4_zero = phq4 == 0 if !missing(phq4)
 
 * Stigma index S: mean of situations 1-7, at least four answered
@@ -470,6 +458,21 @@ gen double S8 = S8_raw if S8_n >= 4 & lgbt == 1
 egen byte S_count7 = anycount($STIG7), values(1 2 3 4)
 replace S_count7 = . if S_n < 4 | lgbt != 1
 gen double S_complete7 = S if S_n == 7
+
+* Stigma sub-indices (RQ1): interpersonal (situations 1-3) and career-related
+* (4-6), each with at least two answered; gender expression (situation 7).
+* S_gen8 adds situation 8 to the gender-expression group (sensitivity).
+egen byte Si_n = rownonmiss($STIG_I)
+egen double Si_raw = rowmean($STIG_I)
+gen double S_int = Si_raw if Si_n >= 2 & lgbt == 1
+egen byte Sc_n = rownonmiss($STIG_C)
+egen double Sc_raw = rowmean($STIG_C)
+gen double S_car = Sc_raw if Sc_n >= 2 & lgbt == 1
+gen double S_gen = stig7 if lgbt == 1
+egen double Sg8_raw = rowmean(stig7 stig8)
+gen double S_gen8 = Sg8_raw if lgbt == 1
+drop Si_n Si_raw Sc_n Sc_raw Sg8_raw
+
 forvalues j = 1/8 {
     gen byte stig`j'_any = stig`j' >= 1 if !missing(stig`j')
 }
@@ -501,7 +504,6 @@ gen byte flag_contra = (agegrp == 1 & position == 4)
 gen byte flag_quality = flag_straight | flag_contra
 drop sd_* n_PHQI n_CONC n_DEI flat_*
 
-gen byte in_e3   = in_analytic & phq_n == 4
 gen byte in_main = in_analytic & lgbt == 1 & !missing(phq4) & !missing(S)
 local xdalt
 foreach v of global XD {
@@ -513,13 +515,15 @@ egen byte xj_miss  = rowmiss($XJ)
 gen byte in_xd_main = in_main & xd_miss == 0
 gen byte in_xd_alt  = in_main & xda_miss == 0
 gen byte in_xj      = in_xd_main & xj_miss == 0
-gen byte in_e5      = in_xd_main & !missing(Q)
+gen byte in_rq1     = in_xd_main & !missing(S_int, S_car, S_gen)
+gen byte in_rq1s    = in_xd_main & !missing(S_int, S_car, S_gen8)
+gen byte in_h3      = in_xd_main & !missing(Q)
 drop xd_miss xda_miss xj_miss
 
-quietly summarize Q if in_e5
+quietly summarize Q if in_h3
 gen double Qc = Q - r(mean) if !missing(Q)
 
-* E1: cut at the median of S among exposed respondents of the main sample
+* Levels of exposure: cut at the median of S among exposed respondents of the main sample
 quietly summarize S if in_main & S > 0, detail
 scalar S_med_exposed = r(p50)
 gen byte S3 = .
@@ -536,29 +540,29 @@ gen byte lgbt_consistent = lgbt == 1 & (inrange(orient, 2, 6) | gender_minority 
 * -----------------------------------------------------------------------------
 tempname F
 tempfile flow
-postfile `F' str80 step long(n_total n_nonlgbt n_lgbt expected) using "`flow'", replace
+postfile `F' str80 step long(n expected) using "`flow'", replace
 quietly count
-post `F' ("Responses received") (r(N)) (.) (.) (850)
+post `F' ("Responses received") (r(N)) (850)
 quietly count if eligible
-post `F' ("Eligible: aged 18 or older with a main income-generating job") (r(N)) (.) (.) (727)
-foreach s in in_analytic in_e3 in_main in_xd_main in_xd_alt in_e5 {
-    quietly count if `s'
-    local a = r(N)
-    quietly count if `s' & lgbt == 0
-    local b = r(N)
-    quietly count if `s' & lgbt == 1
-    local c = r(N)
-    if "`s'" == "in_analytic" post `F' ("Analytic sample") (`a') (`b') (`c') (640)
-    if "`s'" == "in_e3"       post `F' ("Complete PHQ-4 (E3)") (`a') (`b') (`c') (601)
-    if "`s'" == "in_main"     post `F' ("Main sample: complete PHQ-4 and valid stigma index") (`a') (`b') (`c') (278)
-    if "`s'" == "in_xd_main"  post `F' ("Main sample, complete covariates, main rule") (`a') (`b') (`c') (256)
-    if "`s'" == "in_xd_alt"   post `F' ("Main sample, complete covariates, alternative rule") (`a') (`b') (`c') (247)
-    if "`s'" == "in_e5"       post `F' ("Main rule with a valid DEI enforcement score (E5)") (`a') (`b') (`c') (243)
-}
+post `F' ("Eligible: aged 18 or older with a main income-generating job") (r(N)) (727)
+quietly count if in_analytic
+post `F' ("Eligible and answered the LGBT self-identification question") (r(N)) (640)
+quietly count if in_analytic & lgbt == 1
+post `F' ("Self-identified LGBT") (r(N)) (300)
+quietly count if in_main
+post `F' ("Main sample: complete PHQ-4 and valid stigma index") (r(N)) (278)
+quietly count if in_xd_main
+post `F' ("Main sample, complete covariates, main rule") (r(N)) (256)
+quietly count if in_xd_alt
+post `F' ("Main sample, complete covariates, alternative rule") (r(N)) (247)
+quietly count if in_rq1
+post `F' ("Main rule with valid scores on the three stigma sub-indices (RQ1)") (r(N)) (238)
+quietly count if in_h3
+post `F' ("Main rule with a valid DEI enforcement score (H3)") (r(N)) (243)
 postclose `F'
 preserve
 use "`flow'", clear
-gen byte match = n_total == expected
+gen byte match = n == expected
 list, noobs abbreviate(20)
 xl_out "Table1"
 quietly count if !match
@@ -573,10 +577,7 @@ if `nmis' > 0 {
 * 4. Descriptive statistics
 * -----------------------------------------------------------------------------
 
-* Table 2: LGBT main sample and non-LGBT respondents with complete PHQ-4
-gen byte t2_col = .
-replace t2_col = 1 if in_main
-replace t2_col = 0 if in_e3 & lgbt == 0
+* Table 2: characteristics of the main sample
 gen byte orient_t2 = orient if inlist(orient, 2, 3, 4, 5)
 replace orient_t2 = 0 if missing(orient_t2)
 label define orient_t2_lb 2 "Gay" 3 "Lesbian" 4 "Bisexual" 5 "Pansexual" 0 "Other, questioning, or not reported"
@@ -584,44 +585,38 @@ label values orient_t2 orient_t2_lb
 label variable orient_t2 "Sexual orientation"
 
 tempfile t2file
-postfile t2 str60 characteristic str60 category str24 lgbt_main str24 non_lgbt using "`t2file'", replace
-quietly count if t2_col == 1
-local n1 = r(N)
-quietly count if t2_col == 0
-local n0 = r(N)
-post t2 ("n") ("") ("`n1'") ("`n0'")
+postfile t2 str60 characteristic str60 category str24 main_sample using "`t2file'", replace
+quietly count if in_main
+post t2 ("n") ("") ("`r(N)'")
 t2_rows agegrp,    codes(1 2 3 4)
 t2_rows sex_birth, codes(1 2)
 t2_rows educ,      codes(1 2 3 4)
 t2_rows relstat,   codes(1 2 3 9)
 t2_rows region,    codes(1 2 3 4)
-t2_rows orient_t2, codes(2 3 4 5 0) lgbtonly
+t2_rows orient_t2, codes(2 3 4 5 0)
 postclose t2
 preserve
 use "`t2file'", clear
 xl_out "Table2"
 restore
 
-* PHQ-4 scores by group (Methods)
+* PHQ-4 scores in the main sample (Methods)
 preserve
-keep if in_e3
-collapse (mean) mean_phq4=phq4 mean_gad2=gad2 mean_phq2=phq2 (sd) sd_phq4=phq4 sd_gad2=gad2 ///
-    sd_phq2=phq2 (count) n=phq4 (mean) share_zero=phq4_zero, by(lgbt)
+keep if in_main
+collapse (mean) mean_phq4=phq4 (sd) sd_phq4=phq4 (count) n=phq4 (mean) share_zero=phq4_zero
 xl_out "Symptoms"
 restore
 
-* Reliability (Methods)
+* Reliability in the main sample (Methods)
 tempfile relfile
-postfile rel str40 scale str16 sample double(alpha r_items) long N using "`relfile'", replace
-rel_post $PHQI if in_e3, name("PHQ-4") sample("E3")
-quietly corr phqi1 phqi2 if in_e3
-post rel ("GAD-2") ("E3") (.) (r(rho)) (r(N))
-quietly corr phqi3 phqi4 if in_e3
-post rel ("PHQ-2") ("E3") (.) (r(rho)) (r(N))
-rel_post $CONC if lgbt == 1 & in_analytic, name("Concealment (4 statements)") sample("LGBT")
-rel_post $DEI if in_analytic, name("DEI enforcement (4 statements)") sample("Analytic")
-rel_post $STIG7 if lgbt == 1 & in_analytic, name("Stigma, 7 situations") sample("LGBT")
-rel_post $STIG8 if lgbt == 1 & in_analytic, name("Stigma, 8 situations") sample("LGBT")
+postfile rel str40 scale double alpha long N using "`relfile'", replace
+rel_post $PHQI if in_main, name("PHQ-4")
+rel_post $STIG7 if in_main, name("Stigma, situations 1-7")
+rel_post $STIG8 if in_main, name("Stigma, situations 1-8")
+rel_post $STIG_I if in_main, name("Interpersonal stigma, situations 1-3")
+rel_post $STIG_C if in_main, name("Career-related stigma, situations 4-6")
+rel_post $CONC if in_main, name("Concealment (4 statements)")
+rel_post $DEI if in_main, name("DEI enforcement (4 statements)")
 postclose rel
 preserve
 use "`relfile'", clear
@@ -659,7 +654,7 @@ keep if in_xd_main
 tempname MB
 tempfile mbfile
 postfile `MB' str16 variable long n double(mean sd median min max) using "`mbfile'", replace
-foreach v in phq4 gad2 phq2 S C Q {
+foreach v in phq4 S $RQ1 C Q {
     quietly summarize `v', detail
     post `MB' ("`v'") (r(N)) (r(mean)) (r(sd)) (r(p50)) (r(min)) (r(max))
 }
@@ -668,7 +663,7 @@ post `MB' ("pct S > 0") (r(N)) (100 * r(N) / _N) (.) (.) (.) (.)
 quietly count if phq4 >= 6
 post `MB' ("pct PHQ-4 >= 6") (r(N)) (100 * r(N) / _N) (.) (.) (.) (.)
 postclose `MB'
-quietly pwcorr phq4 gad2 phq2 S C Q
+quietly pwcorr phq4 S $RQ1 C Q
 matrix TQ = r(C)
 use "`mbfile'", clear
 xl_out "Table3_Descriptives"
@@ -676,7 +671,7 @@ clear
 svmat TQ, names(col)
 gen str8 variable = ""
 local i 0
-foreach v in phq4 gad2 phq2 S C Q {
+foreach v in phq4 S $RQ1 C Q {
     local ++i
     quietly replace variable = "`v'" in `i'
 }
@@ -708,9 +703,6 @@ restore
 tempfile lvfile
 postfile lv str24 variable double(old_code new_code) str8 n using "`lvfile'", replace
 
-foreach v of global XD {
-    clonevar `v'_orig = `v'
-}
 * Copies for the post hoc sensitivity analyses (Table S7), merged in their own samples
 clonevar exper_s7 = exper
 clonevar disclose_s7 = disclose
@@ -778,81 +770,120 @@ if $RUN_MODELS == 0 {
 }
 
 * -----------------------------------------------------------------------------
-* 6. H1, H2a, H2b (Table 4)
+* 6. H1: stigma and PHQ-4 (Table 4)
 * -----------------------------------------------------------------------------
-foreach y in phq4 gad2 phq2 {
-    local h = cond("`y'" == "phq4", "H1", cond("`y'" == "gad2", "H2a", "H2b"))
+regress phq4 S i.($XD) if in_xd_main, vce(hc3)
+matrix RT = r(table)
+local mde = string(2.8 * _se[S], "%5.2f")
+post_coef, part("H1") outcome("phq4") spec("XD") coef(S) table(RT) note("MDE approx. `mde'")
 
-    regress `y' S i.($XD) if in_xd_main, vce(hc3)
-    matrix RT = r(table)
-    local mde = string(2.8 * _se[S], "%5.2f")
-    post_coef, part("`h'") outcome("`y'") spec("XD") coef(S) table(RT) note("MDE approx. `mde'")
+* The same estimate per standard deviation of S, and fully standardized
+local nH = e(N)
+local j = colnumb(RT, "S")
+quietly summarize S if e(sample)
+local sdS = r(sd)
+quietly summarize phq4 if e(sample)
+local sdY = r(sd)
+local sdS_s : display %5.3f `sdS'
+local std_s : display %5.3f RT[1,`j'] * `sdS' / `sdY'
+post_val, part("PerSD") outcome("phq4") spec("XD, per SD of S") coef("S") ///
+    est(`=RT[1,`j'] * `sdS'') stderr(`=RT[2,`j'] * `sdS'') lower(`=RT[5,`j'] * `sdS'') ///
+    upper(`=RT[6,`j'] * `sdS'') pval(`=RT[4,`j']') nobs(`nH') ///
+    note("SD of S = `sdS_s'; standardized coefficient = `std_s'")
 
-    * The same estimate per standard deviation of S, and fully standardized
-    local nH = e(N)
-    local j = colnumb(RT, "S")
-    quietly summarize S if e(sample)
-    local sdS = r(sd)
-    quietly summarize `y' if e(sample)
-    local sdY = r(sd)
-    local sdS_s : display %5.3f `sdS'
-    local std_s : display %5.3f RT[1,`j'] * `sdS' / `sdY'
-    post_val, part("PerSD") outcome("`y'") spec("XD, per SD of S") coef("S") ///
-        est(`=RT[1,`j'] * `sdS'') stderr(`=RT[2,`j'] * `sdS'') lower(`=RT[5,`j'] * `sdS'') ///
-        upper(`=RT[6,`j'] * `sdS'') pval(`=RT[4,`j']') nobs(`nH') ///
-        note("SD of S = `sdS_s'; standardized coefficient = `std_s'")
+* Two one-sided tests against the smallest effect size of interest
+local df = e(df_r)
+local bS = _b[S]
+local seS = _se[S]
+local lo90 = `bS' - invttail(`df', 0.05) * `seS'
+local hi90 = `bS' + invttail(`df', 0.05) * `seS'
+local p1 = ttail(`df', (`bS' + $SESOI) / `seS')
+local p2 = 1 - ttail(`df', (`bS' - $SESOI) / `seS')
+local ptost = max(`p1', `p2')
+local eq = cond(`lo90' > -$SESOI & `hi90' < $SESOI, "yes", "no")
+post_val, part("H1_TOST") outcome("phq4") spec("XD, 90% CI") coef("S") est(`bS') stderr(`seS') ///
+    lower(`lo90') upper(`hi90') pval(`ptost') nobs(`nH') note("SESOI +/-$SESOI; equivalence: `eq'")
 
-    * Two one-sided tests against the smallest effect size of interest
-    if "`y'" == "phq4" {
-        local df = e(df_r)
-        local bS = _b[S]
-        local seS = _se[S]
-        local lo90 = `bS' - invttail(`df', 0.05) * `seS'
-        local hi90 = `bS' + invttail(`df', 0.05) * `seS'
-        local p1 = ttail(`df', (`bS' + $SESOI) / `seS')
-        local p2 = 1 - ttail(`df', (`bS' - $SESOI) / `seS')
-        local ptost = max(`p1', `p2')
-        local eq = cond(`lo90' > -$SESOI & `hi90' < $SESOI, "yes", "no")
-        post_val, part("H1_TOST") outcome("phq4") spec("XD, 90% CI") coef("S") est(`bS') stderr(`seS') ///
-            lower(`lo90') upper(`hi90') pval(`ptost') nobs(`e(N)') note("SESOI +/-$SESOI; equivalence: `eq'")
-    }
-
-    regress `y' S i.($XD) i.($XJ) if in_xj, vce(hc3)
-    post_coef, part("`h'") outcome("`y'") spec("XD + XJ") coef(S)
-}
+regress phq4 S i.($XD) i.($XJ) if in_xj, vce(hc3)
+post_coef, part("H1") outcome("phq4") spec("XD + XJ") coef(S)
 regress phq4 S i.(`xdalt') if in_xd_alt, vce(hc3)
 post_coef, part("H1") outcome("phq4") spec("XD, prefer not to answer as missing") coef(S)
 
 * -----------------------------------------------------------------------------
-* 7. H3: stigma, concealment, PHQ-4 (Table 5; Table S5)
+* 7. RQ1: three groups of stigma situations, exploratory (Table 5; Table S5)
+* -----------------------------------------------------------------------------
+* All models of a version use the respondents with valid scores on its three
+* sub-indices. Each sub-index is standardized in that sample, so estimates
+* are PHQ-4 points per SD.
+foreach ver in main sens {
+    local touse = cond("`ver'" == "main", "in_rq1", "in_rq1s")
+    local idx = cond("`ver'" == "main", "$RQ1", "S_int S_car S_gen8")
+    local pt = cond("`ver'" == "main", "RQ1", "RQ1_sens")
+    local zs
+    foreach v of local idx {
+        quietly summarize `v' if `touse'
+        local sd_`v' : display %5.3f r(sd)
+        gen double z_`v' = (`v' - r(mean)) / r(sd) if `touse'
+        local zs `zs' z_`v'
+    }
+
+    * One model per sub-index
+    foreach v of local idx {
+        if "`ver'" == "sens" & "`v'" != "S_gen8" continue
+        regress phq4 z_`v' i.($XD) if `touse', vce(hc3)
+        post_coef, part("`pt'") outcome("phq4") spec("separate") coef(z_`v') note("SD of `v' = `sd_`v''")
+    }
+
+    * The three sub-indices together, and the pairwise differences
+    regress phq4 `zs' i.($XD) if `touse', vce(hc3)
+    matrix RT = r(table)
+    local nJ = e(N)
+    foreach v of local idx {
+        post_coef, part("`pt'") outcome("phq4") spec("joint") coef(z_`v') table(RT)
+    }
+    local nz : word count `zs'
+    forvalues a = 1/`=`nz' - 1' {
+        forvalues b = `=`a' + 1'/`nz' {
+            local za : word `a' of `zs'
+            local zb : word `b' of `zs'
+            lincom `za' - `zb'
+            post_val, part("`pt'") outcome("phq4") spec("joint, difference") coef("`za' - `zb'") ///
+                est(`r(estimate)') stderr(`r(se)') lower(`r(lb)') upper(`r(ub)') pval(`r(p)') nobs(`nJ')
+        }
+    }
+    drop `zs'
+}
+
+* -----------------------------------------------------------------------------
+* 8. H2: stigma, concealment, PHQ-4 (Table 6)
 * -----------------------------------------------------------------------------
 foreach cv in C C3 {
-    gen byte h3s = in_xd_main & !missing(`cv')
-    regress `cv' S i.($XD) if h3s, vce(hc3)
+    gen byte h2s = in_xd_main & !missing(`cv')
+    regress `cv' S i.($XD) if h2s, vce(hc3)
     matrix RA = r(table)
     local pa = RA[4, colnumb(RA, "S")]
     local apos = RA[1, colnumb(RA, "S")] > 0
-    post_coef, part("H3_a") outcome("`cv'") spec("`cv'") coef(S) table(RA)
+    post_coef, part("H2_a") outcome("`cv'") spec("`cv'") coef(S) table(RA)
 
-    regress phq4 `cv' S i.($XD) if h3s, vce(hc3)
+    regress phq4 `cv' S i.($XD) if h2s, vce(hc3)
     matrix RB = r(table)
     local pb = RB[4, colnumb(RB, "`cv'")]
     local bpos = RB[1, colnumb(RB, "`cv'")] > 0
-    post_coef, part("H3_b") outcome("phq4") spec("`cv'") coef(`cv') table(RB)
-    post_coef, part("H3_c") outcome("phq4") spec("`cv'") coef(S) table(RB)
+    post_coef, part("H2_b") outcome("phq4") spec("`cv'") coef(`cv') table(RB)
+    post_coef, part("H2_c") outcome("phq4") spec("`cv'") coef(S) table(RB)
 
     * Intersection-union test: the larger of the two p values
-    quietly count if h3s
-    post_val, part("H3") outcome("phq4") spec("`cv'") coef("max(p_a, p_b)") pval(`=max(`pa', `pb')') ///
+    quietly count if h2s
+    post_val, part("H2") outcome("phq4") spec("`cv'") coef("max(p_a, p_b)") pval(`=max(`pa', `pb')') ///
         nobs(`r(N)') note("a > 0: `apos'; b > 0: `bpos'")
-    drop h3s
+    drop h2s
 }
 
 * A failure in a resampling step is recorded and the data are always restored
 preserve
 keep if in_xd_main & !missing(C)
 capture noisily {
-    bootstrap ab = r(ab), reps($BOOT_REPS) seed($SEED) nodots: h3_ab
+    bootstrap ab = r(ab), reps($BOOT_REPS) seed($SEED) nodots: h2_ab
     estat bootstrap, percentile
     matrix CI = e(ci_percentile)
     local bab = _b[ab]
@@ -863,41 +894,39 @@ capture noisily {
 local rc = _rc
 restore
 if `rc' == 0 {
-    post_val, part("H3_ab") outcome("phq4") spec("percentile bootstrap") coef("a*b") ///
+    post_val, part("H2_ab") outcome("phq4") spec("percentile bootstrap") coef("a*b") ///
         est(`bab') lower(`lab') upper(`uab') nobs(`nab') note("$BOOT_REPS resamples")
 }
 else {
-    post_val, part("H3_ab") outcome("phq4") spec("percentile bootstrap") coef("a*b") note("Stata error `rc'")
+    post_val, part("H2_ab") outcome("phq4") spec("percentile bootstrap") coef("a*b") note("Stata error `rc'")
 }
 
 * -----------------------------------------------------------------------------
-* 8. Exploratory analyses E1-E5 (Table 6; Table S4)
+* 9. H3: perceived DEI enforcement as moderator (Table 7)
+* -----------------------------------------------------------------------------
+* Q is centred on the H3 sample mean. The stigma estimate is also reported at
+* one SD of Q below and above the mean.
+quietly summarize Q if in_h3
+local sdQ = r(sd)
+local sdQ_s : display %5.3f `sdQ'
+regress phq4 c.S##c.Qc i.($XD) if in_h3, vce(hc3)
+matrix RT = r(table)
+local nT = e(N)
+post_coef, part("H3") outcome("phq4") spec("S x Q") coef(c.S#c.Qc) table(RT)
+post_coef, part("H3_aux") outcome("phq4") spec("Q at S = 0") coef(Qc) table(RT)
+lincom S - `sdQ' * c.S#c.Qc
+post_val, part("H3_slope") outcome("phq4") spec("S at Q = mean - 1 SD") coef("S") ///
+    est(`r(estimate)') stderr(`r(se)') lower(`r(lb)') upper(`r(ub)') pval(`r(p)') nobs(`nT') note("SD of Q = `sdQ_s'")
+post_coef, part("H3_slope") outcome("phq4") spec("S at mean Q") coef(S) table(RT) note("SD of Q = `sdQ_s'")
+lincom S + `sdQ' * c.S#c.Qc
+post_val, part("H3_slope") outcome("phq4") spec("S at Q = mean + 1 SD") coef("S") ///
+    est(`r(estimate)') stderr(`r(se)') lower(`r(lb)') upper(`r(ub)') pval(`r(p)') nobs(`nT') note("SD of Q = `sdQ_s'")
+
+* -----------------------------------------------------------------------------
+* 10. Supplementary exploratory analyses (Table S4)
 * -----------------------------------------------------------------------------
 
-* E3: distribution of PHQ-4 scores in three groups, descriptive only
-gen byte e3_group = .
-replace e3_group = 0 if in_e3 & lgbt == 0
-replace e3_group = 1 if in_e3 & lgbt == 1 & ever_exposed == 0
-replace e3_group = 2 if in_e3 & lgbt == 1 & ever_exposed == 1
-label define e3_lb 0 "Non-LGBT" 1 "LGBT, no reported stigma" 2 "LGBT, at least one situation"
-label values e3_group e3_lb
-preserve
-keep if !missing(e3_group)
-collapse (count) n=phq4 (mean) mean=phq4 (sd) sd=phq4 (p50) median=phq4 (mean) pct_ge6=phq_ge6, by(e3_group)
-replace pct_ge6 = 100 * pct_ge6
-decode e3_group, gen(group)
-drop e3_group
-order group
-xl_out "TableS4"
-restore
-
-* E1: three levels of exposure
-regress phq4 i.S3 i.($XD) if in_xd_main, vce(hc3)
-matrix RT = r(table)
-post_coef, part("E1") outcome("phq4") spec("low vs. none") coef(1.S3) table(RT)
-post_coef, part("E1") outcome("phq4") spec("high vs. none") coef(2.S3) table(RT)
-
-* E2: one model per situation; not estimated if fewer than MIN_CELL respondents
+* One model per situation; not estimated if fewer than MIN_CELL respondents
 * experienced it or did not experience it
 forvalues j = 1/8 {
     quietly count if in_xd_main & stig`j'_any == 1
@@ -905,62 +934,22 @@ forvalues j = 1/8 {
     quietly count if in_xd_main & stig`j'_any == 0
     local nun = r(N)
     if `nexp' < $MIN_CELL | `nun' < $MIN_CELL {
-        post_val, part("E2_notest") outcome("phq4") spec("situation `j'") coef("1.stig`j'_any") ///
+        post_val, part("Situation_notest") outcome("phq4") spec("situation `j'") coef("1.stig`j'_any") ///
             note("Fewer than $MIN_CELL respondents in one group")
         continue
     }
     regress phq4 i.stig`j'_any i.($XD) if in_xd_main, vce(hc3)
-    post_coef, part("E2") outcome("phq4") spec("situation `j'") coef(1.stig`j'_any)
+    post_coef, part("Situation") outcome("phq4") spec("situation `j'") coef(1.stig`j'_any)
 }
 
-* E2 contrast: attribution-dependent (5, 6; 4 if experienced by at least
-* MIN_CELL respondents) versus event-based situations (1, 2, 3, 7)
-quietly count if in_xd_main & stig4_any == 1
-local attr "stig5 stig6"
-if r(N) >= $MIN_CELL local attr "stig4 stig5 stig6"
-egen double S_attr  = rowmean(`attr')
-egen double S_event = rowmean(stig1 stig2 stig3 stig7)
-regress phq4 S_event S_attr i.($XD) if in_xd_main, vce(hc3)
+* Three levels of exposure
+regress phq4 i.S3 i.($XD) if in_xd_main, vce(hc3)
 matrix RT = r(table)
-local nE = e(N)
-post_coef, part("E2_contrast") outcome("phq4") spec("event-based") coef(S_event) table(RT)
-post_coef, part("E2_contrast") outcome("phq4") spec("attribution-dependent") coef(S_attr) table(RT) note("`attr'")
-lincom S_attr - S_event
-post_val, part("E2_contrast") outcome("phq4") spec("attribution-dependent minus event-based") coef("difference") ///
-    est(`r(estimate)') stderr(`r(se)') lower(`r(lb)') upper(`r(ub)') pval(`r(p)') nobs(`nE')
-
-* Anxiety versus depression: direct test of the difference between the two coefficients
-quietly regress gad2 S i.($XD) if in_xd_main
-estimates store m_gad
-quietly regress phq2 S i.($XD) if in_xd_main
-estimates store m_phq
-suest m_gad m_phq, vce(robust)
-local nE = e(N)
-lincom [m_gad_mean]S - [m_phq_mean]S
-post_val, part("AnxDep") outcome("gad2 - phq2") spec("suest") coef("S") ///
-    est(`r(estimate)') stderr(`r(se)') lower(`r(lb)') upper(`r(ub)') pval(`r(p)') nobs(`nE')
-estimates drop m_gad m_phq
-
-* E4: sex assigned at birth and sexual orientation group
-local xd_all $XD
-local sx_one sex_birth
-local xd_nosex : list xd_all - sx_one
-regress phq4 ib1.sex_birth##c.S i.(`xd_nosex') if in_xd_main & sex_birth_orig != 9, vce(hc3)
-post_coef, part("E4") outcome("phq4") spec("S x female (ref. male)") coef(2.sex_birth#c.S)
-regress phq4 ib1.orient3##c.S i.($XD) if in_xd_main & !missing(orient3), vce(hc3)
-matrix RT = r(table)
-post_coef, part("E4") outcome("phq4") spec("S x lesbian (ref. bisexual or pansexual)") coef(2.orient3#c.S) table(RT)
-post_coef, part("E4") outcome("phq4") spec("S x gay (ref. bisexual or pansexual)") coef(3.orient3#c.S) table(RT)
-
-* E5: perceived DEI enforcement, centred on the E5 sample mean
-regress phq4 c.S##c.Qc i.($XD) if in_e5, vce(hc3)
-matrix RT = r(table)
-post_coef, part("E5") outcome("phq4") spec("S x Q") coef(c.S#c.Qc) table(RT)
-post_coef, part("E5_aux") outcome("phq4") spec("S at mean Q") coef(S) table(RT)
-post_coef, part("E5_aux") outcome("phq4") spec("Q at S = 0") coef(Qc) table(RT)
+post_coef, part("Levels") outcome("phq4") spec("low vs. none") coef(1.S3) table(RT)
+post_coef, part("Levels") outcome("phq4") spec("high vs. none") coef(2.S3) table(RT)
 
 * -----------------------------------------------------------------------------
-* 9. Diagnostics of the main model, descriptive only (Table S2)
+* 11. Diagnostics of the main model, descriptive only (Table S2)
 * -----------------------------------------------------------------------------
 tempname D
 tempfile diag
@@ -1012,7 +1001,7 @@ xl_out "TableS2"
 restore
 
 * -----------------------------------------------------------------------------
-* 10. Robustness checks (Table 7) and sensitivity analysis (Table S3)
+* 12. Robustness checks (Table 8) and sensitivity analysis (Table S3)
 * -----------------------------------------------------------------------------
 
 * Any exposure and intensity among exposed respondents
@@ -1133,7 +1122,7 @@ foreach g in sex_birth educ {
 restore
 
 * -----------------------------------------------------------------------------
-* 11. Post hoc sensitivity analyses, specified after the main results (Table S7)
+* 13. Post hoc sensitivity analyses, specified after the main results (Table S7)
 * -----------------------------------------------------------------------------
 regress phq4 S if in_xd_main, vce(hc3)
 post_coef, part("PostHoc") outcome("phq4") spec("unadjusted") coef(S)
@@ -1148,7 +1137,7 @@ regress phq4 S i.agegrp i.sex_birth i.educ if in_xd_main, vce(hc3)
 post_coef, part("PostHoc") outcome("phq4") spec("XD without relationship status and region") coef(S)
 
 * -----------------------------------------------------------------------------
-* 12. Specification curve (Figure 2; Table S6)
+* 14. Specification curve (Figure 2; Table S6)
 * -----------------------------------------------------------------------------
 tempname SP
 tempfile specfile
@@ -1237,36 +1226,38 @@ xl_out "TableS6"
 restore
 
 * -----------------------------------------------------------------------------
-* 13. Multiple-testing adjustment and export
+* 15. Multiple-testing adjustment and export
 * -----------------------------------------------------------------------------
 postclose res
 preserve
 use "`resfile'", clear
 gen long row_id = _n
 
-* Holm over the secondary family {H2a, H2b, H3}
+* Holm over the hypothesis tests of H2 and H3
 gen str8 fam_holm = ""
-replace fam_holm = "second" if inlist(part, "H2a", "H2b") & spec == "XD"
-replace fam_holm = "second" if part == "H3" & spec == "C"
+replace fam_holm = "second" if part == "H2" & spec == "C"
+replace fam_holm = "second" if part == "H3"
 gen double p_tmp = p if fam_holm != ""
 padjust p_tmp, gen(p_holm) method(holm)
 drop p_tmp
 
-* Benjamini-Hochberg within the E2 family and within the E4 family
-gen str8 fam_bh = ""
-replace fam_bh = "E2" if part == "E2"
-replace fam_bh = "E4" if part == "E4"
+* Benjamini-Hochberg within the separate RQ1 models and within the situations
+gen str10 fam_bh = ""
+replace fam_bh = "RQ1" if part == "RQ1" & spec == "separate"
+replace fam_bh = "Situation" if part == "Situation"
 gen double p_tmp = p if fam_bh != ""
 padjust p_tmp, gen(p_bh) method(bh) by(fam_bh)
 drop p_tmp fam_holm fam_bh
 
 gen str10 paper_table = ""
 replace paper_table = "Table S1" if part == "TableS1"
-replace paper_table = "Table 4"  if inlist(part, "H1", "H1_TOST", "PerSD", "H2a", "H2b")
-replace paper_table = "Table 5"  if inlist(part, "H3_a", "H3_b", "H3_c", "H3")
-replace paper_table = "Table S5" if part == "H3_ab"
-replace paper_table = "Table 6"  if inlist(part, "E1", "E2", "E2_notest", "E2_contrast", "AnxDep", "E4", "E5", "E5_aux")
-replace paper_table = "Table 7"  if part == "Robust"
+replace paper_table = "Table 4"  if inlist(part, "H1", "H1_TOST", "PerSD")
+replace paper_table = "Table 5"  if part == "RQ1"
+replace paper_table = "Table 6"  if inlist(part, "H2_a", "H2_b", "H2_c", "H2", "H2_ab")
+replace paper_table = "Table 7"  if inlist(part, "H3", "H3_aux", "H3_slope")
+replace paper_table = "Table 8"  if part == "Robust"
+replace paper_table = "Table S4" if inlist(part, "Situation", "Situation_notest", "Levels")
+replace paper_table = "Table S5" if part == "RQ1_sens"
 replace paper_table = "Table S7" if part == "PostHoc"
 
 sort row_id
@@ -1275,7 +1266,7 @@ order paper_table part outcome spec term b se lb ub p p_holm p_bh N note
 tempfile allres
 save "`allres'"
 xl_out "AllResults"
-foreach t in "Table 4" "Table 5" "Table 6" "Table 7" "Table S1" "Table S5" "Table S7" {
+foreach t in "Table 4" "Table 5" "Table 6" "Table 7" "Table 8" "Table S1" "Table S4" "Table S5" "Table S7" {
     local sheet : subinstr local t " " "", all
     use if paper_table == "`t'" using "`allres'", clear
     xl_out "`sheet'"

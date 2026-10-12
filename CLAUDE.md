@@ -1,6 +1,6 @@
 # CLAUDE.md — hướng dẫn cho các phiên làm việc với Claude
 
-Đọc tệp này trước mọi việc. Sau đó đọc `docs/analysis_plan.md` (đặc tả phân tích, nguồn chân lý cho mã) và `docs/review_notes.md` (các vấn đề đang mở của đề cương).
+Đọc tệp này trước mọi việc. Sau đó đọc `docs/deviations.md` (cấu trúc phân tích hiện hành từ 12/10/2026 và mọi lệch khỏi kế hoạch), `docs/analysis_plan.md` (kế hoạch chốt 5/10/2026, hồ sơ nội bộ) và `docs/review_notes.md` (các vấn đề đang mở của đề cương).
 
 ## Đề tài
 
@@ -8,12 +8,13 @@
 Đây là công trình NCKH sinh viên, Học viện Ngân hàng. Đề cương hiện hành là `docs/de_cuong/De_cuong_lan_2.docx`; bản văn bản để đọc nhanh là `docs/de_cuong/de_cuong_lan_2.md`.
 
 - Thiết kế: khảo sát trực tuyến cắt ngang, ẩn danh, KoboToolbox, thu từ 24/7 đến 28/9/2026, 850 phiếu.
-- Mẫu chính: 278 người lao động LGBT có đủ PHQ-4 và chỉ số kỳ thị. Mẫu có đủ biến kiểm soát Xᴰ là 256 người theo quy tắc chính, 247 người theo quy tắc thay thế. Mẫu E5 là 243 người.
-- Kết quả: PHQ-4 (0–12), GAD-2 (0–6), PHQ-2 (0–6).
+- Mẫu chính: 278 người lao động LGBT có đủ PHQ-4 và chỉ số kỳ thị. Mẫu có đủ biến kiểm soát Xᴰ là 256 người theo quy tắc chính, 247 người theo quy tắc thay thế. Mẫu RQ1 là 238 người, mẫu H3 là 243 người.
+- Kết quả: PHQ-4 (0–12).
 - Phơi nhiễm: chỉ số kỳ thị S, là trung bình 7 tình huống (thang 0–4), tính khi có ít nhất 4 câu hợp lệ.
 - Mô hình chính: OLS với sai số chuẩn HC3, điều chỉnh Xᴰ. Đặc tả 2 điều chỉnh thêm Xᴶ.
-- Giả thuyết: H1 là chính. H2a, H2b và H3 là phụ, hiệu chỉnh Holm. E1–E5 là thăm dò, hiệu chỉnh BH.
-- Công cụ: Stata 17 (theo đề cương). Mã nằm trong `code/`.
+- Cấu trúc (theo giảng viên hướng dẫn, 12/10/2026): H1 kỳ thị và PHQ-4 (chính). RQ1 ba nhóm tình huống kỳ thị: giao tiếp (1–3), nghề nghiệp (4–6), thể hiện giới (7; thêm 8 ở bản độ nhạy), thăm dò, BH. H2 chuỗi kỳ thị, che giấu danh tính, PHQ-4 (IUT, bootstrap a×b). H3 thực thi DEI được cảm nhận điều tiết liên hệ kỳ thị và PHQ-4. Holm trên {H2, H3}. Phụ lục thăm dò: từng tình huống (BH) và ba mức phơi nhiễm.
+- **Đã bỏ hẳn (yêu cầu tác giả 12/10/2026):** lo âu và trầm cảm riêng (GAD-2, PHQ-2), so sánh với người không phải LGBT, điều tiết theo nhóm, thu nhập, Oaxaca, "disclosure dilemma". Không đưa lại vào bài, phụ lục hay mã, kể cả dưới dạng ghi chú. Bảng S7 (thêm mức công khai làm biến kiểm soát) vẫn giữ.
+- Công cụ: Stata 17. Mã: `phan_tich.do` (một tệp).
 
 ## Trạng thái (cập nhật khi thay đổi)
 
@@ -23,8 +24,9 @@
 - [ ] Đăng ký OSF: **chưa nộp**. Tác giả quyết định (5/10/2026) chạy mô hình trước, đăng ký sau (`docs/deviations.md`). Khi nộp, dùng bản chốt ngày 5/10/2026 của `docs/analysis_plan.md`, ghi rõ nộp sau ước lượng, rồi điền đường dẫn vào `docs/analysis_plan.md` và bài báo.
 - [x] Chốt phương pháp (5/10/2026): hết `TODO(OSF)`; thêm ngưỡng hiệu ứng nhỏ nhất (1,0 điểm PHQ-4, TOST), gộp mức thưa (`04b_collapse_levels.do`), wild bootstrap, đặc tả thêm xu hướng tính dục, kiểm định hiệu ở E2; bỏ kiểm định White. Mã Stata đã sửa nhưng **chưa chạy thử**.
 - [x] Điền `config/variable_map.csv` và tạo `config/value_map.csv` (mã chữ Kobo → mã số), 5/10/2026. Đã đối chiếu bằng Python trên tệp thật (chỉ số đếm): không có mã chưa ánh xạ; luồng mẫu khớp 850 → … → 243.
-- [x] **Tệp chạy chính thức: `phan_tich.do`** (một tệp, theo yêu cầu tác giả 5/10/2026): đường dẫn dữ liệu trên máy tác giả (ổ D), xuất `ket_qua.xlsx`; mặc định `RUN_MODELS 1` chạy toàn bộ, `0` chỉ chạy dữ liệu và mô tả. Hướng dẫn: `docs/huong_dan_chay_stata.md`. Pipeline nhiều tệp trong `code/` là bản trước, giữ để tham chiếu; mọi sửa đổi làm trên `phan_tich.do` trước. Dữ liệu giả lập định dạng Kobo: `tests/synthetic_kobo.csv`.
+- [x] **Tệp chạy chính thức: `phan_tich.do`** (một tệp, theo yêu cầu tác giả 5/10/2026): đường dẫn dữ liệu trên máy tác giả (ổ D), xuất `ket_qua.xlsx`; mặc định `RUN_MODELS 1` chạy toàn bộ, `0` chỉ chạy dữ liệu và mô tả. Hướng dẫn: `docs/huong_dan_chay_stata.md`. Pipeline nhiều tệp `code/` cũ đã bị xóa ngày 12/10/2026. Dữ liệu giả lập định dạng Kobo: `tests/synthetic_kobo.csv`.
 - [x] Chạy `phan_tich.do` trên máy tác giả: chạy đủ ngày 5/10/2026 (sau khi sửa lỗi `post_val`). Kết quả tổng hợp ở `output/tables/stata/`. Mọi ước lượng tất định khớp bản tái lập Python (`tests/python_replication/`) đến 10⁻⁹. Lần chạy thứ hai (cùng ngày, sau khi đổi mốc giới tính của sensemakr sang `benchmark()`) không lỗi và cho kết quả giống hệt lần đầu. Ngày 9/10/2026, `phan_tich.do` được chuyển sang tiếng Anh theo chuẩn gói tái lập (mỗi bảng của bài một sheet trong `results.xlsx`, `README.md` mô tả gói); tác giả chạy lại cùng ngày, 59/59 dòng giống hệt. Cũng ngày 9/10: do-file đọc bản xuất gốc (đã đối chiếu: 850 phiếu, mọi câu trả lời trùng tệp cũ), thêm Bảng S7 (độ nhạy sau kết quả), hệ số trên một độ lệch chuẩn của S, vẽ lại Hình 2. Tác giả chạy lại ngày 10/10/2026, không lỗi: 62/62 dòng tất định khớp Python, các dòng cũ giống hệt lần trước; kết quả ở `output/tables/stata/`.
+- [ ] **Sắp xếp lại theo giảng viên hướng dẫn (12/10/2026):** `phan_tich.do` và bản Python đã sửa (thêm RQ1, hệ số của S theo mức DEI; bỏ các phân tích nêu ở trên; Bảng 2 và độ tin cậy chỉ trên mẫu chính; bảng đánh số lại theo `README.md`). Bản Python đã chạy trên dữ liệu thật; 50 dòng giữ lại khớp lần chạy Stata 10/10. **Tác giả cần chạy lại Stata**; số dự kiến ở `docs/huong_dan_chay_stata.md`. Sau đó cập nhật `output/tables/stata/`, báo cáo tóm tắt và bài báo. Bài báo không còn nói phân tích theo kế hoạch đăng ký trước; quyết định về OSF chờ tác giả.
 - [x] Chạy trên dữ liệu thật (bản Python, 5/10/2026) → điền bảng → viết Results, Discussion, Conclusions của bài báo tiếng Anh.
 - [ ] Bài NCKH 5 chương (khung ~80 trang: Mở đầu 5–6, Ch1 8–10, Ch2 16–17, Ch3 21–23, Ch4 13–15, Ch5 11–13, Tổng kết 2–3). Ch2 = cơ sở lý thuyết và khoảng trống; khung khái niệm và giả thuyết nằm ở mục 3.1 (theo yêu cầu tác giả). Mở đầu, Ch1, Ch2 và mục 3.1 đã có bản chờ tác giả duyệt trong `docs/bai_nckh/`, kèm biên bản phản biện. Chưa viết 3.2–3.9 và Ch4–5. Thời điểm hình thành giả thuyết đã bỏ khỏi phần giả thuyết, nhưng phải trình bày ở mục 3.8. Không viết Ch4–5 khi chưa có kết quả thật. Bản tiếng Anh 5 chương dài (Introduction, Ch1, Ch2) ở `docs/bai_nckh/manuscript_en_intro_ch1_ch2.md`, giữ để tham khảo.
 - [ ] **Bản chính hiện nay (từ 4/10/2026, theo yêu cầu tác giả): bài báo tiếng Anh trình bày theo Herry & Dyar (2025)**, ở `docs/bai_nckh/manuscript_en_article.md`. Bố cục: Abstract có cấu trúc, Keywords, Introduction (các mục không đánh số, kết thúc bằng Current Study và Hypotheses), Methods, Results, Discussion, Conclusions, Declarations, References. Bản hoàn chỉnh ngày 9/10/2026: rút gọn Introduction và Methods (phần chính khoảng 9.500 từ), tóm tắt khoảng 250 từ, thêm Hình 1, Supplementary Methods, Declarations; xuất `manuscript_en_article.docx` (Times New Roman 12, giãn dòng đôi). Mọi số liệu lấy từ lần chạy Stata ngày 5/10/2026. Các chỗ tác giả cần điền nằm trong ngoặc vuông, danh sách ở `docs/bai_nckh/checklist_truoc_khi_nop.md`. Ngày 9/10/2026 có hai bản phản biện nội bộ; kế hoạch sửa bài đã thống nhất, nhưng tác giả chốt kết quả với giảng viên hướng dẫn trước, rồi mới sửa bài. Không phát triển thêm bản tiếng Việt và bản 5 chương trừ khi tác giả yêu cầu.
@@ -33,7 +35,7 @@
 ## Quy tắc bắt buộc
 
 1. **Không bao giờ commit, dán vào chat hay tải lên bất kỳ đâu** dữ liệu cấp cá nhân: tệp Kobo, `.dta`, `.csv` hay `.xlsx` có từng dòng người trả lời. Bộ dữ liệu chứa xu hướng tính dục và tình trạng sức khỏe, thuộc nhóm dữ liệu cá nhân nhạy cảm theo Luật 91/2025/QH15 và Nghị định 356/2025/NĐ-CP. `.gitignore` đã chặn `data/`. Chạy `bash tests/check_no_data.sh` trước khi commit.
-2. **Ẩn ô nhỏ.** Mọi bảng chéo xuất ra theo nhóm SOGIE, nhân khẩu học hoặc đặc điểm nơi làm việc phải ẩn các ô có dưới 10 người. Dùng `small_cell_guard` trong `code/lib/programs.do`. Nhóm chuyển giới và phi nhị nguyên không được trình bày như một nhóm riêng.
+2. **Ẩn ô nhỏ.** Mọi bảng chéo xuất ra theo nhóm SOGIE, nhân khẩu học hoặc đặc điểm nơi làm việc phải ẩn các ô có dưới 10 người (`MIN_CELL` ở mục 0 của `phan_tich.do`). Nhóm chuyển giới và phi nhị nguyên không được trình bày như một nhóm riêng.
 3. **Không diễn giải nhân quả.** Viết “liên hệ”, “đi kèm”, “phù hợp với”. Không viết “tác động”, “làm tăng”, “gây ra” khi nói về η.
 4. **Không viết “gần có ý nghĩa”.** Luôn báo cáo khoảng tin cậy 95%. Nếu khoảng tin cậy chứa cả 0 và các giá trị có ý nghĩa thực tiễn, kết luận là “chưa xác định”.
 5. **Không đổi lựa chọn đã đăng ký** (Xᴰ, quy tắc mã hóa “không muốn trả lời”, HC3, các họ kiểm định, danh mục độ bền) sau khi thấy kết quả. Mọi lệch khỏi kế hoạch phải ghi vào `docs/deviations.md`, kèm ngày và lý do, **trước** khi chạy lại.
@@ -67,14 +69,14 @@
 | Đường dẫn | Nội dung |
 |---|---|
 | `docs/de_cuong/` | Đề cương (.docx gốc, .md, hình) |
-| `docs/analysis_plan.md` | Đặc tả phân tích, quy tắc quyết định, ánh xạ giả thuyết → do-file → bảng |
+| `docs/analysis_plan.md` | Kế hoạch chốt 5/10/2026 (hồ sơ nội bộ); cấu trúc hiện hành ở `docs/deviations.md` |
 | `docs/codebook.md` | Tên biến chuẩn, quy tắc mã hóa, cách dựng chỉ số |
 | `docs/review_notes.md` | Nhận xét và vấn đề đang mở của đề cương lần 2 |
 | `docs/ethics_data_protection.md` | Tình trạng đạo đức, kế hoạch bảo vệ dữ liệu, danh mục hồ sơ |
 | `docs/deviations.md` | Nhật ký lệch khỏi kế hoạch đăng ký |
-| `config/` | `settings.do` (tham số), `variable_map.csv` (ánh xạ biến Kobo) |
-| `code/` | Pipeline Stata `00_master.do` → `11_tables.do` |
-| `tests/` | Dữ liệu giả lập, kiểm tra không lộ dữ liệu |
+| `phan_tich.do` | Mã phân tích chính thức (Stata) |
+| `config/` | `variable_map.csv` (ánh xạ biến Kobo), `value_map.csv` (mã chữ → mã số) |
+| `tests/` | Bản tái lập Python, dữ liệu giả lập, kiểm tra không lộ dữ liệu |
 | `data/` | **Không commit.** Đặt tệp thô vào `data/raw/` |
 | `output/` | Bảng, hình, nhật ký (chỉ commit bảng đã ẩn ô nhỏ) |
 

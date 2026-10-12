@@ -1,4 +1,4 @@
-# Replicates sections 5-13 of phan_tich.do. Writes aggregate results only.
+# Replicates sections 5-15 of phan_tich.do. Writes aggregate results only.
 # Run: LGBT_DATA=/path/to/export.xlsx python3 tests/python_replication/models.py
 import warnings
 warnings.filterwarnings('ignore')
@@ -43,37 +43,58 @@ for t in f.names:
     else:
         postf(f, 'TableS1', 'phq4', 'XD', t)
 
-# ---------------- 6. H1, H2a, H2b
-for y, h in [('phq4', 'H1'), ('gad2', 'H2a'), ('phq2', 'H2b')]:
-    f = R(d, y, d.in_xd_main, cont=['S'], factors=XD)
-    postf(f, h, y, 'XD', 'S', f'MDE approx. {2.8 * f.se["S"]:.2f}')
-    sdS = d.loc[f.sample, 'S'].std(ddof=1)
-    sdY = d.loc[f.sample, y].std(ddof=1)
-    post('PerSD', y, 'XD, per SD of S', 'S', f.b['S'] * sdS, f.se['S'] * sdS, f.lb['S'] * sdS, f.ub['S'] * sdS,
-         f.p['S'], f.n, f'SD of S = {sdS:.3f}; standardized coefficient = {f.b["S"] * sdS / sdY:.3f}')
-    if y == 'phq4':
-        bS, seS, df = f.b['S'], f.se['S'], f.df
-        q = stats.t.ppf(0.95, df)
-        lo90, hi90 = bS - q * seS, bS + q * seS
-        p1 = stats.t.sf((bS + SESOI) / seS, df)
-        p2 = 1 - stats.t.sf((bS - SESOI) / seS, df)
-        eq = 'yes' if (lo90 > -SESOI and hi90 < SESOI) else 'no'
-        post('H1_TOST', 'phq4', 'XD, 90% CI', 'S', bS, seS, lo90, hi90, max(p1, p2), f.n, f'SESOI +/-1.0; equivalence: {eq}')
-        h1 = f
-    f2 = R(d, y, d.in_xj, cont=['S'], factors=XD + XJ)
-    postf(f2, h, y, 'XD + XJ', 'S')
+# ---------------- 6. H1
+f = R(d, 'phq4', d.in_xd_main, cont=['S'], factors=XD)
+postf(f, 'H1', 'phq4', 'XD', 'S', f'MDE approx. {2.8 * f.se["S"]:.2f}')
+sdS = d.loc[f.sample, 'S'].std(ddof=1)
+sdY = d.loc[f.sample, 'phq4'].std(ddof=1)
+post('PerSD', 'phq4', 'XD, per SD of S', 'S', f.b['S'] * sdS, f.se['S'] * sdS, f.lb['S'] * sdS, f.ub['S'] * sdS,
+     f.p['S'], f.n, f'SD of S = {sdS:.3f}; standardized coefficient = {f.b["S"] * sdS / sdY:.3f}')
+bS, seS, df = f.b['S'], f.se['S'], f.df
+q = stats.t.ppf(0.95, df)
+lo90, hi90 = bS - q * seS, bS + q * seS
+p1 = stats.t.sf((bS + SESOI) / seS, df)
+p2 = 1 - stats.t.sf((bS - SESOI) / seS, df)
+eq = 'yes' if (lo90 > -SESOI and hi90 < SESOI) else 'no'
+post('H1_TOST', 'phq4', 'XD, 90% CI', 'S', bS, seS, lo90, hi90, max(p1, p2), f.n, f'SESOI +/-1.0; equivalence: {eq}')
+f = R(d, 'phq4', d.in_xj, cont=['S'], factors=XD + XJ)
+postf(f, 'H1', 'phq4', 'XD + XJ', 'S')
 f = R(d, 'phq4', d.in_xd_alt, cont=['S'], factors=xdalt)
 postf(f, 'H1', 'phq4', 'XD, prefer not to answer as missing', 'S')
 
-# ---------------- 7. H3
+# ---------------- 7. RQ1: sub-indices standardized in the common sample of each version
+for ver, touse, idx, pt in [('main', 'in_rq1', ['S_int', 'S_car', 'S_gen'], 'RQ1'),
+                            ('sens', 'in_rq1s', ['S_int', 'S_car', 'S_gen8'], 'RQ1_sens')]:
+    s = d[touse]
+    zs = []
+    sds = {}
+    for v in idx:
+        sds[v] = d.loc[s, v].std(ddof=1)
+        d['z_' + v] = ((d[v] - d.loc[s, v].mean()) / sds[v]).where(s)
+        zs.append('z_' + v)
+    for v in idx:
+        if ver == 'sens' and v != 'S_gen8':
+            continue
+        f = R(d, 'phq4', s, cont=['z_' + v], factors=XD)
+        postf(f, pt, 'phq4', 'separate', 'z_' + v, f'SD of {v} = {sds[v]:.3f}')
+    f = R(d, 'phq4', s, cont=zs, factors=XD)
+    for z in zs:
+        postf(f, pt, 'phq4', 'joint', z)
+    for i in range(len(zs)):
+        for j in range(i + 1, len(zs)):
+            est, se, lb, ub, p = lincom(f, {zs[i]: 1, zs[j]: -1})
+            post(pt, 'phq4', 'joint, difference', f'{zs[i]} - {zs[j]}', est, se, lb, ub, p, f.n)
+    d.drop(columns=zs, inplace=True)
+
+# ---------------- 8. H2
 for cv in ['C', 'C3']:
     s = d.in_xd_main & d[cv].notna()
     fa = R(d, cv, s, cont=['S'], factors=XD)
-    postf(fa, 'H3_a', cv, cv, 'S')
+    postf(fa, 'H2_a', cv, cv, 'S')
     fb = R(d, 'phq4', s, cont=[cv, 'S'], factors=XD)
-    postf(fb, 'H3_b', 'phq4', cv, cv)
-    postf(fb, 'H3_c', 'phq4', cv, 'S')
-    post('H3', 'phq4', cv, 'max(p_a, p_b)', p=max(fa.p['S'], fb.p[cv]), N=int(s.sum()),
+    postf(fb, 'H2_b', 'phq4', cv, cv)
+    postf(fb, 'H2_c', 'phq4', cv, 'S')
+    post('H2', 'phq4', cv, 'max(p_a, p_b)', p=max(fa.p['S'], fb.p[cv]), N=int(s.sum()),
          note=f'a > 0: {int(fa.b["S"] > 0)}; b > 0: {int(fb.b[cv] > 0)}')
     if cv == 'C':
         ab_obs = fa.b['S'] * fb.b['C']
@@ -93,69 +114,34 @@ for r in range(5000):
     bb = np.linalg.lstsq(Xb[i], yP[i], rcond=None)[0][nb.index('C')]
     abs_.append(ba * bb)
 abs_ = np.array(abs_)
-post('H3_ab', 'phq4', 'percentile bootstrap', 'a*b', ab_obs, abs_.std(ddof=1), np.percentile(abs_, 2.5),
+post('H2_ab', 'phq4', 'percentile bootstrap', 'a*b', ab_obs, abs_.std(ddof=1), np.percentile(abs_, 2.5),
      np.percentile(abs_, 97.5), N=n, note='5000 resamples')
 
-# ---------------- 8. E1-E5
-e3 = d[d.in_e3].copy()
-e3['g'] = np.where(e3.lgbt == 0, 0, np.where(e3.ever_exposed == 0, 1, np.where(e3.ever_exposed == 1, 2, np.nan)))
-E3 = e3.dropna(subset=['g']).groupby('g').phq4.agg(mean='mean', sd='std', median='median', n='count')
-E3['pct_ge6'] = 100 * e3.dropna(subset=['g']).groupby('g').phq_ge6.mean()
-E3.index = E3.index.map({0: 'Non-LGBT', 1: 'LGBT, no reported stigma', 2: 'LGBT, at least one situation'})
-E3.to_csv(f'{OUT}/table_s4.csv')
+# ---------------- 9. H3, with the stigma estimate at Q one SD below and above the mean
+sdQ = d.loc[d.in_h3, 'Q'].std(ddof=1)
+f = R(d, 'phq4', d.in_h3, cont=['S', 'Qc'], factors=XD, inter=[('S', 'Qc')])
+postf(f, 'H3', 'phq4', 'S x Q', 'c.S#c.Qc')
+postf(f, 'H3_aux', 'phq4', 'Q at S = 0', 'Qc')
+for k, lab in [(-1, 'S at Q = mean - 1 SD'), (0, 'S at mean Q'), (1, 'S at Q = mean + 1 SD')]:
+    est, se, lb, ub, p = lincom(f, {'S': 1, 'c.S#c.Qc': k * sdQ})
+    post('H3_slope', 'phq4', lab, 'S', est, se, lb, ub, p, f.n, f'SD of Q = {sdQ:.3f}')
 
-f = R(d, 'phq4', d.in_xd_main, factors=['S3'] + XD)
-postf(f, 'E1', 'phq4', 'low vs. none', '1.S3')
-postf(f, 'E1', 'phq4', 'high vs. none', '2.S3')
-
+# ---------------- 10. Supplementary exploratory analyses (Table S4)
 for j in range(1, 9):
     v = f'stig{j}_any'
     nexp = int((d.in_xd_main & (d[v] == 1)).sum())
     nun = int((d.in_xd_main & (d[v] == 0)).sum())
     if nexp < 10 or nun < 10:
-        post('E2_notest', 'phq4', f'situation {j}', f'1.{v}', note='Fewer than 10 respondents in one group')
+        post('Situation_notest', 'phq4', f'situation {j}', f'1.{v}', note='Fewer than 10 respondents in one group')
         continue
     f = R(d, 'phq4', d.in_xd_main, factors=[v] + XD)
-    postf(f, 'E2', 'phq4', f'situation {j}', f'1.{v}')
+    postf(f, 'Situation', 'phq4', f'situation {j}', f'1.{v}')
 
-attr = ['stig5', 'stig6']
-if (d.in_xd_main & (d.stig4_any == 1)).sum() >= 10:
-    attr = ['stig4'] + attr
-d['S_attr'] = d[attr].mean(axis=1)
-d['S_event'] = d[['stig1', 'stig2', 'stig3', 'stig7']].mean(axis=1)
-f = R(d, 'phq4', d.in_xd_main, cont=['S_event', 'S_attr'], factors=XD)
-postf(f, 'E2_contrast', 'phq4', 'event-based', 'S_event')
-postf(f, 'E2_contrast', 'phq4', 'attribution-dependent', 'S_attr', ' '.join(attr))
-est, se, lb, ub, p = lincom(f, {'S_attr': 1, 'S_event': -1})
-post('E2_contrast', 'phq4', 'attribution-dependent minus event-based', 'difference', est, se, lb, ub, p, f.n)
+f = R(d, 'phq4', d.in_xd_main, factors=['S3'] + XD)
+postf(f, 'Levels', 'phq4', 'low vs. none', '1.S3')
+postf(f, 'Levels', 'phq4', 'high vs. none', '2.S3')
 
-# Anxiety versus depression: GAD-2 minus PHQ-2 regressed on the same terms, robust variance as in suest
-# (HC0 * N/(N-1)), z test. Approximates the suest contrast of the do-file.
-d['gmp'] = d.gad2 - d.phq2
-f = R(d, 'gmp', d.in_xd_main, cont=['S'], factors=XD, vce='hc0')
-N = f.n
-seS = f.se['S'] * np.sqrt(N / (N - 1))
-z = f.b['S'] / seS
-post('AnxDep', 'gad2 - phq2', 'suest', 'S', f.b['S'], seS, f.b['S'] - 1.959964 * seS,
-     f.b['S'] + 1.959964 * seS, 2 * stats.norm.sf(abs(z)), N)
-
-xd_nosex = [v for v in XD if v != 'sex_birth']
-f = R(d, 'phq4', d.in_xd_main & (d.sex_birth_orig != 9), cont=['S'], factors=['sex_birth'] + xd_nosex,
-      inter=[('sex_birth', 'S')], base={'sex_birth': 1})
-postf(f, 'E4', 'phq4', 'S x female (ref. male)', '2.sex_birth#c.S')
-e4sex = f
-f = R(d, 'phq4', d.in_xd_main & d.orient3.notna(), cont=['S'], factors=['orient3'] + XD,
-      inter=[('orient3', 'S')], base={'orient3': 1})
-postf(f, 'E4', 'phq4', 'S x lesbian (ref. bisexual or pansexual)', '2.orient3#c.S')
-postf(f, 'E4', 'phq4', 'S x gay (ref. bisexual or pansexual)', '3.orient3#c.S')
-e4or = f
-
-f = R(d, 'phq4', d.in_e5, cont=['S', 'Qc'], factors=XD, inter=[('S', 'Qc')])
-postf(f, 'E5', 'phq4', 'S x Q', 'c.S#c.Qc')
-postf(f, 'E5_aux', 'phq4', 'S at mean Q', 'S')
-postf(f, 'E5_aux', 'phq4', 'Q at S = 0', 'Qc')
-
-# ---------------- 9. Diagnostics (Table S2)
+# ---------------- 11. Diagnostics (Table S2)
 X, names, s = build(d, d.in_xd_main, ['S'], XD, extra=['phq4'])
 y = d.loc[s, 'phq4'].to_numpy(float)
 fo = ols(y, X, names, 'ols')
@@ -191,7 +177,7 @@ for nm, idx in groups:
     diag.append((f'GVIF {nm}', gv, len(idx), np.nan, f'GVIF^(1/(2df)) = {gv ** (1 / (2 * len(idx))):.3f}'))
 pd.DataFrame(diag, columns=['diagnostic', 'statistic', 'df', 'p', 'note']).to_csv(f'{OUT}/table_s2.csv', index=False)
 
-# ---------------- 10. Robustness checks (Table 7)
+# ---------------- 12. Robustness checks (Table 8)
 f = R(d, 'phq4', d.in_xd_main, cont=['S_exposed'], factors=['ever_exposed'] + XD)
 postf(f, 'Robust', 'phq4', 'any exposure', '1.ever_exposed')
 postf(f, 'Robust', 'phq4', 'intensity among exposed', 'S_exposed')
@@ -299,7 +285,7 @@ from sens import sensemakr
 sens_out = sensemakr(d, d.in_xd_main, XD, groups={'sex_birth': 'sex_birth', 'educ': 'educ'}, kd=(1, 2, 3))
 sens_out.to_csv(f'{OUT}/sensemakr.csv', index=False)
 
-# ---------------- 11. Post hoc sensitivity analyses (Table S7)
+# ---------------- 13. Post hoc sensitivity analyses (Table S7)
 f = R(d, 'phq4', d.in_xd_main, cont=['S'])
 postf(f, 'PostHoc', 'phq4', 'unadjusted', 'S')
 f = R(d, 'phq4', d.s7_disc, cont=['S'], factors=XD + ['disclose_s7'])
@@ -309,7 +295,7 @@ postf(f, 'PostHoc', 'phq4', 'adding work experience', 'S')
 f = R(d, 'phq4', d.in_xd_main, cont=['S'], factors=['agegrp', 'sex_birth', 'educ'])
 postf(f, 'PostHoc', 'phq4', 'XD without relationship status and region', 'S')
 
-# ---------------- 12. Specification curve (Table S6)
+# ---------------- 14. Specification curve (Table S6)
 sp = []
 for idx in ['S', 'S8', 'S_count7', 'S_complete7']:
     for ctl in ['XD', 'XDXJ']:
@@ -328,7 +314,7 @@ sp = pd.DataFrame(sp)
 sp['b_sd'], sp['lb_sd'], sp['ub_sd'] = sp.b * sp.sd_index, sp.lb * sp.sd_index, sp.ub * sp.sd_index
 sp.to_csv(f'{OUT}/table_s6.csv', index=False)
 
-# ---------------- 13. Multiple-testing adjustment
+# ---------------- 15. Multiple-testing adjustment
 res = pd.DataFrame(rows)
 
 
@@ -358,11 +344,10 @@ def bh(p):
 
 
 res['p_holm'] = np.nan
-mask = (res.part.isin(['H2a', 'H2b']) & (res.spec == 'XD')) | ((res.part == 'H3') & (res.spec == 'C'))
+mask = ((res.part == 'H2') & (res.spec == 'C')) | (res.part == 'H3')
 res.loc[mask, 'p_holm'] = holm(res.loc[mask, 'p'])
 res['p_bh'] = np.nan
-for fam in ['E2', 'E4']:
-    mk = res.part == fam
+for mk in [(res.part == 'RQ1') & (res.spec == 'separate'), res.part == 'Situation']:
     res.loc[mk, 'p_bh'] = bh(res.loc[mk, 'p'])
 res.to_csv(f'{OUT}/results.csv', index=False)
 pd.set_option('display.width', 250)

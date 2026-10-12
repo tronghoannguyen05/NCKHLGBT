@@ -13,6 +13,9 @@ ORDERED = ['agegrp', 'educ', 'exper', 'orgsize', 'hours']
 PHQI = ['phqi1', 'phqi2', 'phqi3', 'phqi4']
 STIG7 = [f'stig{j}' for j in range(1, 8)]
 STIG8 = [f'stig{j}' for j in range(1, 9)]
+STIG_I = ['stig1', 'stig2', 'stig3']
+STIG_C = ['stig4', 'stig5', 'stig6']
+RQ1 = ['S_int', 'S_car', 'S_gen']
 CONC = ['conc1', 'conc2', 'conc3', 'conc4']
 CONC3 = ['conc1', 'conc2', 'conc3']
 DEI = ['dei1', 'dei2', 'dei3', 'dei4']
@@ -157,10 +160,7 @@ def load():
 
     d['phq_n'] = d[PHQI].notna().sum(axis=1)
     d['phq4'] = d[PHQI].sum(axis=1, min_count=4).where(d.phq_n == 4)
-    d['gad2'] = d.phqi1 + d.phqi2
-    d['phq2'] = d.phqi3 + d.phqi4
     d['phq4_frac'] = d.phq4 / 12
-    d['phq_ge6'] = (d.phq4 >= 6).astype(float).where(d.phq4.notna())
     d['phq4_zero'] = (d.phq4 == 0).astype(float).where(d.phq4.notna())
 
     L = d.lgbt == 1
@@ -170,6 +170,10 @@ def load():
     d['S8'] = d[STIG8].mean(axis=1).where((d.S8_n >= 4) & L)
     d['S_count7'] = d[STIG7].isin([1, 2, 3, 4]).sum(axis=1).astype(float).where((d.S_n >= 4) & L)
     d['S_complete7'] = d.S.where(d.S_n == 7)
+    d['S_int'] = d[STIG_I].mean(axis=1).where((d[STIG_I].notna().sum(axis=1) >= 2) & L)
+    d['S_car'] = d[STIG_C].mean(axis=1).where((d[STIG_C].notna().sum(axis=1) >= 2) & L)
+    d['S_gen'] = d.stig7.where(L)
+    d['S_gen8'] = d[['stig7', 'stig8']].mean(axis=1).where(L)
     for j in range(1, 9):
         d[f'stig{j}_any'] = (d[f'stig{j}'] >= 1).astype(float).where(d[f'stig{j}'].notna())
     d['ever_exposed'] = (d.S > 0).astype(float).where(d.S.notna())
@@ -187,13 +191,14 @@ def load():
     d['flag_contra'] = (d.agegrp == 1) & (d.position == 4)
     d['flag_quality'] = (d.flag_straight | d.flag_contra).astype(int)
 
-    d['in_e3'] = d.in_analytic & (d.phq_n == 4)
     d['in_main'] = d.in_analytic & L & d.phq4.notna() & d.S.notna()
     d['in_xd_main'] = d.in_main & d[XD].notna().all(axis=1)
     d['in_xd_alt'] = d.in_main & d[[v + '_alt' for v in XD]].notna().all(axis=1)
     d['in_xj'] = d.in_xd_main & d[XJ].notna().all(axis=1)
-    d['in_e5'] = d.in_xd_main & d.Q.notna()
-    d['Qc'] = d.Q - d.loc[d.in_e5, 'Q'].mean()
+    d['in_rq1'] = d.in_xd_main & d[RQ1].notna().all(axis=1)
+    d['in_rq1s'] = d.in_xd_main & d[['S_int', 'S_car', 'S_gen8']].notna().all(axis=1)
+    d['in_h3'] = d.in_xd_main & d.Q.notna()
+    d['Qc'] = d.Q - d.loc[d.in_h3, 'Q'].mean()
 
     med = stata_median(d.loc[d.in_main & (d.S > 0), 'S'])
     d['S3'] = np.select([d.S == 0, (d.S > 0) & (d.S <= med), d.S > med], [0, 1, 2], np.nan)
@@ -223,24 +228,21 @@ def load():
 
 if __name__ == '__main__':
     d = load()
-    print('flow', len(d), int(d.eligible.sum()),
-          [(s, int(d[s].sum()), int((d[s] & (d.lgbt == 0)).sum()), int((d[s] & (d.lgbt == 1)).sum()))
-           for s in ['in_analytic', 'in_e3', 'in_main', 'in_xd_main', 'in_xd_alt', 'in_e5']])
+    L = d.lgbt == 1
+    print('flow', len(d), int(d.eligible.sum()), int(d.in_analytic.sum()), int((d.in_analytic & L).sum()),
+          [(s, int(d[s].sum())) for s in ['in_main', 'in_xd_main', 'in_xd_alt', 'in_rq1', 'in_h3']])
     print('collapse', d.attrs['collapse_log'])
-    e3 = d[d.in_e3]
-    print(e3.groupby('lgbt')[['phq4', 'gad2', 'phq2']].agg(['mean', 'std']).round(6).to_string())
-    print(e3.groupby('lgbt').phq4_zero.mean())
+    m = d[d.in_main]
+    print('phq4 main sample', round(m.phq4.mean(), 6), round(m.phq4.std(), 6), int(m.phq4.count()),
+          round(m.phq4_zero.mean(), 6))
 
     def alpha(X):
         X = X.dropna()
         k = X.shape[1]
         return k / (k - 1) * (1 - X.var(ddof=1).sum() / X.sum(axis=1).var(ddof=1)), len(X)
-    print('alpha phq4', alpha(e3[PHQI]))
-    print('r gad2', e3[['phqi1', 'phqi2']].corr().iloc[0, 1], 'r phq2', e3[['phqi3', 'phqi4']].corr().iloc[0, 1])
-    la = d[d.in_analytic & (d.lgbt == 1)]
-    print('alpha conc', alpha(la[CONC]), 'alpha dei', alpha(d.loc[d.in_analytic, DEI]),
-          'alpha s7', alpha(la[STIG7]), 'alpha s8', alpha(la[STIG8]))
-    m = d[d.in_main]
+    for name, cols in [('PHQ-4', PHQI), ('S7', STIG7), ('S8', STIG8), ('interpersonal', STIG_I),
+                       ('career', STIG_C), ('concealment', CONC), ('DEI', DEI)]:
+        print('alpha', name, alpha(m[cols]))
     for j in range(1, 9):
         v = m[f'stig{j}_any']
         print(f'stig{j}', int(v.notna().sum()), int((v == 1).sum()))

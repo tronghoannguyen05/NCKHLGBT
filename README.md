@@ -1,6 +1,6 @@
 # Replication package
 
-**Pathology or Prejudice? Workplace Stigma and Mental Health among LGBT Workers in Vietnam**
+**Pathology or Prejudice? A Within-Group Test of Workplace Stigma and Anxiety and Depressive Symptoms among LGBT Workers in Vietnam**
 
 This repository contains the code that produces every table and figure of the article. Hướng dẫn chạy bằng tiếng Việt: `docs/huong_dan_chay_stata.md`.
 
@@ -19,7 +19,7 @@ The analysis uses a cross-sectional survey of workers in Vietnam (850 responses)
 1. Open `phan_tich.do` and set two paths in Section 0: `DATA` (the survey export, .xlsx, as downloaded and unedited) and `OUT` (an output folder).
 2. Run the whole file. A full run takes a few minutes; most of the time is spent on the bootstrap, the wild bootstrap and the multiple imputation.
 
-After import the file keeps only the analysis variables, so submission IDs, timestamps, income and free-text answers never enter the analysis data. It checks the sample flow against the counts reported in Table 1 and stops if they differ.
+After import the file keeps only the variables used in the analysis. It checks the sample flow against the counts reported in Table 1 and stops if they differ.
 
 ## Output
 
@@ -30,15 +30,16 @@ All output is written to `OUT`.
 | `results.xlsx`, sheet `Table1` | Table 1, sample flow |
 | `Table2` | Table 2, sample characteristics |
 | `Table3_Descriptives`, `Table3_Correlations` | Table 3 |
-| `Table4` | Table 4, H1, H2a, H2b, including the estimates per standard deviation of the stigma index |
-| `Table5` | Table 5, H3 |
-| `Table6` | Table 6, exploratory analyses E1, E2, E4, E5 |
-| `Table7` | Table 7, robustness checks |
+| `Table4` | Table 4, H1, including the estimate per standard deviation of the stigma index and the equivalence test |
+| `Table5` | Table 5, RQ1, three groups of stigma situations |
+| `Table6` | Table 6, H2, concealment pathway, including the bootstrap of *a* × *b* |
+| `Table7` | Table 7, H3, perceived DEI enforcement as moderator |
+| `Table8` | Table 8, robustness checks |
 | `TableS1` | Table S1, PHQ-4 by pre-exposure characteristics |
 | `TableS2` | Table S2, diagnostics |
 | `analysis.log`, section "Table S3" | Table S3, sensitivity analysis (sensemakr) |
-| `TableS4` | Table S4, E3 |
-| `TableS5` | Table S5, indirect product *a* × *b* |
+| `TableS4` | Table S4, individual situations and levels of exposure |
+| `TableS5` | Table S5, RQ1 with situation 8 in the gender-expression group |
 | `TableS6` | Table S6, all specifications of the specification curve |
 | `TableS7` | Table S7, post hoc sensitivity analyses |
 | `figure2.png` | Figure 2, specification curve |
@@ -55,20 +56,19 @@ All output is written to `OUT`.
 | 3 | Sample flow |
 | 4 | Descriptive statistics, reliability, disclosure control |
 | 5 | Merging of sparse covariate categories; Table S1 |
-| 6 | H1, H2a, H2b, equivalence test |
-| 7 | H3 and the bootstrap of *a* × *b* |
-| 8 | Exploratory analyses |
-| 9 | Diagnostics |
-| 10 | Robustness checks and sensitivity analysis |
-| 11 | Post hoc sensitivity analyses |
-| 12 | Specification curve |
-| 13 | Multiple-testing adjustment and export |
+| 6 | H1 and the equivalence test |
+| 7 | RQ1 |
+| 8 | H2 and the bootstrap of *a* × *b* |
+| 9 | H3 |
+| 10 | Supplementary exploratory analyses |
+| 11 | Diagnostics |
+| 12 | Robustness checks and sensitivity analysis |
+| 13 | Post hoc sensitivity analyses |
+| 14 | Specification curve |
+| 15 | Multiple-testing adjustment and export |
 
 ## Other material
 
-- `docs/analysis_plan.md`: the analysis plan, finalized on 5 October 2026 before estimation.
-- `docs/deviations.md`: departures from the plan.
 - `docs/codebook.md`: variables and coding rules.
 - `tests/python_replication/`: an independent Python replication used to check the Stata results. It reproduces every estimate that does not depend on random draws. Run `prep.py`, `desc.py` and `models.py` with the environment variable `LGBT_DATA` set to the survey export, then `compare.py` with `STATA_RESULTS` set to `results.xlsx`.
-- `code/`: an earlier modular version of the pipeline, kept for reference. It is not used for the article.
 - `tests/check_no_data.sh`: refuses commits that contain individual-level data.

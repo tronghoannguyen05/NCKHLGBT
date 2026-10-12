@@ -1,5 +1,7 @@
 # Kế hoạch phân tích (đặc tả cho mã)
 
+> Bản chốt ngày 5/10/2026, giữ làm hồ sơ nội bộ. Từ 12/10/2026, cấu trúc phân tích theo góp ý của giảng viên hướng dẫn (H1, RQ1, H2, H3) được ghi ở `docs/deviations.md`; `phan_tich.do` là mã hiện hành. Pipeline `code/` và `config/settings.do` nhắc dưới đây đã bị xóa (còn trong lịch sử git).
+
 Tệp này chép lại đặc tả của đề cương lần 2 (mục 2–3) dưới dạng mã có thể đối chiếu. Thứ tự ưu tiên khi có mâu thuẫn: **bản đăng ký OSF > tệp này > đề cương**. Chỗ đề cương chưa đủ chi tiết được đánh dấu `TODO(OSF)` và có giá trị mặc định trong `config/settings.do`. Khi xác nhận được với OSF thì sửa mặc định và xóa dấu.
 
 - Bản đăng ký OSF: **chưa đăng ký**. Theo quyết định của tác giả ngày 5/10/2026, mô hình được chạy trước và kế hoạch sẽ được đăng ký sau (`docs/deviations.md`, dòng 1). Khi đăng ký, nộp đúng bản chốt ngày 5/10/2026 của tệp này, ghi rõ ngày nộp sau ước lượng, rồi dán đường dẫn và ngày đăng ký vào đây.

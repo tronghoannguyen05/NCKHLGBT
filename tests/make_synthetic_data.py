@@ -125,7 +125,7 @@ def main():
     rng.shuffle(non)
     rng.shuffle(lg)
 
-    # Non-LGBT: 17 respondents miss at least one PHQ item -> 323 with complete PHQ-4
+    # Non-LGBT: 17 respondents miss at least one PHQ item
     for r in non[:17]:
         r["phqi" + str(rng.randint(1, 4))] = ""
     # LGBT: 3 skip the stigma section and miss PHQ items; 19 more miss only PHQ items -> 278

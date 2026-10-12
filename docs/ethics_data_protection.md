@@ -33,4 +33,4 @@
 
 - `data/` bị `.gitignore` chặn toàn bộ. `tests/check_no_data.sh` báo lỗi nếu có tệp dữ liệu nằm trong danh sách được git theo dõi.
 - Không dán dữ liệu cấp cá nhân vào cuộc trò chuyện với AI. Khi cần hỏi về lỗi, dùng dữ liệu giả lập (`tests/make_synthetic_data.py`) hoặc chỉ dán thống kê tổng hợp.
-- Bảng xuất ra phải đi qua `small_cell_guard` (ngưỡng `MIN_CELL` = 10 trong `config/settings.do`).
+- Bảng xuất ra phải ẩn ô dưới `MIN_CELL` = 10 (mục 0 của `phan_tich.do`; Bảng 2, bảng tỷ lệ tình huống và Bảng S1 đã áp dụng).

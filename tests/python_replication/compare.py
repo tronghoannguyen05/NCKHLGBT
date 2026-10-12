@@ -9,8 +9,8 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 PY = os.path.join(HERE, '..', '..', 'output', 'tables', 'python_replication', 'results.csv')
 ST = os.environ.get('STATA_RESULTS', '')
 # Estimates that depend on random draws or on a different variance formula
-APPROX = {('H3_ab', 'percentile bootstrap'), ('Robust', 'restricted wild bootstrap, Webb'),
-          ('Robust', 'multiple imputation, m = 20'), ('AnxDep', 'suest')}
+APPROX = {('H2_ab', 'percentile bootstrap'), ('Robust', 'restricted wild bootstrap, Webb'),
+          ('Robust', 'multiple imputation, m = 20')}
 # The spline knots reach mkspline through macros, which round them slightly
 TOL = 1e-5
 
