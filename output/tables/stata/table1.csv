@@ -1,10 +1,11 @@
 step,n,expected,match
 Responses received,850,850,1
-Eligible: aged 18 or older with a main income-generating job,727,727,1
-Eligible and answered the LGBT self-identification question,640,640,1
+Reported a main income-generating job,734,734,1
+Substantive data: at least one answer after the screening questions,719,719,1
 Self-identified LGBT,300,300,1
-Main sample: complete PHQ-4 and valid stigma index,278,278,1
-"Main sample, complete covariates, main rule",256,256,1
-"Main sample, complete covariates, alternative rule",247,247,1
-Main rule with valid scores on the three stigma sub-indices (RQ1),238,238,1
-Main rule with a valid DEI enforcement score (H3),243,243,1
+Complete PHQ-4 and valid stigma index (at least six of eight situations),272,272,1
+"Estimation sample: complete covariates, main rule",235,235,1
+"Complete covariates, prefer not to answer as missing",226,226,1
+Estimation sample with a valid concealment score (H2),233,233,1
+Estimation sample with valid scores on the three stigma sub-indices (RQ1),233,233,1
+Estimation sample with a valid DEI enforcement score (H3),223,223,1

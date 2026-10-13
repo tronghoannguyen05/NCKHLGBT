@@ -44,6 +44,8 @@ Bảng đầy đủ ánh xạ sheet với bảng của bài nằm trong `README.
 
 - 13/10/2026 (lần 2): theo giảng viên hướng dẫn: luồng mẫu mới (có việc làm, có dữ liệu thực chất), chỉ số kỳ thị 8 tình huống (ít nhất 6/8 câu hợp lệ), tám nhóm biến kiểm soát (thêm tình trạng chuyển giới hoặc đa dạng giới, nhóm xu hướng tính dục, ngành), nhóm thể hiện giới của RQ1 gồm tình huống 7 và 8. Ghi chép ở `docs/deviations.md`. **Cần chạy lại một lần.** Số dự kiến (bản Python) ở mục dưới.
 
+- 13/10/2026 (lần 2, chạy lúc 16:54): tác giả chạy bản trên, không lỗi. Luồng mẫu khớp cả 10 bước; 72/72 dòng tất định khớp bản Python (sai khác lớn nhất 1·10⁻⁶). Bootstrap a × b: 29/5.000 lần lặp không ước lượng được, khoảng tin cậy tính trên 4.971 lần còn lại. Kết quả tổng hợp lưu ở `output/tables/stata/` (sensemakr chép từ log).
+
 ## Số dự kiến cho lần chạy 13/10/2026 (lần 2)
 
 | Sheet | Dòng | Hệ số [KTC 95%] |

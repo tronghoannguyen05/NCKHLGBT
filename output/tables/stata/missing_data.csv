@@ -1,5 +1,5 @@
 comparison,in_xd_main,mean_phq4,mean_S,sd_phq4,sd_S,n,has_phq4,n_S
-Main sample: with / without complete covariates,0.0,4.863636493682861,0.3954545454545455,3.783365249633789,0.49738866146982674,22,,
-Main sample: with / without complete covariates,1.0,3.3046875,0.33286830357142877,3.1932737827301025,0.4768196178719252,256,,
-LGBT analytic sample: with / without PHQ-4,,,0.18997493734335844,,,22,0.0,19.0
-LGBT analytic sample: with / without PHQ-4,,,0.3378211716341213,,,278,1.0,278.0
+Valid PHQ-4 and stigma index: with / without complete covariates,0.0,3.7567567825317383,0.2810489060489061,3.4753530025482178,0.37954729908230955,37,,
+Valid PHQ-4 and stigma index: with / without complete covariates,1.0,3.4297871589660645,0.3268490374873354,3.2499780654907227,0.4671809875335372,235,,
+LGBT respondents: with / without PHQ-4,,,0.21491228070175436,,,22,0.0,19.0
+LGBT respondents: with / without PHQ-4,,,0.3206188725490197,,,278,1.0,272.0

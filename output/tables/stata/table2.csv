@@ -1,31 +1,39 @@
 characteristic,category,main_sample
-n,,278
+n,,235
 Age group,,
-,18-24,64 (23.0)
-,25-34,116 (41.7)
-,35-44,49 (17.6)
-,45 or older,43 (15.5)
+,18-24,56 (23.8)
+,25-34,98 (41.7)
+,35-44,43 (18.3)
+,45 or older,37 (15.7)
 Sex assigned at birth,,
-,Male,98 (35.3)
-,Female,171 (61.5)
+,Male,90 (38.3)
+,Female,145 (61.7)
 Education,,
-,Upper secondary or below,45 (16.2)
-,College,25 (9.0)
-,University,171 (61.5)
-,Postgraduate,33 (11.9)
+,Upper secondary or below,36 (15.3)
+,College,20 (8.5)
+,University,152 (64.7)
+,Postgraduate,27 (11.5)
 Relationship status,,
-,No partner,135 (48.6)
-,Partner,127 (45.7)
+,No partner,118 (50.2)
+,Partner,105 (44.7)
 ,"Separated, divorced, or widowed",<10
 ,Prefer not to answer,<10
 Region of work,,
-,Hanoi,74 (26.6)
-,Ho Chi Minh City,147 (52.9)
-,Da Nang,23 (8.3)
-,Elsewhere,31 (11.2)
+,Hanoi,67 (28.5)
+,Ho Chi Minh City,122 (51.9)
+,Da Nang,19 (8.1)
+,Elsewhere,27 (11.5)
 Sexual orientation,,
-,Gay,68 (24.5)
-,Lesbian,74 (26.6)
-,Bisexual,87 (31.3)
-,Pansexual,23 (8.3)
-,"Other, questioning, or not reported",26 (9.4)
+,Gay,62 (26.4)
+,Lesbian,62 (26.4)
+,Bisexual,78 (33.2)
+,Pansexual,21 (8.9)
+,"Other, questioning, or not stated",12 (5.1)
+Industry,,
+,Finance and banking,23 (9.8)
+,Information technology,16 (6.8)
+,Education,65 (27.7)
+,Trade and services,17 (7.2)
+,Manufacturing,17 (7.2)
+,Media and marketing,36 (15.3)
+,"Health care, tourism, or other",61 (26.0)

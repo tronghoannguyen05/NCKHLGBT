@@ -1,10 +1,10 @@
 situation,n_valid,n_exposed,pct
-situation 1,273,69,25.3
-situation 2,266,87,32.7
-situation 3,260,40,15.4
-situation 4,248,<10,
-situation 5,241,22,9.1
-situation 6,260,31,11.9
-situation 7,259,39,15.1
-situation 8,215,13,6.0
-any of 1-7,278,153,55.0
+situation 1,231,62,26.8
+situation 2,227,77,33.9
+situation 3,220,34,15.5
+situation 4,212,<10,
+situation 5,204,20,9.8
+situation 6,223,26,11.7
+situation 7,222,36,16.2
+situation 8,186,13,7.0
+any of 1-8,235,134,57.0
