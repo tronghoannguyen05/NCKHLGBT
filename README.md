@@ -35,13 +35,12 @@ All output is written to `OUT`.
 | `Table6` | Table 6, H2, concealment pathway, including the bootstrap of *a* × *b* |
 | `Table7` | Table 7, H3, perceived DEI enforcement as moderator |
 | `Table8` | Table 8, robustness checks |
-| `TableS1` | Table S1, PHQ-4 by pre-exposure characteristics |
+| `TableS1` | Table S1, PHQ-4 by the covariates |
 | `TableS2` | Table S2, diagnostics |
 | `analysis.log`, section "Table S3" | Table S3, sensitivity analysis (sensemakr) |
 | `TableS4` | Table S4, individual situations and levels of exposure |
-| `TableS5` | Table S5, RQ1 with situation 8 in the gender-expression group |
-| `TableS6` | Table S6, all specifications of the specification curve |
-| `TableS7` | Table S7, post hoc sensitivity analyses |
+| `TableS5` | Table S5, all specifications of the specification curve |
+| `TableS6` | Table S6, post hoc sensitivity analyses |
 | `figure2.png` | Figure 2, specification curve |
 | `Symptoms`, `Reliability`, `Prevalence`, `MissingData`, `MergedCategories` | Values reported in the Methods and Results text |
 | `AllResults` | Every estimate, with Holm and Benjamini-Hochberg adjusted *p* values |

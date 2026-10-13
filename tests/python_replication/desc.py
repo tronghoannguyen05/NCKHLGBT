@@ -18,7 +18,9 @@ LABELS = {
     'educ_orig': {1: 'Upper secondary or below', 2: 'College', 3: 'University', 4: 'Postgraduate'},
     'relstat_orig': {1: 'No partner', 2: 'Partner', 3: 'Separated, divorced, or widowed', 9: 'Prefer not to answer'},
     'region_orig': {1: 'Hanoi', 2: 'Ho Chi Minh City', 3: 'Da Nang', 4: 'Elsewhere'},
-    'orient_g': {2: 'Gay', 3: 'Lesbian', 4: 'Bisexual', 5: 'Pansexual', 0: 'Other, questioning, or not reported'},
+    'orient_g': {2: 'Gay', 3: 'Lesbian', 4: 'Bisexual', 5: 'Pansexual', 0: 'Other, questioning, or not stated'},
+    'ind_g': {1: 'Finance and banking', 2: 'Information technology', 3: 'Education', 5: 'Trade and services',
+              6: 'Manufacturing', 7: 'Media and marketing', 11: 'Health care, tourism, or other'},
 }
 
 
@@ -29,8 +31,9 @@ def cell(n, tot):
 
 
 d = load()
-m = d[d.in_main].copy()
+m = d[d.in_xd_main].copy()
 m['orient_g'] = m.orient.where(m.orient.isin([2, 3, 4, 5]), 0)
+m['ind_g'] = m.industry_orig.where(~m.industry_orig.isin([4, 10]), 11)
 rows = []
 for v, lab in LABELS.items():
     for code, name in lab.items():
@@ -54,15 +57,16 @@ for j in range(1, 9):
     n, p = cell(int((v == 1).sum()), int(v.notna().sum()))
     prev.append(dict(situation=f'stig{j}', n_valid=int(v.notna().sum()), n_exposed=n, pct=p))
 n, p = cell(int((m.S > 0).sum()), len(m))
-prev.append(dict(situation='any of 1-7', n_valid=len(m), n_exposed=n, pct=p))
+prev.append(dict(situation='any of 1-8', n_valid=len(m), n_exposed=n, pct=p))
 pd.DataFrame(prev).to_csv(f'{OUT}/prevalence.csv', index=False)
 
-la = d[d.in_analytic & (d.lgbt == 1)]
+la = d[d.in_lgbt]
 mis = []
 for has, sub in la.groupby(la.phq4.notna()):
-    mis.append(dict(comparison='LGBT analytic sample: with PHQ-4' if has else 'LGBT analytic sample: without PHQ-4',
+    mis.append(dict(comparison='LGBT respondents: with PHQ-4' if has else 'LGBT respondents: without PHQ-4',
                     n=len(sub), n_S=int(sub.S.notna().sum()), mean_S=sub.S.mean(), mean_phq4=sub.phq4.mean()))
-for has, sub in m.groupby(m.in_xd_main):
+mm = d[d.in_main]
+for has, sub in mm.groupby(mm.in_xd_main):
     mis.append(dict(comparison='Main sample: complete XD' if has else 'Main sample: incomplete XD', n=len(sub),
                     n_S=int(sub.S.notna().sum()), mean_S=sub.S.mean(), sd_S=sub.S.std(),
                     mean_phq4=sub.phq4.mean(), sd_phq4=sub.phq4.std()))

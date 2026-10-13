@@ -5,7 +5,7 @@ warnings.filterwarnings('ignore')
 import numpy as np
 import pandas as pd
 from scipy import stats, optimize
-from prep import load, XD, XJ, STIG7, STIG8, stata_pctile
+from prep import load, XD, XJ, RQ1, stata_pctile
 from reg import lincom, build, ols
 
 SEED = 20260928
@@ -38,7 +38,9 @@ for t in f.names:
     if t == '_cons':
         continue
     lev, var = t.split('.', 1)
-    if ((d.loc[f.sample, var] == float(lev)).sum()) < 10:
+    if var == 'gmin':
+        post('TableS1', 'phq4', 'XD', t, note='Gender minority status: not reported')
+    elif ((d.loc[f.sample, var] == float(lev)).sum()) < 10:
         post('TableS1', 'phq4', 'XD', t, note='Fewer than 10 respondents: not reported')
     else:
         postf(f, 'TableS1', 'phq4', 'XD', t)
@@ -62,29 +64,24 @@ postf(f, 'H1', 'phq4', 'XD + XJ', 'S')
 f = R(d, 'phq4', d.in_xd_alt, cont=['S'], factors=xdalt)
 postf(f, 'H1', 'phq4', 'XD, prefer not to answer as missing', 'S')
 
-# ---------------- 7. RQ1: sub-indices standardized in the common sample of each version
-for ver, touse, idx, pt in [('main', 'in_rq1', ['S_int', 'S_car', 'S_gen'], 'RQ1'),
-                            ('sens', 'in_rq1s', ['S_int', 'S_car', 'S_gen8'], 'RQ1_sens')]:
-    s = d[touse]
-    zs = []
-    sds = {}
-    for v in idx:
-        sds[v] = d.loc[s, v].std(ddof=1)
-        d['z_' + v] = ((d[v] - d.loc[s, v].mean()) / sds[v]).where(s)
-        zs.append('z_' + v)
-    for v in idx:
-        if ver == 'sens' and v != 'S_gen8':
-            continue
-        f = R(d, 'phq4', s, cont=['z_' + v], factors=XD)
-        postf(f, pt, 'phq4', 'separate', 'z_' + v, f'SD of {v} = {sds[v]:.3f}')
-    f = R(d, 'phq4', s, cont=zs, factors=XD)
-    for z in zs:
-        postf(f, pt, 'phq4', 'joint', z)
-    for i in range(len(zs)):
-        for j in range(i + 1, len(zs)):
-            est, se, lb, ub, p = lincom(f, {zs[i]: 1, zs[j]: -1})
-            post(pt, 'phq4', 'joint, difference', f'{zs[i]} - {zs[j]}', est, se, lb, ub, p, f.n)
-    d.drop(columns=zs, inplace=True)
+# ---------------- 7. RQ1: sub-indices standardized in the RQ1 sample
+s = d.in_rq1
+zs, sds = [], {}
+for v in RQ1:
+    sds[v] = d.loc[s, v].std(ddof=1)
+    d['z_' + v] = ((d[v] - d.loc[s, v].mean()) / sds[v]).where(s)
+    zs.append('z_' + v)
+for v in RQ1:
+    f = R(d, 'phq4', s, cont=['z_' + v], factors=XD)
+    postf(f, 'RQ1', 'phq4', 'separate', 'z_' + v, f'SD of {v} = {sds[v]:.3f}')
+f = R(d, 'phq4', s, cont=zs, factors=XD)
+for z in zs:
+    postf(f, 'RQ1', 'phq4', 'joint', z)
+for i in range(len(zs)):
+    for j in range(i + 1, len(zs)):
+        est, se, lb, ub, p = lincom(f, {zs[i]: 1, zs[j]: -1})
+        post('RQ1', 'phq4', 'joint, difference', f'{zs[i]} - {zs[j]}', est, se, lb, ub, p, f.n)
+d.drop(columns=zs, inplace=True)
 
 # ---------------- 8. H2
 for cv in ['C', 'C3']:
@@ -270,10 +267,8 @@ lo = optimize.brentq(lambda th: pwild(th) - 0.05, bW - 5 * seW, bW, xtol=1e-6)
 hi = optimize.brentq(lambda th: pwild(th) - 0.05, bW, bW + 5 * seW, xtol=1e-6)
 post('Robust', 'phq4', 'restricted wild bootstrap, Webb', 'S', bW, np.nan, lo, hi, pW, n, '9999 replications')
 
-d['orient4'] = d.orient3
-d.loc[d.orient3.isna() & d.in_main, 'orient4'] = 4
-f = R(d, 'phq4', d.in_xd_main, cont=['S'], factors=XD + ['orient4'])
-postf(f, 'Robust', 'phq4', 'adding sexual orientation group', 'S')
+f = R(d, 'phq4', d.in_xd_main, cont=['S'], factors=[v for v in XD if v != 'industry'])
+postf(f, 'Robust', 'phq4', 'covariates without industry', 'S')
 
 # ---------------- multiple imputation (chained equations)
 from mi import run_mi
@@ -285,26 +280,26 @@ from sens import sensemakr
 sens_out = sensemakr(d, d.in_xd_main, XD, groups={'sex_birth': 'sex_birth', 'educ': 'educ'}, kd=(1, 2, 3))
 sens_out.to_csv(f'{OUT}/sensemakr.csv', index=False)
 
-# ---------------- 13. Post hoc sensitivity analyses (Table S7)
+# ---------------- 13. Post hoc sensitivity analyses (Table S6)
 f = R(d, 'phq4', d.in_xd_main, cont=['S'])
 postf(f, 'PostHoc', 'phq4', 'unadjusted', 'S')
 f = R(d, 'phq4', d.s7_disc, cont=['S'], factors=XD + ['disclose_s7'])
 postf(f, 'PostHoc', 'phq4', 'adding disclosure at work', 'S')
 f = R(d, 'phq4', d.s7_exper, cont=['S'], factors=XD + ['exper_s7'])
 postf(f, 'PostHoc', 'phq4', 'adding work experience', 'S')
-f = R(d, 'phq4', d.in_xd_main, cont=['S'], factors=['agegrp', 'sex_birth', 'educ'])
+f = R(d, 'phq4', d.in_xd_main, cont=['S'], factors=[v for v in XD if v not in ('relstat', 'region')])
 postf(f, 'PostHoc', 'phq4', 'XD without relationship status and region', 'S')
 
-# ---------------- 14. Specification curve (Table S6)
+# ---------------- 14. Specification curve (Table S5)
 sp = []
-for idx in ['S', 'S8', 'S_count7', 'S_complete7']:
+for idx in ['S', 'S7', 'S_count8', 'S_complete8']:
     for ctl in ['XD', 'XDXJ']:
         for de in ['self', 'consistent']:
             for tg in ['keep', 'drop']:
-                cond = d.in_analytic & d.phq4.notna() & d[idx].notna()
+                cond = d.in_lgbt & d.phq4.notna() & d[idx].notna()
                 cond &= (d.lgbt == 1) if de == 'self' else d.lgbt_consistent
                 if tg == 'drop':
-                    cond &= ~(d.gender_minority == 1)
+                    cond &= ~(d.gmin == 1)
                 fac = XD + (XJ if ctl == 'XDXJ' else [])
                 f = R(d, 'phq4', cond, cont=[idx], factors=fac)
                 sdv = d.loc[f.sample, idx].std(ddof=1)
@@ -312,7 +307,7 @@ for idx in ['S', 'S8', 'S_count7', 'S_complete7']:
                                p=f.p[idx], sd_index=sdv, N=f.n))
 sp = pd.DataFrame(sp)
 sp['b_sd'], sp['lb_sd'], sp['ub_sd'] = sp.b * sp.sd_index, sp.lb * sp.sd_index, sp.ub * sp.sd_index
-sp.to_csv(f'{OUT}/table_s6.csv', index=False)
+sp.to_csv(f'{OUT}/table_s5.csv', index=False)
 
 # ---------------- 15. Multiple-testing adjustment
 res = pd.DataFrame(rows)

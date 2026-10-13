@@ -19,7 +19,7 @@ Mặc định `RUN_MODELS 1`: chạy toàn bộ. Đặt `global RUN_MODELS 0` n�
 ## Kết quả
 
 Trong thư mục `OUT`:
-- `results.xlsx`: mỗi bảng của bài một sheet (`Table1` đến `Table8`, `TableS1`, `TableS2`, `TableS4` đến `TableS7`). Sheet `AllResults` chứa mọi hệ số, kèm p hiệu chỉnh Holm và BH, cột `paper_table` cho biết hệ số thuộc bảng nào.
+- `results.xlsx`: mỗi bảng của bài một sheet (`Table1` đến `Table8`, `TableS1`, `TableS2`, `TableS4` đến `TableS6`). Sheet `AllResults` chứa mọi hệ số, kèm p hiệu chỉnh Holm và BH, cột `paper_table` cho biết hệ số thuộc bảng nào.
 - `figure2.png`: Hình 2 (đường cong đặc tả).
 - `analysis.log`: nhật ký đầy đủ. Bảng S3 (sensemakr) được in ở mục "Table S3".
 
@@ -28,7 +28,8 @@ Bảng đầy đủ ánh xạ sheet với bảng của bài nằm trong `README.
 ## Mã dừng có chủ ý
 
 - **Gặp mã chữ chưa có trong bảng mã hóa:** Stata in ra giá trị đó và dừng.
-- **Luồng mẫu khác Bảng 1** (850 → 727 → 640 → 300 → 278 → 256/247 → 238 (RQ1), 243 (H3)): Stata dừng.
+- **Luồng mẫu khác Bảng 1** (850 → 734 → 719 → 300 → 272 → 235/226 → 233 (H2), 233 (RQ1), 223 (H3)): Stata dừng.
+- **Có người trong mẫu không qua câu sàng lọc tuổi:** Stata dừng (lệnh `assert`).
 - **Bảng 2 có một ô bị ẩn có thể suy ngược từ tổng cột:** Stata dừng.
 
 ## Lịch sử chạy
@@ -41,18 +42,23 @@ Bảng đầy đủ ánh xạ sheet với bảng của bài nằm trong `README.
 
 - 13/10/2026: tác giả chạy bản trên, không lỗi. 68/68 dòng tất định khớp bản Python (sai khác lớn nhất 2·10⁻⁶, do điểm nút spline); 53 dòng có từ lần chạy 10/10 (kể cả bootstrap, wild bootstrap, gán giá trị đa lần) giống hệt; luồng mẫu khớp ở cả 9 bước. Kết quả tổng hợp lưu ở `output/tables/stata/`.
 
-## Số dự kiến cho lần chạy 12/10/2026
+- 13/10/2026 (lần 2): theo giảng viên hướng dẫn: luồng mẫu mới (có việc làm, có dữ liệu thực chất), chỉ số kỳ thị 8 tình huống (ít nhất 6/8 câu hợp lệ), tám nhóm biến kiểm soát (thêm tình trạng chuyển giới hoặc đa dạng giới, nhóm xu hướng tính dục, ngành), nhóm thể hiện giới của RQ1 gồm tình huống 7 và 8. Ghi chép ở `docs/deviations.md`. **Cần chạy lại một lần.** Số dự kiến (bản Python) ở mục dưới.
 
-Các dòng giữ lại từ lần chạy 10/10 phải giống hệt (chỉ đổi tên nhãn). Các dòng mới, theo bản Python:
+## Số dự kiến cho lần chạy 13/10/2026 (lần 2)
 
 | Sheet | Dòng | Hệ số [KTC 95%] |
 |---|---|---|
-| `Table1` | Self-identified LGBT; RQ1 | 300; 238 |
-| `Table5` | separate: `z_S_int`, `z_S_car`, `z_S_gen` | 0,82 [0,39; 1,25]; 0,47 [−0,14; 1,07]; 0,37 [−0,18; 0,93] |
-| `Table5` | joint: `z_S_int`, `z_S_car`, `z_S_gen` | 0,74 [0,25; 1,22]; 0,15 [−0,58; 0,88]; 0,08 [−0,53; 0,69] |
-| `Table5` | joint, difference: int − car, int − gen, car − gen | 0,59 [−0,42; 1,59]; 0,65 [−0,18; 1,49]; 0,07 [−1,03; 1,17] |
-| `Table7` | S tại Q thấp, trung bình, cao | 3,27 [1,35; 5,19]; 2,34 [1,26; 3,43]; 1,42 [0,32; 2,52] |
-| `TableS5` | separate `z_S_gen8`; joint `z_S_int`, `z_S_car`, `z_S_gen8` | 0,30 [−0,30; 0,91]; 0,74; 0,18; 0,00 |
-| `AllResults` | p Holm của H2 và H3 | 0,211 và 0,211 |
+| `Table1` | 850, 734, 719, 300, 272, 235, 226, 233, 233, 223 | |
+| `Table4` | H1, Xᴰ | 1,85 [0,71; 2,99] |
+| `Table4` | trên một độ lệch chuẩn của S | 0,86 [0,33; 1,40] |
+| `Table4` | thêm Xᴶ (n = 206); "không muốn trả lời" là thiếu (n = 226) | 1,95 [0,52; 3,37]; 1,94 [0,78; 3,10] |
+| `Table5` | separate: `z_S_int`, `z_S_car`, `z_S_gen` | 0,86 [0,38; 1,33]; 0,49 [−0,12; 1,09]; 0,35 [−0,30; 0,99] |
+| `Table5` | joint: `z_S_int`, `z_S_car`, `z_S_gen` | 0,77 [0,25; 1,29]; 0,18 [−0,56; 0,92]; 0,06 [−0,56; 0,68] |
+| `Table6` | a, b (chỉ số C); p IUT | 0,31 [−0,07; 0,70]; 0,29 [−0,15; 0,73]; 0,196 |
+| `Table7` | S × Q; S tại Q thấp, trung bình, cao | −1,31 [−3,04; 0,42]; 3,43; 2,41; 1,39 [0,08; 2,70] |
+| `Table8` | bỏ ngành khỏi biến kiểm soát | 1,83 [0,71; 2,95] |
+| `AllResults` | p Holm của H2 và H3 | 0,275 và 0,275 |
+
+Bootstrap a × b, wild bootstrap và gán giá trị đa lần của bản Python chỉ xấp xỉ Stata.
 
 Không đưa tệp dữ liệu hay tệp kết quả có dữ liệu cá nhân lên GitHub.

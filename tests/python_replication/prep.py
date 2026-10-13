@@ -7,19 +7,26 @@ import pandas as pd
 
 RAW = os.environ.get('LGBT_DATA', '')
 
-XD = ['agegrp', 'sex_birth', 'educ', 'relstat', 'region']
-XJ = ['exper', 'industry', 'position', 'emptype', 'orgtype', 'orgsize', 'socins', 'hours']
+XD = ['agegrp', 'educ', 'sex_birth', 'gmin', 'orientg', 'relstat', 'region', 'industry']
+XJ = ['exper', 'position', 'emptype', 'orgtype', 'orgsize', 'socins', 'hours']
 ORDERED = ['agegrp', 'educ', 'exper', 'orgsize', 'hours']
 PHQI = ['phqi1', 'phqi2', 'phqi3', 'phqi4']
 STIG7 = [f'stig{j}' for j in range(1, 8)]
 STIG8 = [f'stig{j}' for j in range(1, 9)]
 STIG_I = ['stig1', 'stig2', 'stig3']
 STIG_C = ['stig4', 'stig5', 'stig6']
+STIG_G = ['stig7', 'stig8']
 RQ1 = ['S_int', 'S_car', 'S_gen']
 CONC = ['conc1', 'conc2', 'conc3', 'conc4']
 CONC3 = ['conc1', 'conc2', 'conc3']
 DEI = ['dei1', 'dei2', 'dei3', 'dei4']
 MIN_LEVEL = 5
+# Questions after the screening block; any answer counts as substantive data
+SUBST = (['c1_age_group', 'c2_education', 'c3_experience', 'c4_industry', 'c5_position', 'c6_employment',
+          'c7_social_insurance', 'c8_employer_type', 'c9_employer_size', 'c10_province', 'c11_relationship',
+          'c13_hours', 'c14_sex_assigned', 'c15_gender_identity', 'c16_sexual_orientation', 'c17_lgbt_self_id']
+         + [f'c19_{j}' for j in range(1, 9)] + [f'c21_{j}' for j in range(1, 5)]
+         + [f'c22_{j}' for j in range(1, 5)] + [f'c24_{j}' for j in range(1, 5)])
 
 
 def map_codes(s, frm, to):
@@ -107,6 +114,7 @@ def load():
     r = pd.read_excel(RAW, dtype=str, keep_default_na=False)
     r = r.apply(lambda c: c.str.strip())
     d = pd.DataFrame(index=r.index)
+    d['n_answered'] = (r[SUBST] != '').sum(axis=1)
     d['age18'] = map_codes(r.s1_age18, 'co khong', [1, 0])
     d['has_job'] = map_codes(r.s2_has_job, 'co khong', [1, 0])
     d['lgbt_self'] = map_codes(r.c17_lgbt_self_id, 'co khong khong_chac kmtl', [1, 0, 8, 9])
@@ -146,13 +154,13 @@ def load():
     assert d[DEI].stack().dropna().isin([1, 2, 3, 4, 5, 9]).all()
 
     # section 2: derived variables and sample indicators
-    d['eligible'] = ((d.age18 == 1) & (d.has_job == 1)).astype(int)
-    d['lgbt'] = np.where(d.lgbt_self == 1, 1, np.where(d.lgbt_self == 0, 0, np.nan))
-    d['in_analytic'] = (d.eligible == 1) & d.lgbt.notna()
-    gm = d.gender_id.isin([3, 4, 5, 6]).astype(float)
-    gm[d.gender_id.isna() | (d.gender_id == 9)] = np.nan
-    d['gender_minority'] = gm
-    d['orient3'] = np.select([d.orient.isin([4, 5]), d.orient == 3, d.orient == 2], [1, 2, 3], np.nan)
+    d['in_base'] = (d.has_job == 1) & (d.n_answered > 0)
+    d['lgbt'] = (d.lgbt_self == 1).astype(int)
+    d['in_lgbt'] = d.in_base & (d.lgbt == 1)
+    assert (d.loc[d.in_base, 'age18'] == 1).all()
+    d['gmin'] = np.select([d.gender_id.isin([1, 2]), d.gender_id.isin([3, 4, 5, 6]), d.gender_id == 9], [0, 1, 9], np.nan)
+    d['orientg'] = np.select([d.orient == 2, d.orient == 3, d.orient.isin([4, 5]), d.orient.isin([1, 6, 7]), d.orient == 9],
+                             [1, 2, 3, 98, 9], np.nan)
     for v in STIG8 + DEI:
         d.loc[d[v] == 9, v] = np.nan
     for v in XD:
@@ -164,16 +172,14 @@ def load():
     d['phq4_zero'] = (d.phq4 == 0).astype(float).where(d.phq4.notna())
 
     L = d.lgbt == 1
-    d['S_n'] = d[STIG7].notna().sum(axis=1)
-    d['S'] = d[STIG7].mean(axis=1).where((d.S_n >= 4) & L)
-    d['S8_n'] = d[STIG8].notna().sum(axis=1)
-    d['S8'] = d[STIG8].mean(axis=1).where((d.S8_n >= 4) & L)
-    d['S_count7'] = d[STIG7].isin([1, 2, 3, 4]).sum(axis=1).astype(float).where((d.S_n >= 4) & L)
-    d['S_complete7'] = d.S.where(d.S_n == 7)
+    d['S_n'] = d[STIG8].notna().sum(axis=1)
+    d['S'] = d[STIG8].mean(axis=1).where((d.S_n >= 6) & L)
+    d['S7'] = d[STIG7].mean(axis=1).where((d[STIG7].notna().sum(axis=1) >= 4) & L)
+    d['S_count8'] = d[STIG8].isin([1, 2, 3, 4]).sum(axis=1).astype(float).where(d.S.notna())
+    d['S_complete8'] = d.S.where(d.S_n == 8)
     d['S_int'] = d[STIG_I].mean(axis=1).where((d[STIG_I].notna().sum(axis=1) >= 2) & L)
     d['S_car'] = d[STIG_C].mean(axis=1).where((d[STIG_C].notna().sum(axis=1) >= 2) & L)
-    d['S_gen'] = d.stig7.where(L)
-    d['S_gen8'] = d[['stig7', 'stig8']].mean(axis=1).where(L)
+    d['S_gen'] = d[STIG_G].mean(axis=1).where(L)
     for j in range(1, 9):
         d[f'stig{j}_any'] = (d[f'stig{j}'] >= 1).astype(float).where(d[f'stig{j}'].notna())
     d['ever_exposed'] = (d.S > 0).astype(float).where(d.S.notna())
@@ -191,19 +197,18 @@ def load():
     d['flag_contra'] = (d.agegrp == 1) & (d.position == 4)
     d['flag_quality'] = (d.flag_straight | d.flag_contra).astype(int)
 
-    d['in_main'] = d.in_analytic & L & d.phq4.notna() & d.S.notna()
+    d['in_main'] = d.in_lgbt & d.phq4.notna() & d.S.notna()
     d['in_xd_main'] = d.in_main & d[XD].notna().all(axis=1)
     d['in_xd_alt'] = d.in_main & d[[v + '_alt' for v in XD]].notna().all(axis=1)
     d['in_xj'] = d.in_xd_main & d[XJ].notna().all(axis=1)
     d['in_rq1'] = d.in_xd_main & d[RQ1].notna().all(axis=1)
-    d['in_rq1s'] = d.in_xd_main & d[['S_int', 'S_car', 'S_gen8']].notna().all(axis=1)
     d['in_h3'] = d.in_xd_main & d.Q.notna()
     d['Qc'] = d.Q - d.loc[d.in_h3, 'Q'].mean()
 
-    med = stata_median(d.loc[d.in_main & (d.S > 0), 'S'])
+    med = stata_median(d.loc[d.in_xd_main & (d.S > 0), 'S'])
     d['S3'] = np.select([d.S == 0, (d.S > 0) & (d.S <= med), d.S > med], [0, 1, 2], np.nan)
     d.loc[d.S.isna(), 'S3'] = np.nan
-    d['lgbt_consistent'] = L & (d.orient.between(2, 6) | (d.gender_minority == 1))
+    d['lgbt_consistent'] = L & (d.orient.between(2, 6) | (d.gmin == 1))
 
     # section 5: merging sparse covariate categories
     for v in XD:
@@ -228,20 +233,20 @@ def load():
 
 if __name__ == '__main__':
     d = load()
-    L = d.lgbt == 1
-    print('flow', len(d), int(d.eligible.sum()), int(d.in_analytic.sum()), int((d.in_analytic & L).sum()),
-          [(s, int(d[s].sum())) for s in ['in_main', 'in_xd_main', 'in_xd_alt', 'in_rq1', 'in_h3']])
+    print('flow', len(d), int((d.has_job == 1).sum()), int(d.in_base.sum()), int(d.in_lgbt.sum()),
+          [(s, int(d[s].sum())) for s in ['in_main', 'in_xd_main', 'in_xd_alt', 'in_rq1', 'in_h3']],
+          'H2', int((d.in_xd_main & d.C.notna()).sum()))
     print('collapse', d.attrs['collapse_log'])
-    m = d[d.in_main]
-    print('phq4 main sample', round(m.phq4.mean(), 6), round(m.phq4.std(), 6), int(m.phq4.count()),
+    m = d[d.in_xd_main]
+    print('phq4 estimation sample', round(m.phq4.mean(), 6), round(m.phq4.std(), 6), int(m.phq4.count()),
           round(m.phq4_zero.mean(), 6))
 
     def alpha(X):
         X = X.dropna()
         k = X.shape[1]
         return k / (k - 1) * (1 - X.var(ddof=1).sum() / X.sum(axis=1).var(ddof=1)), len(X)
-    for name, cols in [('PHQ-4', PHQI), ('S7', STIG7), ('S8', STIG8), ('interpersonal', STIG_I),
-                       ('career', STIG_C), ('concealment', CONC), ('DEI', DEI)]:
+    for name, cols in [('PHQ-4', PHQI), ('S8', STIG8), ('interpersonal', STIG_I), ('career', STIG_C),
+                       ('gender expression', STIG_G), ('concealment', CONC), ('DEI', DEI)]:
         print('alpha', name, alpha(m[cols]))
     for j in range(1, 9):
         v = m[f'stig{j}_any']

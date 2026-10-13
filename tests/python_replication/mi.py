@@ -81,7 +81,7 @@ def draw_mlogit(y, Z, mis, levels, rng, lam=0.1):
 
 def run_mi(d, XD, m=20, seed=1, burnin=10):
     import models_helpers as mh
-    D0 = d.loc[d.in_analytic & (d.lgbt == 1), ['phq4', 'S', 'C', 'Q'] + XD].copy()
+    D0 = d.loc[d.in_lgbt, ['phq4', 'S', 'C', 'Q'] + XD].copy()
     cont = ['phq4', 'S', 'C', 'Q']
     cat = list(XD)
     allv = cont + cat

@@ -1,6 +1,6 @@
 # Codebook — tên biến chuẩn
 
-Tệp xuất từ Kobo dùng tên cột riêng và **mã chữ** cho phương án (ví dụ `co`, `1824`, `kmtl`). `config/variable_map.csv` ánh xạ tên cột sang tên chuẩn dưới đây. `config/value_map.csv` ánh xạ mã chữ sang mã số, kèm nhãn. `phan_tich.do` (mục 1, lệnh `map_codes`) dừng nếu gặp mã chữ chưa có trong bảng. Hai bảng đã được đối chiếu với tệp thật ngày 5/10/2026: không có giá trị chưa ánh xạ. Luồng mẫu: 850 → 727 → 640 → 300 người tự nhận LGBT → 278 → 256/247 → 238 (RQ1), 243 (H3).
+Tệp xuất từ Kobo dùng tên cột riêng và **mã chữ** cho phương án (ví dụ `co`, `1824`, `kmtl`). `config/variable_map.csv` ánh xạ tên cột sang tên chuẩn dưới đây. `config/value_map.csv` ánh xạ mã chữ sang mã số, kèm nhãn. `phan_tich.do` (mục 1, lệnh `map_codes`) dừng nếu gặp mã chữ chưa có trong bảng. Hai bảng đã được đối chiếu với tệp thật ngày 5/10/2026: không có giá trị chưa ánh xạ. Luồng mẫu (từ 13/10/2026): 850 → 734 có việc làm → 719 có dữ liệu thực chất → 300 tự nhận LGBT → 272 đủ PHQ-4 và chỉ số kỳ thị → 235 đủ biến kiểm soát (226 theo quy tắc thay thế) → 233 (H2), 233 (RQ1), 223 (H3).
 
 Ghi chú về mã:
 - `agegrp` 4 = 45+: gộp hai phương án 45–54 và từ 55 của bảng hỏi, như codebook và đề cương.
@@ -42,11 +42,11 @@ Biến dựng: `phq4` (0–12), `phq4_frac` = phq4/12, `phq4_zero` (PHQ-4 = 0).
 | `stig5` | bị đánh giá, trả lương, thăng tiến không công bằng | nghề nghiệp |
 | `stig6` | bị phân công công việc bất lợi | nghề nghiệp |
 | `stig7` | bị áp lực tuân theo khuôn mẫu giới | thể hiện giới |
-| `stig8` | khó khăn về tên gọi, đại từ, trang phục, nhà vệ sinh | thể hiện giới, chỉ trong bản độ nhạy (không vào S) |
+| `stig8` | khó khăn về tên gọi, đại từ, trang phục, nhà vệ sinh | thể hiện giới |
 
-Mã 9 (“không áp dụng / không muốn trả lời”) chuyển thành khuyết. Biến dựng: `S` (trung bình 7 câu, cần ít nhất 4 câu hợp lệ), `S8`, `S_count7`, `S_complete7`, `stigX_any` (1 nếu ≥ 1 lần), `ever_exposed` (S > 0), `S3` (0 không, 1 thấp, 2 cao; cắt tại trung vị của S trong số người có phơi nhiễm).
+Mã 9 (“không áp dụng / không muốn trả lời”) chuyển thành khuyết, không gán 0. Biến dựng: `S` (trung bình 8 câu, cần ít nhất 6 câu hợp lệ), `S7` (trung bình câu 1–7, cần ít nhất 4 câu; phương án của đường cong đặc tả), `S_count8`, `S_complete8`, `stigX_any` (1 nếu ≥ 1 lần), `ever_exposed` (S > 0), `S3` (0 không, 1 thấp, 2 cao; cắt tại trung vị của S trong số người có phơi nhiễm ở mẫu ước lượng).
 
-Chỉ số con của RQ1: `S_int` (tình huống 1–3, cần ít nhất 2 câu hợp lệ), `S_car` (4–6, cần ít nhất 2 câu), `S_gen` (tình huống 7), `S_gen8` (trung bình tình huống 7 và 8, cần ít nhất 1 câu; bản độ nhạy). Trong mô hình, mỗi chỉ số được chuẩn hóa trong mẫu RQ1.
+Chỉ số con của RQ1: `S_int` (tình huống 1–3, cần ít nhất 2 câu hợp lệ), `S_car` (4–6, cần ít nhất 2 câu), `S_gen` (tình huống 7 và 8, cần ít nhất 1 câu). Trong mô hình, mỗi chỉ số được chuẩn hóa trong mẫu RQ1.
 
 ## Che giấu danh tính (1–5, chỉ hỏi người LGBT)
 
@@ -60,8 +60,8 @@ Chỉ số con của RQ1: `S_int` (tình huống 1–3, cần ít nhất 2 câu 
 
 | Khối | Tên chuẩn | Ghi chú |
 |---|---|---|
-| Xᴰ | `agegrp` (1 18–24, 2 25–34, 3 35–44, 4 45+), `sex_birth`, `educ`, `relstat`, `region` (1 Hà Nội, 2 TP.HCM, 3 Đà Nẵng, 4 nơi khác) | Mã 9 = không muốn trả lời: quy tắc chính giữ thành mức riêng; quy tắc thay thế coi là khuyết |
-| Xᴶ | `exper`, `industry`, `position`, `emptype`, `orgtype`, `orgsize`, `socins`, `hours` | phân loại |
+| Xᴰ (tám nhóm, từ 13/10/2026) | `agegrp` (1 18–24, 2 25–34, 3 35–44, 4 45+), `educ`, `sex_birth`, `gmin` (0 nam hoặc nữ; 1 chuyển giới nam, chuyển giới nữ, phi nhị nguyên, khác), `orientg` (1 đồng tính nam, 2 đồng tính nữ, 3 song tính hoặc toàn tính, 98 khác, đang tự xác định hoặc dị tính), `relstat`, `region` (1 Hà Nội, 2 TP.HCM, 3 Đà Nẵng, 4 nơi khác), `industry` | Mã 9 = không muốn trả lời: quy tắc chính giữ thành mức riêng; quy tắc thay thế coi là khuyết. Bỏ trống là khuyết. Hệ số của `gmin` không được báo cáo |
+| Xᴶ | `exper`, `position`, `emptype`, `orgtype`, `orgsize`, `socins`, `hours` | phân loại |
 
 ## Cờ chất lượng
 
