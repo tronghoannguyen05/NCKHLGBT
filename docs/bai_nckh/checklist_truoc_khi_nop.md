@@ -17,6 +17,28 @@ Bản viết lại ngày 16/10/2026 theo cấu trúc giảng viên hướng dẫ
 6. **Ngo và cộng sự (2026)**, *Tạp chí Nghiên cứu Y học*, về tự kỳ thị ở cộng đồng LGBTQ+ miền Bắc và miền Trung: đã bỏ khỏi bài vì không xác minh được đủ danh sách tác giả, số tập và trang. Nếu muốn dùng lại, lấy thông tin từ bản PDF của tạp chí rồi mới thêm.
 7. **Chọn tạp chí** và đối chiếu hướng dẫn tác giả. Bài hiện có: tóm tắt khoảng 250 từ theo năm mục như Herry và Dyar (2025), phần chính khoảng 10.000 từ (chưa tính bảng và tài liệu tham khảo), 8 bảng, 2 hình, tài liệu bổ sung (Supplementary Methods S1–S2 và Bảng S1–S6). Nếu tạp chí giới hạn độ dài, phần nên rút trước là *Analytic Plan* và các đoạn số liệu lặp lại bảng ở *Results*.
 
+## Điều kiện nhận tài trợ công bố quốc tế của Học viện
+
+Căn cứ: Quy chế chi tiêu nội bộ (Quyết định 3272/QĐ-HVNH ngày 23/6/2026, mục 2.1.7) và Thông báo 5711/TB-HVNH ngày 13/11/2025, theo tài liệu hướng dẫn tác giả cung cấp ngày 16/10/2026. Việc tạp chí nhận bài không tự động bảo đảm được tài trợ; Viện Nghiên cứu khoa học ngân hàng (VNC) xét hồ sơ.
+
+**Trước khi nộp**
+
+- [ ] Có ít nhất một viên chức hoặc người lao động của Học viện cùng đứng tên (thường là giảng viên hướng dẫn). Sinh viên nộp bài khi còn đang học; lưu email xác nhận ngày nộp.
+- [ ] Thứ tự tác giả đúng đóng góp thực tế; khai đóng góp theo CRediT. Mức hỗ trợ chia đều theo tổng số tác giả.
+- [ ] Đơn vị ghi đúng *Banking Academy of Vietnam*, chỉ một đơn vị. Sai thứ tự đơn vị: chỉ nhận 50%; nhiều đơn vị ngoài trường hợp cho phép: không được tài trợ.
+- [ ] Email dạng `@hvnh.edu.vn` và ORCID đúng cho từng tác giả của Học viện. Nếu chưa có email Học viện, hỏi VNC trước; không thay bằng email khác.
+- [ ] *Acknowledgements* và *Funding* ghi nhận hỗ trợ của Học viện (thiếu: chỉ nhận 90%). Thống nhất câu chữ với VNC; không tự đặt mã tài trợ.
+- [ ] Nhờ VNC xác nhận: SRSP thuộc nhóm nào (Scopus Q mấy, theo hệ thống, năm và ngành nào; có thuộc SSCI không); đề tài có được coi là phù hợp lĩnh vực của Học viện không. Lưu phản hồi và minh chứng xếp hạng, ISSN.
+- [ ] Loại bài là *original research article*, không thuộc các loại bị loại trừ (review, commentary, note, letter...).
+- [ ] Phê duyệt đạo đức (mục 1 ở trên). Bài bị rút đăng hoặc có bằng chứng vi phạm đạo đức nghiên cứu thì phải hoàn lại 100% tài trợ.
+
+**Sau khi công bố**
+
+- [ ] Có Online First, DOI: cập nhật ORCID của các tác giả Học viện, chuẩn bị hồ sơ (Mẫu 01a, 02, 03, 04 nếu áp dụng; toàn văn, bìa, mục lục; minh chứng xếp hạng, ISSN, ORCID).
+- [ ] Sau 3 tháng từ Online First, nếu đã có DOI nhưng chưa có số tập: được gửi hồ sơ.
+- [ ] Gửi hồ sơ trong 12 tháng từ Online First, quá hạn thì không được chi.
+- [ ] Khi sửa bản proof, kiểm tra lại tên tác giả, đơn vị, email, ORCID và lời cảm ơn.
+
 ## Đã xong
 
 - Toàn bài viết lại theo trình tự của bài mẫu: Introduction (hai mục lý thuyết, bối cảnh Việt Nam, Current Study, Hypotheses), Methods (Participants and Procedures, Measures với câu hỏi nguyên văn, Analytic Plan), Results, Discussion (các mục theo phát hiện, Policy Implications, Limitations and Future Directions, Conclusions).

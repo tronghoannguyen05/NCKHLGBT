@@ -2,11 +2,11 @@ RESEARCH
 
 # Pathology or Prejudice? Workplace Stigma and Mental Health among LGBT Workers in Vietnam
 
-[Author names]¹
+[Author names, including at least one staff member of the Banking Academy of Vietnam; ORCID for each author]¹
 
 ¹ Banking Academy of Vietnam, Hanoi, Vietnam
 
-Corresponding author: [name, email]
+Corresponding author: [name, @hvnh.edu.vn email, ORCID]
 
 ---
 
@@ -391,11 +391,11 @@ Overall, the current study documents that more than half of the LGBT workers in 
 
 ---
 
-**Acknowledgements** We thank the participants and the community organizations that circulated the questionnaire. [Authors: add the project supervisor and the experts consulted on the questionnaire.]
+**Acknowledgements** We thank the participants and the community organizations that circulated the questionnaire. [Authors: add the project supervisor and the experts consulted on the questionnaire. Add the sentence acknowledging support from the Banking Academy of Vietnam, worded as agreed with the Banking Research Institute; do not cite a grant number unless one has been issued.]
 
 **Author Contributions** [Authors: complete using the CRediT taxonomy, for example conceptualization, methodology, formal analysis, writing of the original draft, review and editing, and supervision.]
 
-**Funding** [Authors: state the funding source, or "This research received no specific funding."]
+**Funding** [Authors: state the support from the Banking Academy of Vietnam in the wording agreed with the Banking Research Institute, consistent with the Acknowledgements.]
 
 **Data Availability** The data contain sensitive personal data on sexual orientation, gender identity, and health under Vietnam's Law on Personal Data Protection (Law No. 91/2025/QH15) and Decree No. 356/2025/ND-CP, and they cannot be shared publicly. The analysis code and aggregate results, with cells of fewer than 10 participants suppressed, are available from the corresponding author on reasonable request.
 
