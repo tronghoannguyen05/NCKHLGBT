@@ -36,44 +36,23 @@ Bản viết lại ngày 16/10/2026 theo cấu trúc giảng viên hướng dẫ
    - Mở `Manuscript.docx` trong Word, tìm chuỗi `[Authors` để chắc không còn chỗ trống (không tìm dấu `[`, vì khoảng tin cậy và tài liệu tham khảo cũng dùng ngoặc vuông). Trong `Title_Page.docx`, mọi chỗ trong ngoặc vuông đều phải điền.
    - Nếu đã lưu lại tệp bằng Word, chạy File > Info > Check for Issues > Inspect Document và xóa thông tin cá nhân, vì Word tự ghi tên người sửa vào tệp.
    - Tên tệp không được chứa tên tác giả.
+   - Đếm lại số trang trong Word: từ trang Abstract đến hết Acknowledgments không quá 40 trang (xem mục Độ dài ở phần Đã xong).
 
-## Cần tác giả và giảng viên quyết
+## Cần tác giả quyết
 
-5. **Độ dài.** SRSP ghi: "generally no longer than 40 double-spaced pages". `Manuscript.docx` hiện có 57 trang, phân bổ như sau:
-
-   | Phần | Số trang |
-   |---|---|
-   | Trang tên bài | 1 |
-   | Tóm tắt và từ khóa | 2 |
-   | Phần chính, từ Introduction đến Conclusions | khoảng 31 |
-   | Declarations, Compliance with Ethical Standards, Acknowledgments | 2 |
-   | Tài liệu tham khảo | 9 |
-   | Tám bảng (Bảng 2 dài hai trang) | 9 |
-   | Chú thích hình | 1 |
-   | Hai hình | 2 |
-
-   Phần không phải chữ của bài đã chiếm khoảng 26 trang, nên không thể về 40 trang mà vẫn giữ đủ 8 bảng và nội dung đã chốt. Đã làm trong lần dựng này:
-   - chuyển chi tiết kỹ thuật của *Analytic Plan* sang Supplementary Methods S2–S3;
-   - rút tóm tắt còn 247 từ.
-
-   Nếu muốn rút thêm, có thể:
-   - chuyển Bảng 1 (luồng mẫu, đã có trong đoạn văn) và Bảng 8 (độ bền, đã tóm tắt trong đoạn văn và Hình 2) sang tài liệu bổ sung, bớt khoảng 2 trang;
-   - rút các đoạn ở *Results* lặp lại số liệu của Bảng 4 và Bảng 5, cùng các đoạn ở *Limitations* lặp lại *Methods*, bớt khoảng 2–3 trang.
-
-   Cả hai việc đổi cấu trúc mà giảng viên đã chốt, nên cần giảng viên đồng ý.
-6. **Kiểu trích dẫn.** Tài liệu tham khảo đang theo APA 7. Hướng dẫn SRSP dẫn APA 6 (2010) "in general" và chỉ "suggested", nên APA 7 thường vẫn được nhận; nhà xuất bản dàn lại theo kiểu của tạp chí sau khi bài được chấp nhận. Nếu tạp chí yêu cầu đúng APA 6, cần sửa ba điểm:
+5. **Kiểu trích dẫn.** Tài liệu tham khảo đang theo APA 7. Hướng dẫn SRSP dẫn APA 6 (2010) "in general" và chỉ "suggested", nên APA 7 thường vẫn được nhận; nhà xuất bản dàn lại theo kiểu của tạp chí sau khi bài được chấp nhận. Nếu tạp chí yêu cầu đúng APA 6, cần sửa ba điểm:
    - thêm nơi xuất bản cho sách;
    - liệt kê tác giả theo quy tắc sáu tác giả;
    - trích lần đầu đủ tên khi bài có 3–5 tác giả.
 
 ## Nên làm
 
-7. **Tìm kiếm tài liệu có hệ thống** (Scopus, Web of Science, PubMed, các tạp chí tiếng Việt) để xác nhận ba câu "to our knowledge":
+6. **Tìm kiếm tài liệu có hệ thống** (Scopus, Web of Science, PubMed, các tạp chí tiếng Việt) để xác nhận ba câu "to our knowledge":
    - cuối mục *Workplace Stigma in the Vietnamese Context*;
    - trong mục *Current Study*;
    - câu đầu phần *Discussion*.
-8. **Trích dẫn thứ cấp.** Dyar và cộng sự (2020) và Pachankis và cộng sự (2018) đang được trích qua Herry và Dyar (2025). Nếu đọc được bản gốc, chuyển thành trích trực tiếp và thêm vào danh mục tài liệu.
-9. **Ngo và cộng sự (2026)**, *Tạp chí Nghiên cứu Y học*, về tự kỳ thị ở cộng đồng LGBTQ+ miền Bắc và miền Trung: đã bỏ khỏi bài vì không xác minh được đủ danh sách tác giả, số tập và trang. Nếu muốn dùng lại, lấy thông tin từ bản PDF của tạp chí rồi mới thêm.
+7. **Trích dẫn thứ cấp.** Dyar và cộng sự (2020) và Pachankis và cộng sự (2018) đang được trích qua Herry và Dyar (2025). Nếu đọc được bản gốc, chuyển thành trích trực tiếp và thêm vào danh mục tài liệu.
+8. **Ngo và cộng sự (2026)**, *Tạp chí Nghiên cứu Y học*, về tự kỳ thị ở cộng đồng LGBTQ+ miền Bắc và miền Trung: đã bỏ khỏi bài vì không xác minh được đủ danh sách tác giả, số tập và trang. Nếu muốn dùng lại, lấy thông tin từ bản PDF của tạp chí rồi mới thêm.
 
 ## Điều kiện nhận tài trợ công bố quốc tế của Học viện
 
@@ -99,6 +78,12 @@ Căn cứ: Quy chế chi tiêu nội bộ (Quyết định 3272/QĐ-HVNH ngày 2
 
 ## Đã xong
 
+- **Độ dài: đạt.** SRSP giới hạn "generally no longer than 40 double-spaced pages". Theo cách tính tác giả chốt ngày 16/10/2026, chỉ tính từ Abstract đến hết Acknowledgments; không tính trang tên bài, tài liệu tham khảo, bảng và hình ở cuối bài. Phần này hiện có 35 trang (trang 2–36 của `Manuscript.docx`):
+  - tóm tắt và từ khóa: 2 trang;
+  - phần chính, từ Introduction đến Conclusions: khoảng 31 trang;
+  - Declarations, Compliance with Ethical Standards, Acknowledgments: 2 trang.
+
+  Số trang đếm bằng LibreOffice; Word có thể chênh khoảng một trang. Khi sửa bài, giữ phần này trong 40 trang.
 - **Định dạng theo hướng dẫn SRSP (16/10/2026).**
   - Bản thảo ẩn danh: trang 1 chỉ có tên bài, siêu dữ liệu của tệp Word không có tên người tạo, tên tệp không chứa tên tác giả.
   - Giãn dòng đôi toàn bộ, kể cả bảng, chú thích bảng và tài liệu tham khảo; lề 1 inch; đánh số trang liên tục từ trang tên bài.
