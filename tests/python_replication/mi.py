@@ -1,5 +1,5 @@
 # Multiple imputation by chained equations, close to Stata's mi impute chained:
-# PMM with knn(5) for phq4 S C Q; multinomial logit (light penalty in place of augment) for the XD variables.
+# PMM with knn(5) for phq4 S; multinomial logit (light penalty in place of augment) for the XD variables.
 import numpy as np
 import pandas as pd
 from scipy import stats, optimize
@@ -81,8 +81,8 @@ def draw_mlogit(y, Z, mis, levels, rng, lam=0.1):
 
 def run_mi(d, XD, m=20, seed=1, burnin=10):
     import models_helpers as mh
-    D0 = d.loc[d.in_lgbt, ['phq4', 'S', 'C', 'Q'] + XD].copy()
-    cont = ['phq4', 'S', 'C', 'Q']
+    D0 = d.loc[d.in_lgbt, ['phq4', 'S'] + XD].copy()
+    cont = ['phq4', 'S']
     cat = list(XD)
     allv = cont + cat
     miss = {v: D0[v].isna().to_numpy() for v in allv}

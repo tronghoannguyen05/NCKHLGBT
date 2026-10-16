@@ -17,8 +17,8 @@ STIG_I = ['stig1', 'stig2', 'stig3']
 STIG_C = ['stig4', 'stig5', 'stig6']
 STIG_G = ['stig7', 'stig8']
 RQ1 = ['S_int', 'S_car', 'S_gen']
+# The two other Likert scales of the questionnaire, used only for the response-quality flag
 CONC = ['conc1', 'conc2', 'conc3', 'conc4']
-CONC3 = ['conc1', 'conc2', 'conc3']
 DEI = ['dei1', 'dei2', 'dei3', 'dei4']
 MIN_LEVEL = 5
 # Questions after the screening block; any answer counts as substantive data
@@ -180,15 +180,21 @@ def load():
     d['S_int'] = d[STIG_I].mean(axis=1).where((d[STIG_I].notna().sum(axis=1) >= 2) & L)
     d['S_car'] = d[STIG_C].mean(axis=1).where((d[STIG_C].notna().sum(axis=1) >= 2) & L)
     d['S_gen'] = d[STIG_G].mean(axis=1).where(L)
+    # experienced at least once (any) and often or very often (often)
     for j in range(1, 9):
-        d[f'stig{j}_any'] = (d[f'stig{j}'] >= 1).astype(float).where(d[f'stig{j}'].notna())
+        v = d[f'stig{j}']
+        d[f'stig{j}_any'] = (v >= 1).astype(float).where(v.notna())
+        d[f'stig{j}_often'] = (v >= 3).astype(float).where(v.notna())
     d['ever_exposed'] = (d.S > 0).astype(float).where(d.S.notna())
     d['S_exposed'] = np.where(d.ever_exposed == 1, d.S, 0.0)
     d.loc[d.S.isna(), 'S_exposed'] = np.nan
-
-    d['C'] = d[CONC].mean(axis=1).where((d[CONC].notna().sum(axis=1) == 4) & L)
-    d['C3'] = d[CONC3].mean(axis=1).where((d[CONC3].notna().sum(axis=1) == 3) & L)
-    d['Q'] = d[DEI].mean(axis=1).where(d[DEI].notna().sum(axis=1) >= 3)
+    d['ever_often'] = (d[STIG8].max(axis=1) >= 3).astype(float).where(d.S.notna())
+    for g, items in [('int', STIG_I), ('car', STIG_C), ('gen', STIG_G)]:
+        sg = d['S_' + g]
+        d[g + '_any'] = (sg > 0).astype(float).where(sg.notna())
+        d[g + '_often'] = (d[items].max(axis=1) >= 3).astype(float).where(sg.notna())
+    # PHQ-4 severity categories (Kroenke et al., 2009)
+    d['phq4_cat'] = pd.cut(d.phq4, [-1, 2, 5, 8, 12], labels=[1, 2, 3, 4]).astype(float)
 
     def flat(cols):
         full = d[cols].notna().sum(axis=1) == len(cols)
@@ -202,8 +208,6 @@ def load():
     d['in_xd_alt'] = d.in_main & d[[v + '_alt' for v in XD]].notna().all(axis=1)
     d['in_xj'] = d.in_xd_main & d[XJ].notna().all(axis=1)
     d['in_rq1'] = d.in_xd_main & d[RQ1].notna().all(axis=1)
-    d['in_h3'] = d.in_xd_main & d.Q.notna()
-    d['Qc'] = d.Q - d.loc[d.in_h3, 'Q'].mean()
 
     med = stata_median(d.loc[d.in_xd_main & (d.S > 0), 'S'])
     d['S3'] = np.select([d.S == 0, (d.S > 0) & (d.S <= med), d.S > med], [0, 1, 2], np.nan)
@@ -234,8 +238,7 @@ def load():
 if __name__ == '__main__':
     d = load()
     print('flow', len(d), int((d.has_job == 1).sum()), int(d.in_base.sum()), int(d.in_lgbt.sum()),
-          [(s, int(d[s].sum())) for s in ['in_main', 'in_xd_main', 'in_xd_alt', 'in_rq1', 'in_h3']],
-          'H2', int((d.in_xd_main & d.C.notna()).sum()))
+          [(s, int(d[s].sum())) for s in ['in_main', 'in_xd_main', 'in_xd_alt', 'in_rq1']])
     print('collapse', d.attrs['collapse_log'])
     m = d[d.in_xd_main]
     print('phq4 estimation sample', round(m.phq4.mean(), 6), round(m.phq4.std(), 6), int(m.phq4.count()),
@@ -246,7 +249,7 @@ if __name__ == '__main__':
         k = X.shape[1]
         return k / (k - 1) * (1 - X.var(ddof=1).sum() / X.sum(axis=1).var(ddof=1)), len(X)
     for name, cols in [('PHQ-4', PHQI), ('S8', STIG8), ('interpersonal', STIG_I), ('career', STIG_C),
-                       ('gender expression', STIG_G), ('concealment', CONC), ('DEI', DEI)]:
+                       ('gender expression', STIG_G)]:
         print('alpha', name, alpha(m[cols]))
     for j in range(1, 9):
         v = m[f'stig{j}_any']

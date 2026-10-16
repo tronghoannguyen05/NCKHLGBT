@@ -1,4 +1,4 @@
-# Replicates sections 5-15 of phan_tich.do. Writes aggregate results only.
+# Replicates sections 5-13 of phan_tich.do. Writes aggregate results only.
 # Run: LGBT_DATA=/path/to/export.xlsx python3 tests/python_replication/models.py
 import warnings
 warnings.filterwarnings('ignore')
@@ -83,47 +83,7 @@ for i in range(len(zs)):
         post('RQ1', 'phq4', 'joint, difference', f'{zs[i]} - {zs[j]}', est, se, lb, ub, p, f.n)
 d.drop(columns=zs, inplace=True)
 
-# ---------------- 8. H2
-for cv in ['C', 'C3']:
-    s = d.in_xd_main & d[cv].notna()
-    fa = R(d, cv, s, cont=['S'], factors=XD)
-    postf(fa, 'H2_a', cv, cv, 'S')
-    fb = R(d, 'phq4', s, cont=[cv, 'S'], factors=XD)
-    postf(fb, 'H2_b', 'phq4', cv, cv)
-    postf(fb, 'H2_c', 'phq4', cv, 'S')
-    post('H2', 'phq4', cv, 'max(p_a, p_b)', p=max(fa.p['S'], fb.p[cv]), N=int(s.sum()),
-         note=f'a > 0: {int(fa.b["S"] > 0)}; b > 0: {int(fb.b[cv] > 0)}')
-    if cv == 'C':
-        ab_obs = fa.b['S'] * fb.b['C']
-
-# percentile bootstrap of a*b
-s = d.in_xd_main & d.C.notna()
-D = d.loc[s]
-Xa, na, _ = build(D, pd.Series(True, D.index), ['S'], XD, extra=['C'])
-Xb, nb, _ = build(D, pd.Series(True, D.index), ['C', 'S'], XD, extra=['phq4'])
-yC, yP = D.C.to_numpy(), D.phq4.to_numpy()
-rng = np.random.default_rng(SEED)
-abs_ = []
-n = len(D)
-for r in range(5000):
-    i = rng.integers(0, n, n)
-    ba = np.linalg.lstsq(Xa[i], yC[i], rcond=None)[0][na.index('S')]
-    bb = np.linalg.lstsq(Xb[i], yP[i], rcond=None)[0][nb.index('C')]
-    abs_.append(ba * bb)
-abs_ = np.array(abs_)
-post('H2_ab', 'phq4', 'percentile bootstrap', 'a*b', ab_obs, abs_.std(ddof=1), np.percentile(abs_, 2.5),
-     np.percentile(abs_, 97.5), N=n, note='5000 resamples')
-
-# ---------------- 9. H3, with the stigma estimate at Q one SD below and above the mean
-sdQ = d.loc[d.in_h3, 'Q'].std(ddof=1)
-f = R(d, 'phq4', d.in_h3, cont=['S', 'Qc'], factors=XD, inter=[('S', 'Qc')])
-postf(f, 'H3', 'phq4', 'S x Q', 'c.S#c.Qc')
-postf(f, 'H3_aux', 'phq4', 'Q at S = 0', 'Qc')
-for k, lab in [(-1, 'S at Q = mean - 1 SD'), (0, 'S at mean Q'), (1, 'S at Q = mean + 1 SD')]:
-    est, se, lb, ub, p = lincom(f, {'S': 1, 'c.S#c.Qc': k * sdQ})
-    post('H3_slope', 'phq4', lab, 'S', est, se, lb, ub, p, f.n, f'SD of Q = {sdQ:.3f}')
-
-# ---------------- 10. Supplementary exploratory analyses (Table S4)
+# ---------------- 8. Supplementary exploratory analyses (Table S4)
 for j in range(1, 9):
     v = f'stig{j}_any'
     nexp = int((d.in_xd_main & (d[v] == 1)).sum())
@@ -138,7 +98,7 @@ f = R(d, 'phq4', d.in_xd_main, factors=['S3'] + XD)
 postf(f, 'Levels', 'phq4', 'low vs. none', '1.S3')
 postf(f, 'Levels', 'phq4', 'high vs. none', '2.S3')
 
-# ---------------- 11. Diagnostics (Table S2)
+# ---------------- 9. Diagnostics (Table S2)
 X, names, s = build(d, d.in_xd_main, ['S'], XD, extra=['phq4'])
 y = d.loc[s, 'phq4'].to_numpy(float)
 fo = ols(y, X, names, 'ols')
@@ -174,7 +134,7 @@ for nm, idx in groups:
     diag.append((f'GVIF {nm}', gv, len(idx), np.nan, f'GVIF^(1/(2df)) = {gv ** (1 / (2 * len(idx))):.3f}'))
 pd.DataFrame(diag, columns=['diagnostic', 'statistic', 'df', 'p', 'note']).to_csv(f'{OUT}/table_s2.csv', index=False)
 
-# ---------------- 12. Robustness checks (Table 8)
+# ---------------- 10. Robustness checks (Table 8)
 f = R(d, 'phq4', d.in_xd_main, cont=['S_exposed'], factors=['ever_exposed'] + XD)
 postf(f, 'Robust', 'phq4', 'any exposure', '1.ever_exposed')
 postf(f, 'Robust', 'phq4', 'intensity among exposed', 'S_exposed')
@@ -280,7 +240,7 @@ from sens import sensemakr
 sens_out = sensemakr(d, d.in_xd_main, XD, groups={'sex_birth': 'sex_birth', 'educ': 'educ'}, kd=(1, 2, 3))
 sens_out.to_csv(f'{OUT}/sensemakr.csv', index=False)
 
-# ---------------- 13. Post hoc sensitivity analyses (Table S6)
+# ---------------- 11. Post hoc sensitivity analyses (Table S6)
 f = R(d, 'phq4', d.in_xd_main, cont=['S'])
 postf(f, 'PostHoc', 'phq4', 'unadjusted', 'S')
 f = R(d, 'phq4', d.s7_disc, cont=['S'], factors=XD + ['disclose_s7'])
@@ -290,7 +250,7 @@ postf(f, 'PostHoc', 'phq4', 'adding work experience', 'S')
 f = R(d, 'phq4', d.in_xd_main, cont=['S'], factors=[v for v in XD if v not in ('relstat', 'region')])
 postf(f, 'PostHoc', 'phq4', 'XD without relationship status and region', 'S')
 
-# ---------------- 14. Specification curve (Table S5)
+# ---------------- 12. Specification curve (Table S5)
 sp = []
 for idx in ['S', 'S7', 'S_count8', 'S_complete8']:
     for ctl in ['XD', 'XDXJ']:
@@ -309,20 +269,8 @@ sp = pd.DataFrame(sp)
 sp['b_sd'], sp['lb_sd'], sp['ub_sd'] = sp.b * sp.sd_index, sp.lb * sp.sd_index, sp.ub * sp.sd_index
 sp.to_csv(f'{OUT}/table_s5.csv', index=False)
 
-# ---------------- 15. Multiple-testing adjustment
+# ---------------- 13. Multiple-testing adjustment: BH within RQ1 and within the situations
 res = pd.DataFrame(rows)
-
-
-def holm(p):
-    p = np.asarray(p, float)
-    o = np.argsort(p)
-    m = len(p)
-    adj = np.empty(m)
-    run = 0
-    for r, i in enumerate(o):
-        run = max(run, min(1, (m - r) * p[i]))
-        adj[i] = run
-    return adj
 
 
 def bh(p):
@@ -338,9 +286,6 @@ def bh(p):
     return adj
 
 
-res['p_holm'] = np.nan
-mask = ((res.part == 'H2') & (res.spec == 'C')) | (res.part == 'H3')
-res.loc[mask, 'p_holm'] = holm(res.loc[mask, 'p'])
 res['p_bh'] = np.nan
 for mk in [(res.part == 'RQ1') & (res.spec == 'separate'), res.part == 'Situation']:
     res.loc[mk, 'p_bh'] = bh(res.loc[mk, 'p'])

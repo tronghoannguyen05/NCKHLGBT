@@ -19,7 +19,7 @@ Mặc định `RUN_MODELS 1`: chạy toàn bộ. Đặt `global RUN_MODELS 0` n�
 ## Kết quả
 
 Trong thư mục `OUT`:
-- `results.xlsx`: mỗi bảng của bài một sheet (`Table1` đến `Table8`, `TableS1`, `TableS2`, `TableS4` đến `TableS6`). Sheet `AllResults` chứa mọi hệ số, kèm p hiệu chỉnh Holm và BH, cột `paper_table` cho biết hệ số thuộc bảng nào.
+- `results.xlsx`: mỗi bảng của bài một sheet (`Table1` đến `Table8`, kèm `Table3_Severity` và `Table4_Number`; `TableS1`, `TableS2`, `TableS4` đến `TableS6`). Sheet `AllResults` chứa mọi hệ số, kèm p hiệu chỉnh BH, cột `paper_table` cho biết hệ số thuộc bảng nào.
 - `figure2.png`: Hình 2 (đường cong đặc tả).
 - `analysis.log`: nhật ký đầy đủ. Bảng S3 (sensemakr) được in ở mục "Table S3".
 
@@ -28,9 +28,9 @@ Bảng đầy đủ ánh xạ sheet với bảng của bài nằm trong `README.
 ## Mã dừng có chủ ý
 
 - **Gặp mã chữ chưa có trong bảng mã hóa:** Stata in ra giá trị đó và dừng.
-- **Luồng mẫu khác Bảng 1** (850 → 734 → 719 → 300 → 272 → 235/226 → 233 (H2), 233 (RQ1), 223 (H3)): Stata dừng.
+- **Luồng mẫu khác Bảng 1** (850 → 734 → 719 → 300 → 272 → 235/226 → 233 (RQ1)): Stata dừng.
 - **Có người trong mẫu không qua câu sàng lọc tuổi:** Stata dừng (lệnh `assert`).
-- **Bảng 2 có một ô bị ẩn có thể suy ngược từ tổng cột:** Stata dừng.
+- **Bảng 2, bảng số tình huống đã gặp hoặc bảng mức PHQ-4 có đúng một ô bị ẩn (có thể suy ngược từ tổng):** Stata dừng.
 
 ## Lịch sử chạy
 
@@ -46,21 +46,24 @@ Bảng đầy đủ ánh xạ sheet với bảng của bài nằm trong `README.
 
 - 13/10/2026 (lần 2, chạy lúc 16:54): tác giả chạy bản trên, không lỗi. Luồng mẫu khớp cả 10 bước; 72/72 dòng tất định khớp bản Python (sai khác lớn nhất 1·10⁻⁶). Bootstrap a × b: 29/5.000 lần lặp không ước lượng được, khoảng tin cậy tính trên 4.971 lần còn lại. Kết quả tổng hợp lưu ở `output/tables/stata/` (sensemakr chép từ log).
 
-## Số dự kiến cho lần chạy 13/10/2026 (lần 2)
+- 16/10/2026: định vị lại theo giảng viên hướng dẫn: bài xoay quanh H1 và các hình thức kỳ thị. Bỏ H2 và H3 khỏi mã (phương án B của tác giả); thêm Bảng 4 (các hình thức kỳ thị đã gặp, số tình huống đã gặp), Bảng 5 (PHQ-4 theo từng hình thức, mô tả) và bốn mức PHQ-4 ở Bảng 3; bảng H1, RQ1 nay là Bảng 6, Bảng 7. Ghi chép ở `docs/deviations.md`. Bản Python: 59/59 dòng tất định khớp lần chạy 13/10 (lần 2). **Cần chạy lại một lần.** Số dự kiến ở mục dưới. Kiểm tra bằng `tests/python_replication/compare.py` (so cả các bảng mô tả mới).
 
-| Sheet | Dòng | Hệ số [KTC 95%] |
+## Số dự kiến cho lần chạy 16/10/2026
+
+| Sheet | Dòng | Số dự kiến |
 |---|---|---|
-| `Table1` | 850, 734, 719, 300, 272, 235, 226, 233, 233, 223 | |
-| `Table4` | H1, Xᴰ | 1,85 [0,71; 2,99] |
-| `Table4` | trên một độ lệch chuẩn của S | 0,86 [0,33; 1,40] |
-| `Table4` | thêm Xᴶ (n = 206); "không muốn trả lời" là thiếu (n = 226) | 1,95 [0,52; 3,37]; 1,94 [0,78; 3,10] |
-| `Table5` | separate: `z_S_int`, `z_S_car`, `z_S_gen` | 0,86 [0,38; 1,33]; 0,49 [−0,12; 1,09]; 0,35 [−0,30; 0,99] |
-| `Table5` | joint: `z_S_int`, `z_S_car`, `z_S_gen` | 0,77 [0,25; 1,29]; 0,18 [−0,56; 0,92]; 0,06 [−0,56; 0,68] |
-| `Table6` | a, b (chỉ số C); p IUT | 0,31 [−0,07; 0,70]; 0,29 [−0,15; 0,73]; 0,196 |
-| `Table7` | S × Q; S tại Q thấp, trung bình, cao | −1,31 [−3,04; 0,42]; 3,43; 2,41; 1,39 [0,08; 2,70] |
-| `Table8` | bỏ ngành khỏi biến kiểm soát | 1,83 [0,71; 2,95] |
-| `AllResults` | p Holm của H2 và H3 | 0,275 và 0,275 |
+| `Table1` | luồng mẫu | 850, 734, 719, 300, 272, 235, 226, 233 |
+| `Table3_Severity` | PHQ-4 0–2, 3–5, 6–8, 9–12 | 108 (46,0%), 73 (31,1%), 38 (16,2%), 16 (6,8%) |
+| `Table4` | gặp ít nhất một lần: bất kỳ, giao tiếp, nghề nghiệp, thể hiện giới | 134 (57,0%), 111 (47,2%), 41 (17,4%), 42 (18,0%) |
+| `Table4` | tình huống 1, 2 | 62 (26,8%), 77 (33,9%) |
+| `Table4_Number` | 0, 1, 2, từ 3 tình huống | 101, 63, 36, 35 |
+| `Table5` | bất kỳ tình huống: PHQ-4 đã gặp và chưa gặp; tỷ lệ PHQ-4 ≥ 6 | 4,02 và 2,64 (hiệu 1,38); 29,1% và 14,9% |
+| `Table5` | tình huống 4 | không báo cáo (dưới 10 người) |
+| `Table6` | H1, Xᴰ; trên một độ lệch chuẩn của S | 1,85 [0,71; 2,99]; 0,86 [0,33; 1,40] |
+| `Table7` | separate: `z_S_int`, `z_S_car`, `z_S_gen` | 0,86 [0,38; 1,33]; 0,49 [−0,12; 1,09]; 0,35 [−0,30; 0,99] |
+| `Table8` | gán giá trị đa lần (mô hình gán mới) | gần 2,0 (bản Python 2,08; lần trước Stata 2,02) |
+| `AllResults` | cột p | chỉ còn `p_bh` (không còn `p_holm`) |
 
-Bootstrap a × b, wild bootstrap và gán giá trị đa lần của bản Python chỉ xấp xỉ Stata.
+Wild bootstrap và gán giá trị đa lần của bản Python chỉ xấp xỉ Stata.
 
 Không đưa tệp dữ liệu hay tệp kết quả có dữ liệu cá nhân lên GitHub.

@@ -30,12 +30,11 @@ global OUT  "D:/NCKH chủ đề LGBT/ket_qua"
 * 1 = full analysis; 0 = data preparation, sample flow and descriptive tables
 global RUN_MODELS 1
 
-global SEED      20260928    // bootstrap, wild bootstrap, multiple imputation
+global SEED      20260928    // wild bootstrap, multiple imputation
 global MIN_CELL  10          // disclosure control: smallest reportable cell
 global MIN_LEVEL 5           // covariate categories below this size are merged
 global SESOI     1.0         // smallest effect size of interest, PHQ-4 points per unit of S
 global MI_M      20
-global BOOT_REPS 5000
 global WILD_REPS 9999
 
 * Covariates of the main model (XD) and other job characteristics (XJ)
@@ -49,8 +48,8 @@ global STIG_I  "stig1 stig2 stig3"
 global STIG_C  "stig4 stig5 stig6"
 global STIG_G  "stig7 stig8"
 global RQ1     "S_int S_car S_gen"
+* The two other Likert scales of the questionnaire, used only for the response-quality flag
 global CONC    "conc1 conc2 conc3 conc4"
-global CONC3   "conc1 conc2 conc3"
 global DEI     "dei1 dei2 dei3 dei4"
 
 capture mkdir "$OUT"
@@ -142,26 +141,19 @@ program define post_val
         (`pval') (`nobs') (`"`note'"')
 end
 
-* Holm and Benjamini-Hochberg adjustment within families of tests
+* Benjamini-Hochberg adjustment within families of tests
 capture program drop padjust
 program define padjust
-    syntax varname(numeric), GENerate(name) Method(string) [BY(varname)]
+    syntax varname(numeric), GENerate(name) [BY(varname)]
     tempvar grp ord m raw rev
     if "`by'" == "" gen byte `grp' = 1
     else egen `grp' = group(`by'), missing
     bysort `grp' (`varlist'): gen long `ord' = _n if !missing(`varlist')
     by `grp': egen long `m' = count(`varlist')
-    if "`method'" == "holm" {
-        gen double `raw' = min(1, (`m' - `ord' + 1) * `varlist') if !missing(`varlist')
-        bysort `grp' (`ord'): replace `raw' = max(`raw', `raw'[_n-1]) ///
-            if _n > 1 & !missing(`raw') & !missing(`raw'[_n-1])
-    }
-    else {
-        gen double `raw' = min(1, `m' / `ord' * `varlist') if !missing(`varlist')
-        gen long `rev' = -`ord'
-        bysort `grp' (`rev'): replace `raw' = min(`raw', `raw'[_n-1]) ///
-            if _n > 1 & !missing(`raw') & !missing(`raw'[_n-1])
-    }
+    gen double `raw' = min(1, `m' / `ord' * `varlist') if !missing(`varlist')
+    gen long `rev' = -`ord'
+    bysort `grp' (`rev'): replace `raw' = min(`raw', `raw'[_n-1]) ///
+        if _n > 1 & !missing(`raw') & !missing(`raw'[_n-1])
     gen double `generate' = `raw'
 end
 
@@ -296,13 +288,102 @@ program define collapse_sparse
     }
 end
 
-* Indirect product a*b of the concealment pathway, for the bootstrap
-capture program drop h2_ab
-program define h2_ab, rclass
-    quietly regress C S i.($XD)
-    local a = _b[S]
-    quietly regress phq4 C S i.($XD)
-    return scalar ab = `a' * _b[C]
+* Count and percentage of one table cell. The cell is not reported if its
+* count, or a count that a reader could derive from it (other), is between 1
+* and MIN_CELL - 1.
+capture program drop cell_fmt
+program define cell_fmt, rclass
+    args k tot other
+    if `k' > 0 & `k' < $MIN_CELL {
+        return local n "<$MIN_CELL"
+        return local pct ""
+    }
+    else if `other' > 0 & `other' < $MIN_CELL {
+        return local n "not reported"
+        return local pct ""
+    }
+    else {
+        return local n = string(`k')
+        return local pct = strtrim(string(100 * `k' / `tot', "%5.1f"))
+    }
+end
+
+* One row of Table 4: respondents with a valid score, respondents who
+* experienced the form at least once, and respondents who experienced it often
+* or very often (3-4), with the mean frequency score
+capture program drop t4_row
+program define t4_row
+    syntax, LABel(string) SCORE(varname) ANY(varname) OFTEN(varname)
+    quietly count if in_xd_main & !missing(`any')
+    local nv = r(N)
+    quietly count if in_xd_main & `any' == 1
+    local na = r(N)
+    quietly count if in_xd_main & `often' == 1
+    local no = r(N)
+    cell_fmt `na' `nv' `=`nv' - `na''
+    local n1 "`r(n)'"
+    local p1 "`r(pct)'"
+    cell_fmt `no' `nv' `=`na' - `no''
+    local n2 "`r(n)'"
+    local p2 "`r(pct)'"
+    quietly summarize `score' if in_xd_main & !missing(`any')
+    post t4 (`"`label'"') (`nv') ("`n1'") ("`p1'") ("`n2'") ("`p2'") (r(mean)) (r(sd))
+end
+
+* One row of Table 5: PHQ-4 among respondents who experienced the form and
+* among those who did not (descriptive, unadjusted). The row is not reported
+* if either group has fewer than MIN_CELL respondents.
+capture program drop t5_row
+program define t5_row
+    syntax, LABel(string) ANY(varname)
+    quietly count if in_xd_main & `any' == 1
+    local ne = r(N)
+    quietly count if in_xd_main & `any' == 0
+    local nu = r(N)
+    if `ne' < $MIN_CELL | `nu' < $MIN_CELL {
+        local se = cond(`ne' < $MIN_CELL, "<$MIN_CELL", "not reported")
+        local su = cond(`nu' < $MIN_CELL, "<$MIN_CELL", "not reported")
+        post t5 (`"`label'"') ("`se'") ("`su'") (.) (.) (.) (.) (.) ("") ("")
+        exit
+    }
+    quietly summarize phq4 if in_xd_main & `any' == 1
+    local me = r(mean)
+    local sde = r(sd)
+    quietly summarize phq4 if in_xd_main & `any' == 0
+    local mu = r(mean)
+    local sdu = r(sd)
+    quietly count if in_xd_main & `any' == 1 & phq4 >= 6
+    local ke = r(N)
+    quietly count if in_xd_main & `any' == 0 & phq4 >= 6
+    local ku = r(N)
+    cell_fmt `ke' `ne' `=`ne' - `ke''
+    local pe "`r(pct)'"
+    cell_fmt `ku' `nu' `=`nu' - `ku''
+    local pu "`r(pct)'"
+    post t5 (`"`label'"') ("`ne'") ("`nu'") (`me') (`sde') (`mu') (`sdu') (`me' - `mu') ("`pe'") ("`pu'")
+end
+
+* Rows of a frequency table (category, n, %) for one variable of the estimation
+* sample. Stops if a single suppressed cell could be recovered from the total.
+capture program drop freq_rows
+program define freq_rows
+    syntax varname, HANDLE(name) CODES(numlist) LABELS(string asis)
+    quietly count if in_xd_main & !missing(`varlist')
+    local tot = r(N)
+    local nsupp 0
+    local i 0
+    foreach c of local codes {
+        local ++i
+        local lab : word `i' of `labels'
+        quietly count if in_xd_main & `varlist' == `c'
+        cell_fmt `r(N)' `tot' 0
+        if "`r(pct)'" == "" & "`r(n)'" != "0" local ++nsupp
+        post `handle' (`"`lab'"') ("`r(n)'") ("`r(pct)'")
+    }
+    if `nsupp' == 1 {
+        display as error "`varlist': a suppressed cell can be recovered from the total"
+        exit 459
+    }
 end
 
 * Generalized variance inflation factors for groups of dummies (Fox & Monette, 1992)
@@ -372,6 +453,7 @@ destring c21_3, gen(phqi4)
 forvalues j = 1/8 {
     destring c19_`j', gen(stig`j')
 }
+* Items of the two other Likert scales, read only for the response-quality flag
 forvalues j = 1/4 {
     destring c22_`j', gen(conc`j')
     destring c24_`j', gen(dei`j')
@@ -459,7 +541,8 @@ label define orientg_lb 1 "Gay" 2 "Lesbian" 3 "Bisexual or pansexual" 98 "Other 
 label values orientg orientg_lb
 label variable orientg "Sexual orientation group"
 
-* "Not applicable or prefer not to answer" on the stigma and DEI items is missing
+* "Not applicable or prefer not to answer" on the stigma items (and on the
+* items of the quality flag) is missing
 foreach v of varlist $STIG8 $DEI {
     replace `v' = . if `v' == 9
 }
@@ -500,26 +583,30 @@ egen double Sg_raw = rowmean($STIG_G)
 gen double S_gen = Sg_raw if lgbt == 1
 drop Si_n Si_raw Sc_n Sc_raw Sg_raw
 
+* Experienced at least once (any) and often or very often (often), for each
+* situation, each group of situations and any of the eight. A group counts as
+* experienced when its sub-index is above zero.
 forvalues j = 1/8 {
     gen byte stig`j'_any = stig`j' >= 1 if !missing(stig`j')
+    gen byte stig`j'_often = stig`j' >= 3 if !missing(stig`j')
 }
 gen byte ever_exposed = S > 0 if !missing(S)
 gen double S_exposed = cond(ever_exposed == 1, S, 0) if !missing(S)
+egen byte max8 = rowmax($STIG8)
+gen byte ever_often = max8 >= 3 if !missing(S)
+foreach g in int car gen {
+    local items = cond("`g'" == "int", "$STIG_I", cond("`g'" == "car", "$STIG_C", "$STIG_G"))
+    egen byte max_`g' = rowmax(`items')
+    gen byte `g'_any = S_`g' > 0 if !missing(S_`g')
+    gen byte `g'_often = max_`g' >= 3 if !missing(S_`g')
+}
+drop max8 max_int max_car max_gen
 
-* Concealment C (all four statements) and C3 (fatigue statement omitted)
-egen byte C_n = rownonmiss($CONC)
-egen double C_raw = rowmean($CONC)
-gen double C = C_raw if C_n == 4 & lgbt == 1
-egen byte C3_n = rownonmiss($CONC3)
-egen double C3_raw = rowmean($CONC3)
-gen double C3 = C3_raw if C3_n == 3 & lgbt == 1
+* PHQ-4 severity categories (Kroenke et al., 2009)
+gen byte phq4_cat = cond(phq4 <= 2, 1, cond(phq4 <= 5, 2, cond(phq4 <= 8, 3, 4))) if !missing(phq4)
 
-* Perceived DEI enforcement Q: at least three statements answered
-egen byte Q_n = rownonmiss($DEI)
-egen double Q_raw = rowmean($DEI)
-gen double Q = Q_raw if Q_n >= 3
-
-* Response quality: identical answers on all three scales, or contradictory answers
+* Response quality: identical answers on all three Likert scales of the
+* questionnaire (PHQ-4 and the two other scales), or contradictory answers
 foreach sc in PHQI CONC DEI {
     egen double sd_`sc' = rowsd(${`sc'})
     egen byte n_`sc' = rownonmiss(${`sc'})
@@ -543,11 +630,7 @@ gen byte in_xd_main = in_main & xd_miss == 0
 gen byte in_xd_alt  = in_main & xda_miss == 0
 gen byte in_xj      = in_xd_main & xj_miss == 0
 gen byte in_rq1     = in_xd_main & !missing(S_int, S_car, S_gen)
-gen byte in_h3      = in_xd_main & !missing(Q)
 drop xd_miss xda_miss xj_miss
-
-quietly summarize Q if in_h3
-gen double Qc = Q - r(mean) if !missing(Q)
 
 * Levels of exposure: cut at the median of S among exposed respondents of the estimation sample
 quietly summarize S if in_xd_main & S > 0, detail
@@ -581,12 +664,8 @@ quietly count if in_xd_main
 post `F' ("Estimation sample: complete covariates, main rule") (r(N)) (235)
 quietly count if in_xd_alt
 post `F' ("Complete covariates, prefer not to answer as missing") (r(N)) (226)
-quietly count if in_xd_main & !missing(C)
-post `F' ("Estimation sample with a valid concealment score (H2)") (r(N)) (233)
 quietly count if in_rq1
 post `F' ("Estimation sample with valid scores on the three stigma sub-indices (RQ1)") (r(N)) (233)
-quietly count if in_h3
-post `F' ("Estimation sample with a valid DEI enforcement score (H3)") (r(N)) (223)
 postclose `F'
 preserve
 use "`flow'", clear
@@ -651,46 +730,91 @@ rel_post $STIG8 if in_xd_main, name("Stigma, situations 1-8")
 rel_post $STIG_I if in_xd_main, name("Interpersonal stigma, situations 1-3")
 rel_post $STIG_C if in_xd_main, name("Career-related stigma, situations 4-6")
 rel_post $STIG_G if in_xd_main, name("Gender-expression stigma, situations 7-8")
-rel_post $CONC if in_xd_main, name("Concealment (4 statements)")
-rel_post $DEI if in_xd_main, name("DEI enforcement (4 statements)")
 postclose rel
 preserve
 use "`relfile'", clear
 xl_out "Reliability"
 restore
 
-* Share of the estimation sample reporting each situation at least once (Results)
-tempname P
-tempfile prev
-postfile `P' str16 situation long n_valid str12 n_exposed str8 pct using "`prev'", replace
-forvalues j = 1/8 {
-    quietly count if in_xd_main & !missing(stig`j'_any)
-    local nv = r(N)
-    quietly count if in_xd_main & stig`j'_any == 1
-    local na = r(N)
-    local nshow = cond(`na' > 0 & `na' < $MIN_CELL, "<$MIN_CELL", string(`na'))
-    local pshow = cond(`na' > 0 & `na' < $MIN_CELL, "", strtrim(string(100 * `na' / `nv', "%5.1f")))
-    post `P' ("situation `j'") (`nv') ("`nshow'") ("`pshow'")
+* Labels of the eight situations and the three groups (Tables 4 and 5)
+local lab_all "Any of situations 1-8"
+local lab_int "Interpersonal: any of situations 1-3"
+local lab_car "Career-related: any of situations 4-6"
+local lab_gen "Gender expression: any of situations 7-8"
+local lab1 "1 Offensive jokes or comments"
+local lab2 "2 Unwanted personal questions"
+local lab3 "3 Disclosure or threatened disclosure without consent"
+local lab4 "4 Exclusion from training or career development"
+local lab5 "5 Unfair evaluation, pay, or promotion"
+local lab6 "6 Unfavourable work assignments"
+local lab7 "7 Pressure to conform to gender stereotypes"
+local lab8 "8 Difficulty with name, pronouns, dress, or restrooms"
+local sit_int 1 2 3
+local sit_car 4 5 6
+local sit_gen 7 8
+
+* Table 4: forms of workplace stigma experienced in the previous 12 months
+tempfile t4file
+postfile t4 str56 form long n_valid str12(n_once pct_once n_often pct_often) double(mean_score sd_score) ///
+    using "`t4file'", replace
+t4_row, label("`lab_all'") score(S) any(ever_exposed) often(ever_often)
+foreach g in int car gen {
+    t4_row, label("`lab_`g''") score(S_`g') any(`g'_any) often(`g'_often)
+    foreach j of local sit_`g' {
+        t4_row, label("`lab`j''") score(stig`j') any(stig`j'_any) often(stig`j'_often)
+    }
 }
-quietly count if in_xd_main
-local nv = r(N)
-quietly count if in_xd_main & S > 0
-local na = r(N)
-local pshow = strtrim(string(100 * `na' / `nv', "%5.1f"))
-post `P' ("any of 1-8") (`nv') ("`na'") ("`pshow'")
-postclose `P'
+postclose t4
 preserve
-use "`prev'", clear
-xl_out "Prevalence"
+use "`t4file'", clear
+xl_out "Table4"
 restore
 
-* Table 3: study variables in the estimation sample
+* Table 4 (continued): number of the eight situations experienced
+tempfile t4nfile
+postfile t4n str24 situations str12(n pct) using "`t4nfile'", replace
+gen byte S_count8_c = min(S_count8, 3) if !missing(S_count8)
+freq_rows S_count8_c, handle(t4n) codes(0 1 2 3) labels("0" "1" "2" "3 or more")
+drop S_count8_c
+postclose t4n
+preserve
+use "`t4nfile'", clear
+xl_out "Table4_Number"
+restore
+
+* Table 5: PHQ-4 by experience of each form of stigma (descriptive, unadjusted)
+tempfile t5file
+postfile t5 str56 form str12(n_exposed n_unexposed) double(mean_exposed sd_exposed mean_unexposed ///
+    sd_unexposed difference) str8(pct6_exposed pct6_unexposed) using "`t5file'", replace
+t5_row, label("`lab_all'") any(ever_exposed)
+foreach g in int car gen {
+    t5_row, label("`lab_`g''") any(`g'_any)
+    foreach j of local sit_`g' {
+        t5_row, label("`lab`j''") any(stig`j'_any)
+    }
+}
+postclose t5
+preserve
+use "`t5file'", clear
+xl_out "Table5"
+restore
+
+* Table 3: study variables in the estimation sample, with PHQ-4 severity categories
+tempfile sevfile
+postfile sev str24 category str12(n pct) using "`sevfile'", replace
+freq_rows phq4_cat, handle(sev) codes(1 2 3 4) labels("0-2 (none)" "3-5 (mild)" "6-8 (moderate)" "9-12 (severe)")
+postclose sev
+preserve
+use "`sevfile'", clear
+xl_out "Table3_Severity"
+restore
+
 preserve
 keep if in_xd_main
 tempname MB
 tempfile mbfile
 postfile `MB' str16 variable long n double(mean sd median min max) using "`mbfile'", replace
-foreach v in phq4 S $RQ1 C Q {
+foreach v in phq4 S $RQ1 {
     quietly summarize `v', detail
     post `MB' ("`v'") (r(N)) (r(mean)) (r(sd)) (r(p50)) (r(min)) (r(max))
 }
@@ -699,7 +823,7 @@ post `MB' ("pct S > 0") (r(N)) (100 * r(N) / _N) (.) (.) (.) (.)
 quietly count if phq4 >= 6
 post `MB' ("pct PHQ-4 >= 6") (r(N)) (100 * r(N) / _N) (.) (.) (.) (.)
 postclose `MB'
-quietly pwcorr phq4 S $RQ1 C Q
+quietly pwcorr phq4 S $RQ1
 matrix TQ = r(C)
 use "`mbfile'", clear
 xl_out "Table3_Descriptives"
@@ -707,7 +831,7 @@ clear
 svmat TQ, names(col)
 gen str8 variable = ""
 local i 0
-foreach v in phq4 S $RQ1 C Q {
+foreach v in phq4 S $RQ1 {
     local ++i
     quietly replace variable = "`v'" in `i'
 }
@@ -809,7 +933,7 @@ if $RUN_MODELS == 0 {
 }
 
 * -----------------------------------------------------------------------------
-* 6. H1: stigma and PHQ-4 (Table 4)
+* 6. H1: stigma and PHQ-4 (Table 6)
 * -----------------------------------------------------------------------------
 regress phq4 S i.($XD) if in_xd_main, vce(hc3)
 matrix RT = r(table)
@@ -849,7 +973,7 @@ regress phq4 S i.(`xdalt') if in_xd_alt, vce(hc3)
 post_coef, part("H1") outcome("phq4") spec("XD, prefer not to answer as missing") coef(S)
 
 * -----------------------------------------------------------------------------
-* 7. RQ1: three groups of stigma situations, exploratory (Table 5)
+* 7. RQ1: forms of stigma (three groups of situations) and PHQ-4, exploratory (Table 7)
 * -----------------------------------------------------------------------------
 * All RQ1 models use the respondents with valid scores on the three
 * sub-indices. Each sub-index is standardized in that sample, so estimates
@@ -888,75 +1012,7 @@ forvalues a = 1/`=`nz' - 1' {
 drop `zs'
 
 * -----------------------------------------------------------------------------
-* 8. H2: stigma, concealment, PHQ-4 (Table 6)
-* -----------------------------------------------------------------------------
-foreach cv in C C3 {
-    gen byte h2s = in_xd_main & !missing(`cv')
-    regress `cv' S i.($XD) if h2s, vce(hc3)
-    matrix RA = r(table)
-    local pa = RA[4, colnumb(RA, "S")]
-    local apos = RA[1, colnumb(RA, "S")] > 0
-    post_coef, part("H2_a") outcome("`cv'") spec("`cv'") coef(S) table(RA)
-
-    regress phq4 `cv' S i.($XD) if h2s, vce(hc3)
-    matrix RB = r(table)
-    local pb = RB[4, colnumb(RB, "`cv'")]
-    local bpos = RB[1, colnumb(RB, "`cv'")] > 0
-    post_coef, part("H2_b") outcome("phq4") spec("`cv'") coef(`cv') table(RB)
-    post_coef, part("H2_c") outcome("phq4") spec("`cv'") coef(S) table(RB)
-
-    * Intersection-union test: the larger of the two p values
-    quietly count if h2s
-    post_val, part("H2") outcome("phq4") spec("`cv'") coef("max(p_a, p_b)") pval(`=max(`pa', `pb')') ///
-        nobs(`r(N)') note("a > 0: `apos'; b > 0: `bpos'")
-    drop h2s
-}
-
-* A failure in a resampling step is recorded and the data are always restored
-preserve
-keep if in_xd_main & !missing(C)
-capture noisily {
-    bootstrap ab = r(ab), reps($BOOT_REPS) seed($SEED) nodots: h2_ab
-    estat bootstrap, percentile
-    matrix CI = e(ci_percentile)
-    local bab = _b[ab]
-    local lab = CI[1,1]
-    local uab = CI[2,1]
-    local nab = e(N)
-}
-local rc = _rc
-restore
-if `rc' == 0 {
-    post_val, part("H2_ab") outcome("phq4") spec("percentile bootstrap") coef("a*b") ///
-        est(`bab') lower(`lab') upper(`uab') nobs(`nab') note("$BOOT_REPS resamples")
-}
-else {
-    post_val, part("H2_ab") outcome("phq4") spec("percentile bootstrap") coef("a*b") note("Stata error `rc'")
-}
-
-* -----------------------------------------------------------------------------
-* 9. H3: perceived DEI enforcement as moderator (Table 7)
-* -----------------------------------------------------------------------------
-* Q is centred on the H3 sample mean. The stigma estimate is also reported at
-* one SD of Q below and above the mean.
-quietly summarize Q if in_h3
-local sdQ = r(sd)
-local sdQ_s : display %5.3f `sdQ'
-regress phq4 c.S##c.Qc i.($XD) if in_h3, vce(hc3)
-matrix RT = r(table)
-local nT = e(N)
-post_coef, part("H3") outcome("phq4") spec("S x Q") coef(c.S#c.Qc) table(RT)
-post_coef, part("H3_aux") outcome("phq4") spec("Q at S = 0") coef(Qc) table(RT)
-lincom S - `sdQ' * c.S#c.Qc
-post_val, part("H3_slope") outcome("phq4") spec("S at Q = mean - 1 SD") coef("S") ///
-    est(`r(estimate)') stderr(`r(se)') lower(`r(lb)') upper(`r(ub)') pval(`r(p)') nobs(`nT') note("SD of Q = `sdQ_s'")
-post_coef, part("H3_slope") outcome("phq4") spec("S at mean Q") coef(S) table(RT) note("SD of Q = `sdQ_s'")
-lincom S + `sdQ' * c.S#c.Qc
-post_val, part("H3_slope") outcome("phq4") spec("S at Q = mean + 1 SD") coef("S") ///
-    est(`r(estimate)') stderr(`r(se)') lower(`r(lb)') upper(`r(ub)') pval(`r(p)') nobs(`nT') note("SD of Q = `sdQ_s'")
-
-* -----------------------------------------------------------------------------
-* 10. Supplementary exploratory analyses (Table S4)
+* 8. Supplementary exploratory analyses (Table S4)
 * -----------------------------------------------------------------------------
 
 * One model per situation; not estimated if fewer than MIN_CELL respondents
@@ -982,7 +1038,7 @@ post_coef, part("Levels") outcome("phq4") spec("low vs. none") coef(1.S3) table(
 post_coef, part("Levels") outcome("phq4") spec("high vs. none") coef(2.S3) table(RT)
 
 * -----------------------------------------------------------------------------
-* 11. Diagnostics of the main model, descriptive only (Table S2)
+* 9. Diagnostics of the main model, descriptive only (Table S2)
 * -----------------------------------------------------------------------------
 tempname D
 tempfile diag
@@ -1034,7 +1090,7 @@ xl_out "TableS2"
 restore
 
 * -----------------------------------------------------------------------------
-* 12. Robustness checks (Table 8) and sensitivity analysis (Table S3)
+* 10. Robustness checks (Table 8) and sensitivity analysis (Table S3)
 * -----------------------------------------------------------------------------
 
 * Any exposure and intensity among exposed respondents
@@ -1109,8 +1165,8 @@ preserve
 keep if in_lgbt
 capture noisily {
     mi set wide
-    mi register imputed phq4 S C Q $XD
-    mi impute chained (pmm, knn(5)) phq4 S C Q (mlogit, augment) $XD, add($MI_M) rseed($SEED)
+    mi register imputed phq4 S $XD
+    mi impute chained (pmm, knn(5)) phq4 S (mlogit, augment) $XD, add($MI_M) rseed($SEED)
     mi estimate, post: regress phq4 S i.($XD), vce(hc3)
     matrix DFM = e(df_mi)
     local dfS = DFM[1, colnumb(DFM, "S")]
@@ -1156,7 +1212,7 @@ foreach g in sex_birth educ {
 restore
 
 * -----------------------------------------------------------------------------
-* 13. Post hoc sensitivity analyses, specified after the main results (Table S6)
+* 11. Post hoc sensitivity analyses, specified after the main results (Table S6)
 * -----------------------------------------------------------------------------
 regress phq4 S if in_xd_main, vce(hc3)
 post_coef, part("PostHoc") outcome("phq4") spec("unadjusted") coef(S)
@@ -1173,7 +1229,7 @@ regress phq4 S i.(`xd_norr') if in_xd_main, vce(hc3)
 post_coef, part("PostHoc") outcome("phq4") spec("XD without relationship status and region") coef(S)
 
 * -----------------------------------------------------------------------------
-* 14. Specification curve (Figure 2; Table S5)
+* 12. Specification curve (Figure 2; Table S5)
 * -----------------------------------------------------------------------------
 tempname SP
 tempfile specfile
@@ -1262,46 +1318,37 @@ xl_out "TableS5"
 restore
 
 * -----------------------------------------------------------------------------
-* 15. Multiple-testing adjustment and export
+* 13. Multiple-testing adjustment and export
 * -----------------------------------------------------------------------------
 postclose res
 preserve
 use "`resfile'", clear
 gen long row_id = _n
 
-* Holm over the hypothesis tests of H2 and H3
-gen str8 fam_holm = ""
-replace fam_holm = "second" if part == "H2" & spec == "C"
-replace fam_holm = "second" if part == "H3"
-gen double p_tmp = p if fam_holm != ""
-padjust p_tmp, gen(p_holm) method(holm)
-drop p_tmp
-
-* Benjamini-Hochberg within the separate RQ1 models and within the situations
+* H1 is the single hypothesis test. Benjamini-Hochberg within the separate
+* RQ1 models and within the situations.
 gen str10 fam_bh = ""
 replace fam_bh = "RQ1" if part == "RQ1" & spec == "separate"
 replace fam_bh = "Situation" if part == "Situation"
 gen double p_tmp = p if fam_bh != ""
-padjust p_tmp, gen(p_bh) method(bh) by(fam_bh)
-drop p_tmp fam_holm fam_bh
+padjust p_tmp, gen(p_bh) by(fam_bh)
+drop p_tmp fam_bh
 
 gen str10 paper_table = ""
 replace paper_table = "Table S1" if part == "TableS1"
-replace paper_table = "Table 4"  if inlist(part, "H1", "H1_TOST", "PerSD")
-replace paper_table = "Table 5"  if part == "RQ1"
-replace paper_table = "Table 6"  if inlist(part, "H2_a", "H2_b", "H2_c", "H2", "H2_ab")
-replace paper_table = "Table 7"  if inlist(part, "H3", "H3_aux", "H3_slope")
+replace paper_table = "Table 6"  if inlist(part, "H1", "H1_TOST", "PerSD")
+replace paper_table = "Table 7"  if part == "RQ1"
 replace paper_table = "Table 8"  if part == "Robust"
 replace paper_table = "Table S4" if inlist(part, "Situation", "Situation_notest", "Levels")
 replace paper_table = "Table S6" if part == "PostHoc"
 
 sort row_id
 drop row_id
-order paper_table part outcome spec term b se lb ub p p_holm p_bh N note
+order paper_table part outcome spec term b se lb ub p p_bh N note
 tempfile allres
 save "`allres'"
 xl_out "AllResults"
-foreach t in "Table 4" "Table 5" "Table 6" "Table 7" "Table 8" "Table S1" "Table S4" "Table S6" {
+foreach t in "Table 6" "Table 7" "Table 8" "Table S1" "Table S4" "Table S6" {
     local sheet : subinstr local t " " "", all
     use if paper_table == "`t'" using "`allres'", clear
     xl_out "`sheet'"

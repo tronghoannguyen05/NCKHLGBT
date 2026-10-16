@@ -1,6 +1,6 @@
 # Codebook — tên biến chuẩn
 
-Tệp xuất từ Kobo dùng tên cột riêng và **mã chữ** cho phương án (ví dụ `co`, `1824`, `kmtl`). `config/variable_map.csv` ánh xạ tên cột sang tên chuẩn dưới đây. `config/value_map.csv` ánh xạ mã chữ sang mã số, kèm nhãn. `phan_tich.do` (mục 1, lệnh `map_codes`) dừng nếu gặp mã chữ chưa có trong bảng. Hai bảng đã được đối chiếu với tệp thật ngày 5/10/2026: không có giá trị chưa ánh xạ. Luồng mẫu (từ 13/10/2026): 850 → 734 có việc làm → 719 có dữ liệu thực chất → 300 tự nhận LGBT → 272 đủ PHQ-4 và chỉ số kỳ thị → 235 đủ biến kiểm soát (226 theo quy tắc thay thế) → 233 (H2), 233 (RQ1), 223 (H3).
+Tệp xuất từ Kobo dùng tên cột riêng và **mã chữ** cho phương án (ví dụ `co`, `1824`, `kmtl`). `config/variable_map.csv` ánh xạ tên cột sang tên chuẩn dưới đây. `config/value_map.csv` ánh xạ mã chữ sang mã số, kèm nhãn. `phan_tich.do` (mục 1, lệnh `map_codes`) dừng nếu gặp mã chữ chưa có trong bảng. Hai bảng đã được đối chiếu với tệp thật ngày 5/10/2026: không có giá trị chưa ánh xạ. Luồng mẫu (từ 13/10/2026): 850 → 734 có việc làm → 719 có dữ liệu thực chất → 300 tự nhận LGBT → 272 đủ PHQ-4 và chỉ số kỳ thị → 235 đủ biến kiểm soát (226 theo quy tắc thay thế) → 233 (RQ1).
 
 Ghi chú về mã:
 - `agegrp` 4 = 45+: gộp hai phương án 45–54 và từ 55 của bảng hỏi, như codebook và đề cương.
@@ -29,7 +29,7 @@ Ghi chú về mã:
 | `phqi3` | ít hứng thú hoặc niềm vui khi làm việc |
 | `phqi4` | cảm thấy buồn, chán nản, tuyệt vọng |
 
-Biến dựng: `phq4` (0–12), `phq4_frac` = phq4/12, `phq4_zero` (PHQ-4 = 0).
+Biến dựng: `phq4` (0–12), `phq4_frac` = phq4/12, `phq4_zero` (PHQ-4 = 0), `phq4_cat` (1 = 0–2, 2 = 3–5, 3 = 6–8, 4 = 9–12; Kroenke và cộng sự, 2009).
 
 ## Phơi nhiễm: kỳ thị tại nơi làm việc (0 không bao giờ … 4 rất thường xuyên; 12 tháng gần nhất; chỉ hỏi người LGBT)
 
@@ -44,17 +44,13 @@ Biến dựng: `phq4` (0–12), `phq4_frac` = phq4/12, `phq4_zero` (PHQ-4 = 0).
 | `stig7` | bị áp lực tuân theo khuôn mẫu giới | thể hiện giới |
 | `stig8` | khó khăn về tên gọi, đại từ, trang phục, nhà vệ sinh | thể hiện giới |
 
-Mã 9 (“không áp dụng / không muốn trả lời”) chuyển thành khuyết, không gán 0. Biến dựng: `S` (trung bình 8 câu, cần ít nhất 6 câu hợp lệ), `S7` (trung bình câu 1–7, cần ít nhất 4 câu; phương án của đường cong đặc tả), `S_count8`, `S_complete8`, `stigX_any` (1 nếu ≥ 1 lần), `ever_exposed` (S > 0), `S3` (0 không, 1 thấp, 2 cao; cắt tại trung vị của S trong số người có phơi nhiễm ở mẫu ước lượng).
+Thang tần suất: 0 không bao giờ, 1 một lần, 2 thỉnh thoảng, 3 thường xuyên, 4 rất thường xuyên. Mã 9 (“không áp dụng / không muốn trả lời”) chuyển thành khuyết, không gán 0. Biến dựng: `S` (trung bình 8 câu, cần ít nhất 6 câu hợp lệ), `S7` (trung bình câu 1–7, cần ít nhất 4 câu; phương án của đường cong đặc tả), `S_count8`, `S_complete8`, `stigX_any` (1 nếu ≥ 1 lần), `stigX_often` (1 nếu mức 3–4), `ever_exposed` (S > 0), `ever_often` (ít nhất một tình huống ở mức 3–4), `int_any`, `car_any`, `gen_any` (chỉ số con của nhóm > 0), `int_often`, `car_often`, `gen_often` (ít nhất một tình huống của nhóm ở mức 3–4), `S3` (0 không, 1 thấp, 2 cao; cắt tại trung vị của S trong số người có phơi nhiễm ở mẫu ước lượng).
 
 Chỉ số con của RQ1: `S_int` (tình huống 1–3, cần ít nhất 2 câu hợp lệ), `S_car` (4–6, cần ít nhất 2 câu), `S_gen` (tình huống 7 và 8, cần ít nhất 1 câu). Trong mô hình, mỗi chỉ số được chuẩn hóa trong mẫu RQ1.
 
-## Che giấu danh tính (1–5, chỉ hỏi người LGBT)
+## Hai thang Likert khác của bảng hỏi (1–5)
 
-`conc1`–`conc4`; `conc4` là câu về sự mệt mỏi do phải kiểm soát thông tin. Biến dựng: `C` (4 câu), `C3` (bỏ `conc4`).
-
-## Thực thi DEI được cảm nhận (1–5)
-
-`dei1`–`dei4` (an toàn khi phản ánh; quản lý tôn trọng; hành vi xúc phạm bị xử lý; được dùng tên gọi, đại từ, trang phục phù hợp). Mã 9 chuyển thành khuyết. Biến dựng: `Q` (cần ít nhất 3 câu hợp lệ), `Qc` (trung tâm hóa trên mẫu H3).
+`conc1`–`conc4` (che giấu danh tính, chỉ hỏi người LGBT) và `dei1`–`dei4` (thực thi DEI được cảm nhận; mã 9 chuyển thành khuyết). Từ 16/10/2026, hai thang này chỉ được đọc để dựng cờ `flag_straight`; không có chỉ số hay mô hình nào dùng chúng.
 
 ## Biến kiểm soát
 
