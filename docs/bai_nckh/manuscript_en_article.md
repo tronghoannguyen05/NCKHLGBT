@@ -1,26 +1,18 @@
-RESEARCH
-
 # Pathology or Prejudice? Workplace Stigma and Mental Health among LGBT Workers in Vietnam
-
-[Author names, including at least one staff member of the Banking Academy of Vietnam; ORCID for each author]¹
-
-¹ Banking Academy of Vietnam, Hanoi, Vietnam
-
-Corresponding author: [name, @hvnh.edu.vn email, ORCID]
 
 ---
 
 ## Abstract
 
-**Introduction** Sexual and gender minority adults report more anxiety and depression than other adults, but such disparities cannot show whether distress originates in identity or in prejudice. Minority stress theory predicts that minority group members who experience more stigma report more symptoms. We examined which forms of workplace stigma LGBT workers in Vietnam experience and how these forms relate to symptoms.
+**Introduction** Sexual and gender minority adults report more anxiety and depression than other adults, but such disparities cannot show whether distress originates in identity or in prejudice. Minority stress theory predicts that minority group members who experience more stigma report more symptoms. We examined which forms of workplace stigma LGBT workers in Vietnam experience and how they relate to symptoms.
 
-**Methods** In a cross-sectional survey, 235 LGBT workers reported how often they had experienced eight stigmatizing situations at work during the previous 12 months and completed the PHQ-4. Models adjusted for eight groups of pre-exposure characteristics.
+**Methods** In a cross-sectional survey conducted in 2026, 235 LGBT workers reported how often they had experienced eight stigmatizing situations at work during the previous 12 months and completed the PHQ-4. Models adjusted for pre-exposure characteristics.
 
 **Results** More than half of participants (57.0%) reported at least one situation. Interpersonal stigma was the most common form (47.2%), particularly unwanted personal questions (33.9%) and offensive jokes (26.8%), whereas career-related (17.4%) and gender expression stigma (18.0%) were less common. A one-unit difference in the stigma index was associated with PHQ-4 scores 1.85 points higher (95% CI [0.71, 2.99]), and the estimate was positive in all 32 specifications. The association was clear for interpersonal stigma and inconclusive for the other forms.
 
-**Conclusion** Symptoms varied with exposure to stigma within the group, a gradient predicted by minority stress theory but not by an identity-based account, although the cross-sectional design does not establish its direction.
+**Conclusions** Symptoms varied with exposure to stigma within the group, a gradient predicted by minority stress theory but not by an identity-based account, although the cross-sectional design does not establish its direction.
 
-**Policy Implications** Elevated symptoms among LGBT workers should not be read as evidence of pathology. Naming sexual orientation and gender identity in the Labor Code, and workplace rules against derogatory jokes and intrusive questions, would address the forms of stigma that LGBT workers most often report.
+**Policy Implications** Elevated symptoms among LGBT workers should not be read as evidence of pathology. Adding sexual orientation and gender identity to the Labor Code, and adopting workplace rules against derogatory jokes and intrusive questions, would address the forms of stigma most often reported.
 
 **Keywords** Minority stress · Workplace stigma · Enacted stigma · LGBT workers · Anxiety · Depression · Vietnam
 
@@ -74,7 +66,7 @@ The first question is descriptive and was examined without hypothesis tests. For
 
 ### Participants and Procedures
 
-The current study used data from a cross-sectional survey of workers in Vietnam. The survey was open to workers of any sexual orientation and gender identity, and the present analyses focus on participants who identified as LGBT. To be eligible, participants had to be 18 years of age or older and have a main income-generating job in Vietnam, as verified by two screening questions. Because no sampling frame exists for LGBT people in Vietnam, participants were recruited through convenience and snowball sampling within community networks. Before answering, participants read an information page that described the purpose of the study, warned that the questionnaire contained sensitive questions, and explained that they could skip any question or stop at any time. Participants indicated consent by continuing to the questionnaire, which did not collect names, contact details, places of residence, or names of employers. [Authors: insert the statement of ethics approval, including the name of the committee.]
+The current study used data from a cross-sectional survey of workers in Vietnam conducted in 2026. The survey was open to workers of any sexual orientation and gender identity, and the present analyses focus on participants who identified as LGBT. To be eligible, participants had to be 18 years of age or older and have a main income-generating job in Vietnam, as verified by two screening questions. Because no sampling frame exists for LGBT people in Vietnam, participants were recruited through convenience and snowball sampling within community networks. Before answering, participants read an information page that described the purpose of the study, warned that the questionnaire contained sensitive questions, and explained that they could skip any question or stop at any time. Participants indicated consent by continuing to the questionnaire, which did not collect names, contact details, places of residence, or names of employers. [Authors: insert the statement of ethics approval or exemption. In this masked manuscript, the name of the committee should read "masked for review".]
 
 Table 1 shows how the samples were formed. Of the 850 responses received, 734 reported a main income-generating job, and 719 of these answered at least one question after the screening questions. All participants who provided such data had passed the age screening question, so age did not require a separate exclusion. Of these 719 participants, 300 identified as LGBT. The analytic sample comprised the 272 LGBT participants with complete PHQ-4 responses and a valid stigma index. The main sample comprised the 235 of them with complete data on the pre-exposure covariates when "prefer not to answer" was coded as a separate category (main rule). When "prefer not to answer" was treated as missing (alternative rule), 226 participants had complete covariate data. Each model used the participants with complete data on the variables it contained.
 
@@ -86,18 +78,22 @@ Table 1 shows how the samples were formed. Of the 850 responses received, 734 re
 | Reported a main income-generating job in Vietnam | 734 |
 | Answered at least one question after the screening questions | 719 |
 | Self-identified as LGBT | 300 |
-| Complete PHQ-4 and valid stigma index (analytic sample) | 272 |
-| Complete pre-exposure covariates, main rule (main sample) | 235 |
-| Complete pre-exposure covariates, alternative rule | 226 |
+| Complete PHQ-4 and valid stigma index (analytic sample)^a^ | 272 |
+| Complete pre-exposure covariates, main rule (main sample)^b^ | 235 |
+| Complete pre-exposure covariates, alternative rule^c^ | 226 |
 | Main sample with valid scores on the three stigma sub-indices (RQ1) | 233 |
 
-*Note.* A valid stigma index required at least six of the eight situations to be answered. Under the main rule, "prefer not to answer" on a covariate was coded as a separate category, and under the alternative rule it was treated as missing.
+^a^ A valid stigma index required at least six of the eight situations to be answered.
+
+^b^ Under the main rule, "prefer not to answer" on a covariate was coded as a separate category.
+
+^c^ Under the alternative rule, "prefer not to answer" on a covariate was treated as missing.
 
 Table 2 describes the main sample, in which the largest groups were participants aged 25–34 years (41.7%), participants assigned female at birth (61.7%), participants with a university degree (64.7%), and participants who worked in Ho Chi Minh City (51.9%), and in which education (27.7%) and media and marketing (15.3%) were the most common industries. By the sexual orientation item, the main sample included 78 bisexual, 62 gay, 62 lesbian, and 21 pansexual participants, and 10 participants reported a transgender, nonbinary, or other gender identity. Results are not reported separately for transgender and nonbinary participants, because the group is too small to yield estimates that are both stable and safe from re-identification.
 
-**Table 2** *Characteristics of the main sample (n = 235)*
+**Table 2** *Characteristics of the main sample (n = 235)*^a^
 
-| Characteristic | *n* (%) |
+| Characteristic | *n* (%)^b^ |
 |---|---|
 | **Age group** | |
 | 18–24 | 56 (23.8) |
@@ -115,8 +111,8 @@ Table 2 describes the main sample, in which the largest groups were participants
 | **Relationship status** | |
 | No partner | 118 (50.2) |
 | Partner | 105 (44.7) |
-| Separated, divorced, or widowed | <10 |
-| Prefer not to answer | <10 |
+| Separated, divorced, or widowed | <10^c^ |
+| Prefer not to answer | <10^c^ |
 | **Region of work** | |
 | Hanoi | 67 (28.5) |
 | Ho Chi Minh City | 122 (51.9) |
@@ -135,9 +131,15 @@ Table 2 describes the main sample, in which the largest groups were participants
 | Trade and services | 17 (7.2) |
 | Manufacturing | 17 (7.2) |
 | Media and marketing | 36 (15.3) |
-| Health care, tourism, or other | 61 (26.0) |
+| Health care, tourism, or other^d^ | 61 (26.0) |
 
-*Note.* Values are numbers of participants, with percentages in parentheses. Cells with fewer than 10 participants are suppressed. Health care is shown together with other industries because it had fewer than 10 participants, and transgender and nonbinary participants are not shown as a separate group.
+^a^ Gender identity is not shown, and transgender and nonbinary participants are not presented as a separate group.
+
+^b^ Values are numbers of participants, with percentages in parentheses.
+
+^c^ Cells with fewer than 10 participants are suppressed.
+
+^d^ Health care is shown together with tourism and other industries because it had fewer than 10 participants.
 
 ### Measures
 
@@ -151,7 +153,7 @@ Table 2 describes the main sample, in which the largest groups were participants
 
 **Job characteristics.** Participants also reported their total work experience, their position, their employment relationship, whether they were covered by compulsory social insurance, the type and size of their employing organization, and their average weekly working hours in their main job.
 
-**Coding of covariates.** All covariates were categorical, and each item included a "prefer not to answer" option. Under the main rule, "prefer not to answer" was retained as a separate category, and under the alternative rule it was treated as missing; blank responses were treated as missing under both rules. Before estimation, categories with fewer than five participants in the estimation sample were merged according to a rule that uses counts only (Supplementary Methods), because categories with one or two participants produce leverage values close to one, at which heteroskedasticity-consistent standard errors become unstable. Descriptive tables use the original categories.
+**Coding of covariates.** All covariates were categorical, and each item included a "prefer not to answer" option. Under the main rule, "prefer not to answer" was retained as a separate category, and under the alternative rule it was treated as missing; blank responses were treated as missing under both rules. Before estimation, categories with fewer than five participants in the estimation sample were merged according to a rule that uses counts only (Supplementary Methods S1), because categories with one or two participants produce leverage values close to one, at which heteroskedasticity-consistent standard errors become unstable. Descriptive tables use the original categories.
 
 #### Workplace Stigma
 
@@ -175,7 +177,7 @@ All analyses were conducted in Stata 17 with the user-written commands sensemakr
 
 H1 was tested with the model PHQᵢ = α + η·Sᵢ + γ′Xᵢᴰ + εᵢ, estimated by ordinary least squares, in which η is the expected difference in PHQ-4 scores between two LGBT workers whose stigma indices differ by one unit on the 0–4 scale and who share the same pre-exposure characteristics (Xᴰ). Because the design is cross-sectional and both measures are self-reported, η is interpreted as an adjusted association rather than as a causal effect. Standard errors were heteroskedasticity-consistent of type HC3, which Long and Ervin (2000) recommend for samples of fewer than 250 observations, and this choice was made before estimation regardless of the results of heteroskedasticity tests. H1 was considered supported if η was positive and statistically significant in a two-sided test at the 5% level.
 
-Covariates were selected with a causal diagram (Figure 1; Greenland et al., 1999), following the principle of adjusting for pre-exposure causes of the exposure, the outcome, or both (VanderWeele, 2019). The pre-exposure characteristics comprised eight groups: age group, education, sex assigned at birth, gender minority status, sexual orientation group, relationship status, region of work, and industry. Gender minority status and sexual orientation group precede workplace experiences and may shape both exposure to stigma and symptoms (Ross et al., 2018). Industry was treated as a pre-exposure characteristic because most workers enter a sector before their experiences at a particular workplace, although some workers may move to sectors that they perceive as more accepting, and a sensitivity analysis therefore omitted it. Two further covariates are open to similar doubts, because relationship status may partly reflect symptoms and region of work may reflect moves to cities that are perceived as more accepting. Other job characteristics (Xᴶ) may confound the association, because the type and size of an organization may shape exposure. However, they may also lie on the path between stigma and symptoms, because stigma may push workers into lower positions or less secure employment, and adjusting for a variable on this path would remove part of the association of interest (Angrist & Pischke, 2009). Job characteristics were therefore added only in a second specification, which indicates how far the association may run through these characteristics.
+Covariates were selected with a causal diagram (Figure 1; Greenland et al., 1999), following the principle of adjusting for pre-exposure causes of the exposure, the outcome, or both (VanderWeele, 2019). The pre-exposure characteristics comprised eight groups: age group, education, sex assigned at birth, gender minority status, sexual orientation group, relationship status, region of work, and industry. Gender minority status and sexual orientation group precede workplace experiences and may shape both exposure to stigma and symptoms (Ross et al., 2018). Industry was treated as a pre-exposure characteristic because most workers enter a sector before their experiences at a particular workplace. Industry and region of work may nevertheless reflect moves to sectors or cities that are perceived as more accepting, and relationship status may partly reflect symptoms, so a sensitivity analysis omitted industry and a post hoc analysis omitted relationship status and region of work. Other job characteristics (Xᴶ), such as the type and size of the organization, may confound the association, but they may also lie on the path between stigma and symptoms, because stigma may push workers into lower positions or less secure employment, and adjusting for a variable on this path would remove part of the association of interest (Angrist & Pischke, 2009). Job characteristics were therefore added only in a second specification, which indicates how far the association may run through these characteristics.
 
 **Figure 1** *Simplified causal diagram used to select covariates*
 
@@ -187,9 +189,9 @@ To distinguish the absence of an association from an imprecise estimate, the sma
 
 RQ1 used the 233 participants in the main sample with valid scores on all three sub-indices. Each sub-index was standardized within this sample, so that its coefficient represents the difference in PHQ-4 points per standard deviation and can be compared across forms that occur at different frequencies. One model was estimated for each sub-index with the same covariates as the model for H1, and a joint model entered the three sub-indices together. Because a difference in statistical significance between two coefficients is not evidence that the coefficients differ (Gelman & Stern, 2006), the three pairwise differences were tested directly in the joint model. In supplementary exploratory analyses, one model was estimated for each situation, in which *S* was replaced with an indicator of having experienced that situation at least once. Situations that were experienced by fewer than 10 participants, or not experienced by fewer than 10, were not estimated, so that small cells would not be disclosed. A further model replaced *S* with indicators of low and high exposure, with no exposure as the reference category and the median of *S* among exposed participants as the cut point. H1 was treated as the single hypothesis test and was not adjusted for multiple testing, whereas the *p* values of the three separate RQ1 models and of the models for individual situations were adjusted with the Benjamini and Hochberg (1995) procedure.
 
-Several sensitivity analyses examined whether the association depended on analytic choices. These analyses (1) added job characteristics; (2) treated "prefer not to answer" as missing; (3) separated any exposure from intensity among exposed participants and fitted a restricted cubic spline with knots at the 10th, 50th, and 90th percentiles of *S* among exposed participants; (4) estimated a fractional logit model for PHQ-4 scores divided by 12 and reported the average marginal effect multiplied by 12 (Papke & Wooldridge, 1996); (5) used multiple imputation by chained equations with 20 imputed datasets among the 300 LGBT participants, imputing PHQ-4 scores, *S*, and missing covariates (White et al., 2011); (6) excluded flagged responses; (7) excluded observations with a Cook's distance above 4/*n*; (8) used a restricted wild bootstrap with Webb weights and 9,999 replications (Davidson & Flachaire, 2008; Roodman et al., 2019); and (9) omitted industry from the covariates. A specification curve (Simonsohn et al., 2020) combined four constructions of the stigma index (the eight-situation mean, the mean of situations 1 to 7 with at least four answered, the number of situations experienced, and the eight-situation mean among participants who answered all eight situations), two sets of covariates, two definitions of the LGBT group (self-identification alone, or self-identification together with a non-heterosexual orientation or a minority gender identity), and the inclusion or exclusion of transgender and nonbinary participants, which yielded 32 specifications. Every result is reported, and no threshold was set for the share of specifications that must agree.
+Sensitivity analyses examined whether the association depended on analytic choices. They added job characteristics, treated "prefer not to answer" as missing, separated any exposure from intensity among exposed participants, tested for a nonlinear association, estimated a fractional logit model that respects the bounds of the PHQ-4 (Papke & Wooldridge, 1996), used multiple imputation by chained equations (White et al., 2011), excluded flagged responses and influential observations, used a restricted wild bootstrap (Davidson & Flachaire, 2008; Roodman et al., 2019), and omitted industry from the covariates. A specification curve (Simonsohn et al., 2020) combined four constructions of the stigma index, two sets of covariates, two definitions of the LGBT group, and the inclusion or exclusion of transgender and nonbinary participants, which yielded 32 specifications. Every result is reported, and no threshold was set for the share of specifications that must agree. Supplementary Methods S2 describes each analysis.
 
-Four sources of bias could inflate η, namely minority stress outside work that was not measured, reverse causation, recall bias, and common method variance (Podsakoff et al., 2003). The stigma and PHQ-4 sections used different response scales and reference periods, but the stigma section immediately preceded the PHQ-4, and recalling stigmatizing events just before rating one's symptoms may raise symptom reports (Schwarz, 1999). Sensitivity to unmeasured confounding was quantified with the omitted variable bias framework of Cinelli and Hazlett (2020), which reports the partial *R*² of *S* with PHQ-4 scores and the robustness values at which an omitted confounder would reduce η to zero or make its 95% confidence interval include zero. These values were compared with the explanatory power of sex assigned at birth and of education, each entered as a group of dummy variables, at one, two, and three times their observed strength. Instrumental variables, propensity score matching, selection models, Harman's single factor test, and coefficient stability bounds (Oster, 2019) were not used, for reasons given in the Supplementary Methods. Diagnostics of the main model, namely the Breusch-Pagan test, generalized variance inflation factors (Fox & Monette, 1992), Ramsey's RESET test, Cook's distance, and leverage, were descriptive and did not change the estimator. Four further sensitivity analyses were specified after the main results were known, and they are reported separately as post hoc analyses (Table S6). Finally, every table by sexual orientation, gender identity, demographic group, or workplace characteristic, and every table of stigma experiences, suppresses cells with fewer than 10 participants together with any cell from which a suppressed count could be derived.
+Four sources of bias could inflate η, namely minority stress outside work that was not measured, reverse causation, recall bias, and common method variance (Podsakoff et al., 2003). The stigma and PHQ-4 sections used different response scales and reference periods, but the stigma section immediately preceded the PHQ-4, and recalling stigmatizing events just before rating one's symptoms may raise symptom reports (Schwarz, 1999). Sensitivity to unmeasured confounding was quantified with the omitted variable bias framework of Cinelli and Hazlett (2020), with education and sex assigned at birth as benchmarks (Supplementary Methods S3). Instrumental variables, propensity score matching, selection models, Harman's single factor test, and coefficient stability bounds (Oster, 2019) were not used, for reasons given in Supplementary Methods S4. Diagnostics of the main model were descriptive and did not change the estimator. Four further sensitivity analyses were specified after the main results were known, and they are reported separately as post hoc analyses (Table S6). Finally, every table by sexual orientation, gender identity, demographic group, or workplace characteristic, and every table of stigma experiences, suppresses cells with fewer than 10 participants together with any cell from which a suppressed count could be derived.
 
 ---
 
@@ -199,20 +201,26 @@ The mean PHQ-4 score in the main sample was 3.43 (*SD* = 3.25, range = 0–12; T
 
 **Table 3** *Descriptive statistics and correlations of the study variables (main sample)*
 
-| Variable | *n* | *M* | *SD* | Range | 1 | 2 | 3 | 4 |
+| Variable | *n* | *M* | *SD* | Range^a^ | 1^b^ | 2 | 3 | 4 |
 |---|---|---|---|---|---|---|---|---|
 | 1. PHQ-4 | 235 | 3.43 | 3.25 | 0–12 | | | | |
-| 2. Stigma index (*S*) | 235 | 0.33 | 0.47 | 0–2.75 | .21 | | | |
+| 2. Stigma index (*S*)^c^ | 235 | 0.33 | 0.47 | 0–2.75 | .21 | | | |
 | 3. Interpersonal stigma | 235 | 0.53 | 0.76 | 0–4 | .23 | .86 | | |
 | 4. Career-related stigma | 235 | 0.17 | 0.45 | 0–3 | .13 | .71 | .37 | |
 | 5. Gender expression stigma | 233 | 0.23 | 0.61 | 0–4 | .05 | .61 | .32 | .32 |
-| **PHQ-4 symptom level**, *n* (%) | | | | | | | | |
+| **PHQ-4 symptom level**, *n* (%)^d^ | | | | | | | | |
 | Normal (0–2) | 108 (46.0) | | | | | | | |
 | Mild (3–5) | 73 (31.1) | | | | | | | |
 | Moderate (6–8) | 38 (16.2) | | | | | | | |
 | Severe (9–12) | 16 (6.8) | | | | | | | |
 
-*Note.* Correlations are Pearson correlations computed pairwise, and ranges are the observed ranges. Stigma scores are mean frequencies on the 0–4 scale, and symptom levels follow Kroenke et al. (2009).
+^a^ Ranges are the observed ranges.
+
+^b^ Columns 1–4 report pairwise Pearson correlations with the variables numbered in the first column.
+
+^c^ Rows 2–5 are mean frequencies on the 0–4 scale.
+
+^d^ Symptom levels follow Kroenke et al. (2009).
 
 ### Forms of Workplace Stigma Experienced
 
@@ -222,7 +230,7 @@ Interpersonal stigma was the most common form, as almost half of the participant
 
 **Table 4** *Forms of workplace stigma experienced in the previous 12 months (main sample, n = 235)*
 
-| Form of stigma | *n* answered | At least once, *n* (%) | Often or very often, *n* (%) | *M* (*SD*) |
+| Form of stigma | *n*^a^ | At least once, *n* (%)^b^ | Often or very often, *n* (%)^c^ | *M* (*SD*)^d^ |
 |---|---|---|---|---|
 | **Any of the eight situations** | 235 | 134 (57.0) | 64 (27.2) | 0.33 (0.47) |
 | **Interpersonal (any of 1–3)** | 235 | 111 (47.2) | 52 (22.1) | 0.53 (0.76) |
@@ -230,19 +238,27 @@ Interpersonal stigma was the most common form, as almost half of the participant
 | 2. Unwanted personal questions | 227 | 77 (33.9) | 31 (13.7) | 0.71 (1.16) |
 | 3. Disclosure or threatened disclosure without consent | 220 | 34 (15.5) | 13 (5.9) | 0.34 (0.92) |
 | **Career-related (any of 4–6)** | 235 | 41 (17.4) | 17 (7.2) | 0.17 (0.45) |
-| 4. Exclusion from training or career development | 212 | <10 | <10 | 0.05 (0.41) |
-| 5. Unfair evaluation, pay, or promotion | 204 | 20 (9.8) | <10 | 0.20 (0.70) |
+| 4. Exclusion from training or career development | 212 | <10^e^ | <10^e^ | 0.05 (0.41) |
+| 5. Unfair evaluation, pay, or promotion | 204 | 20 (9.8) | <10^e^ | 0.20 (0.70) |
 | 6. Unfavorable work assignments | 223 | 26 (11.7) | 10 (4.5) | 0.26 (0.80) |
 | **Gender expression (any of 7–8)** | 233 | 42 (18.0) | 14 (6.0) | 0.23 (0.61) |
 | 7. Pressure to conform to gender stereotypes | 222 | 36 (16.2) | 10 (4.5) | 0.32 (0.80) |
-| 8. Difficulty with name, pronouns, dress, or restrooms | 186 | 13 (7.0) | <10 | 0.14 (0.60) |
+| 8. Difficulty with name, pronouns, dress, or restrooms | 186 | 13 (7.0) | <10^e^ | 0.14 (0.60) |
 | **Number of situations experienced** | | | | |
 | None | | 101 (43.0) | | |
 | One | | 63 (26.8) | | |
 | Two | | 36 (15.3) | | |
 | Three or more | | 35 (14.9) | | |
 
-*Note.* Percentages use as the denominator the participants who answered the situation or, for a form, the participants with a valid sub-index. A form was considered experienced when its sub-index was above zero, and it was considered experienced often when at least one of its situations was rated 3 (*often*) or 4 (*very often*). *M* (*SD*) is the mean frequency on the 0–4 scale. Cells with fewer than 10 participants, and cells from which such a count could be derived, are suppressed.
+^a^ *n* is the number of participants who answered the situation or, for a form, who had a valid sub-index, and it is the denominator of the percentages.
+
+^b^ A form was considered experienced when its sub-index was above zero.
+
+^c^ A situation or form was considered experienced often when at least one of its situations was rated 3 (*often*) or 4 (*very often*).
+
+^d^ Values are mean frequencies on the 0–4 scale.
+
+^e^ Cells with fewer than 10 participants, and cells from which such a count could be derived, are suppressed.
 
 ### Workplace Stigma and Symptoms of Anxiety and Depression
 
@@ -250,22 +266,28 @@ Table 5 compares PHQ-4 scores between participants who did and did not experienc
 
 **Table 5** *PHQ-4 scores by experience of each form of stigma (main sample, descriptive)*
 
-| Form of stigma | *n* experienced / not | *M* (*SD*), experienced | *M* (*SD*), not experienced | Difference | PHQ-4 ≥ 6, experienced (%) | PHQ-4 ≥ 6, not experienced (%) |
+| Form of stigma | *n*, yes / no^a^ | *M* (*SD*), yes | *M* (*SD*), no | Difference^b^ | PHQ-4 ≥ 6 (%), yes | PHQ-4 ≥ 6 (%), no |
 |---|---|---|---|---|---|---|
 | **Any of the eight situations** | 134 / 101 | 4.02 (3.35) | 2.64 (2.94) | 1.38 | 29.1 | 14.9 |
 | **Interpersonal (any of 1–3)** | 111 / 124 | 4.30 (3.35) | 2.65 (2.96) | 1.64 | 31.5 | 15.3 |
 | 1. Offensive jokes or comments | 62 / 169 | 4.40 (3.36) | 3.12 (3.17) | 1.28 | 32.3 | 20.1 |
 | 2. Unwanted personal questions | 77 / 150 | 4.62 (3.55) | 2.89 (2.96) | 1.74 | 36.4 | 16.7 |
-| 3. Disclosure or threatened disclosure without consent | 34 / 186 | 3.85 (3.24) | 3.28 (3.18) | 0.57 | not reported | 21.5 |
+| 3. Disclosure or threatened disclosure without consent | 34 / 186 | 3.85 (3.24) | 3.28 (3.18) | 0.57 | not reported^c^ | 21.5 |
 | **Career-related (any of 4–6)** | 41 / 194 | 4.20 (3.63) | 3.27 (3.15) | 0.93 | 34.1 | 20.6 |
-| 4. Exclusion from training or career development | not reported | | | | | |
-| 5. Unfair evaluation, pay, or promotion | 20 / 184 | 4.10 (3.46) | 3.39 (3.18) | 0.71 | not reported | 22.8 |
+| 4. Exclusion from training or career development | not reported^d^ | | | | | |
+| 5. Unfair evaluation, pay, or promotion | 20 / 184 | 4.10 (3.46) | 3.39 (3.18) | 0.71 | not reported^c^ | 22.8 |
 | 6. Unfavorable work assignments | 26 / 197 | 4.38 (3.95) | 3.37 (3.17) | 1.02 | 38.5 | 21.3 |
 | **Gender expression (any of 7–8)** | 42 / 191 | 3.98 (3.63) | 3.30 (3.17) | 0.67 | 35.7 | 20.4 |
 | 7. Pressure to conform to gender stereotypes | 36 / 186 | 4.06 (3.72) | 3.34 (3.20) | 0.72 | 36.1 | 21.0 |
-| 8. Difficulty with name, pronouns, dress, or restrooms | 13 / 173 | 3.46 (3.80) | 3.42 (3.15) | 0.05 | not reported | 21.4 |
+| 8. Difficulty with name, pronouns, dress, or restrooms | 13 / 173 | 3.46 (3.80) | 3.42 (3.15) | 0.05 | not reported^c^ | 21.4 |
 
-*Note.* The comparisons are unadjusted and are not accompanied by hypothesis tests. "Not experienced" refers to participants who answered the situation, or had a valid sub-index, and reported no occurrence, and the difference is the mean among participants who experienced the form minus the mean among those who did not. A row is not reported if either group had fewer than 10 participants, and a percentage is not reported if the number of participants with, or without, a score of 6 or more was below 10.
+^a^ "Yes" refers to participants who experienced the form at least once, and "no" refers to those who answered and reported no occurrence.
+
+^b^ The difference is the mean in the "yes" group minus the mean in the "no" group, without adjustment or hypothesis tests.
+
+^c^ A percentage is not reported when fewer than 10 participants in a group scored 6 or more, or fewer than 10 scored below 6.
+
+^d^ The row is not reported because fewer than 10 participants experienced the situation.
 
 As shown in Table 6, a difference of one unit in the stigma index was associated in the main specification with PHQ-4 scores 1.85 points higher (*SE* = 0.58, 95% CI [0.71, 2.99], *p* = .002). A difference of one standard deviation in the index (0.47) corresponded to 0.86 PHQ-4 points (95% CI [0.33, 1.40]), or about 0.27 standard deviations of PHQ-4 scores, a result that supports H1. The 90% confidence interval, [0.89, 2.80], did not lie within the equivalence bounds of ±1.0, so the conclusion of no practically meaningful association did not apply, and by the decision rule the result indicates a positive association. The point estimate exceeded the smallest effect size of interest, but the lower limit of the 90% interval fell just below it, so the data do not exclude an association slightly smaller than 1.0 point per unit of the index. The minimum detectable effect after estimation was about 1.62 points.
 
@@ -273,14 +295,22 @@ Adding job characteristics did not reduce the estimate (η = 1.95, 95% CI [0.52,
 
 **Table 6** *Association between the workplace stigma index and PHQ-4 scores (H1)*
 
-| Specification | *n* | η | *SE* | 95% CI | *p* |
+| Specification | *n* | η^a^ | *SE* | 95% CI | *p* |
 |---|---|---|---|---|---|
-| Xᴰ (main) | 235 | 1.85 | 0.58 | [0.71, 2.99] | .002 |
-| Xᴰ, alternative rule | 226 | 1.94 | 0.59 | [0.78, 3.10] | .001 |
-| Xᴰ + Xᴶ | 206 | 1.95 | 0.72 | [0.52, 3.37] | .008 |
-| Xᴰ (main), per *SD* of the index | 235 | 0.86 | 0.27 | [0.33, 1.40] | .002 |
+| Xᴰ (main)^b^ | 235 | 1.85 | 0.58 | [0.71, 2.99] | .002 |
+| Xᴰ, alternative rule^c^ | 226 | 1.94 | 0.59 | [0.78, 3.10] | .001 |
+| Xᴰ + Xᴶ^d^ | 206 | 1.95 | 0.72 | [0.52, 3.37] | .008 |
+| Xᴰ (main), per *SD* of the index^e^ | 235 | 0.86 | 0.27 | [0.33, 1.40] | .002 |
 
-*Note.* Estimates are from ordinary least squares regressions with HC3 standard errors. η is the difference in PHQ-4 score per unit of the stigma index (0–4), and the last row expresses it per standard deviation of the index (0.47). Xᴰ denotes the eight groups of pre-exposure characteristics, and Xᴶ denotes the job characteristics. Under the alternative rule, "prefer not to answer" on a covariate was treated as missing. The 90% confidence interval of the equivalence test was [0.89, 2.80], with bounds of ±1.0. The specification with Xᴶ is reported for comparison and is not a test of the hypothesis.
+^a^ η is the difference in PHQ-4 score per unit of the stigma index (0–4), estimated by ordinary least squares regression with HC3 standard errors.
+
+^b^ Xᴰ denotes the eight groups of pre-exposure characteristics. The 90% confidence interval of the equivalence test was [0.89, 2.80], with bounds of ±1.0.
+
+^c^ "Prefer not to answer" on a covariate was treated as missing.
+
+^d^ Xᴶ denotes the job characteristics. This specification is reported for comparison and is not a test of the hypothesis.
+
+^e^ The estimate is expressed per standard deviation of the index (0.47).
 
 ### Forms of Stigma and Symptoms of Anxiety and Depression
 
@@ -288,7 +318,7 @@ Table 7 reports the exploratory analyses for RQ1 (*n* = 233). In the separate mo
 
 **Table 7** *Forms of stigma and PHQ-4 scores (RQ1, exploratory; n = 233)*
 
-| Model | Term | Coefficient | *SE* | 95% CI | *p* | BH *p* |
+| Model | Term | Coefficient^a^ | *SE* | 95% CI | *p* | BH *p*^b^ |
 |---|---|---|---|---|---|---|
 | Separate models | Interpersonal (1–3) | 0.86 | 0.24 | [0.38, 1.33] | < .001 | .002 |
 |  | Career-related (4–6) | 0.49 | 0.31 | [−0.12, 1.09] | .116 | .174 |
@@ -296,21 +326,25 @@ Table 7 reports the exploratory analyses for RQ1 (*n* = 233). In the separate mo
 | Joint model | Interpersonal (1–3) | 0.77 | 0.26 | [0.25, 1.29] | .004 | |
 |  | Career-related (4–6) | 0.18 | 0.38 | [−0.56, 0.92] | .640 | |
 |  | Gender expression (7–8) | 0.06 | 0.31 | [−0.56, 0.68] | .848 | |
-| Joint model, differences | Interpersonal minus career-related | 0.59 | 0.53 | [−0.46, 1.65] | .267 | |
+| Joint model, differences^c^ | Interpersonal minus career-related | 0.59 | 0.53 | [−0.46, 1.65] | .267 | |
 |  | Interpersonal minus gender expression | 0.71 | 0.40 | [−0.08, 1.50] | .079 | |
 |  | Career-related minus gender expression | 0.12 | 0.57 | [−1.00, 1.23] | .838 | |
 
-*Note.* Estimates are from ordinary least squares regressions with HC3 standard errors, adjusted for pre-exposure characteristics. Coefficients are differences in PHQ-4 points per standard deviation of each sub-index (0.76, 0.45, and 0.61, respectively). BH *p* values are adjusted with the Benjamini-Hochberg procedure over the three separate models, and the differences were tested directly in the joint model.
+^a^ Coefficients are differences in PHQ-4 points per standard deviation of each sub-index (0.76, 0.45, and 0.61, respectively), from ordinary least squares regressions with HC3 standard errors that adjust for pre-exposure characteristics.
+
+^b^ *p* values adjusted with the Benjamini-Hochberg procedure over the three separate models.
+
+^c^ The differences between coefficients were tested directly in the joint model.
 
 The models for individual situations showed a similar pattern (Table S4). Offensive jokes or comments (*b* = 1.86, 95% CI [0.81, 2.91]) and unwanted personal questions (*b* = 1.87, 95% CI [0.84, 2.89]) were associated with higher PHQ-4 scores after Benjamini-Hochberg adjustment (adjusted *p* = .002 for both). The coefficients for the other situations were positive, but their confidence intervals included zero (adjusted *p* ≥ .19), and because these situations were less common, their coefficients were estimated less precisely. Exclusion from training was not estimated, because fewer than 10 participants reported it. When the index was divided into three levels, participants with high exposure (an index above 0.43, the median among exposed participants) scored 2.32 points higher than unexposed participants (95% CI [1.08, 3.56]), whereas the estimate for low exposure was 1.05 (95% CI [−0.08, 2.19]) and was inconclusive.
 
 ### Sensitivity Analyses
 
-Table 8 reports the sensitivity analyses. In every analysis that retained the stigma index as a single term, the coefficient was positive, ranged from 1.56 to 2.04 compared with 1.85 in the main specification, and had a confidence interval that excluded zero. The one exception was the analysis that separated any exposure from intensity among exposed participants, in which both components were positive but neither could be distinguished from zero on its own (any exposure: 0.95, 95% CI [−0.32, 2.22]; intensity: 1.24, 95% CI [−0.24, 2.72]). The restricted cubic spline provided no evidence of nonlinearity (*p* = .335). The fractional logit model, which respects the bounds of the PHQ-4, gave an average marginal effect of 1.71 points (95% CI [0.90, 2.53]), and the restricted wild bootstrap gave *p* = .001 with a 95% confidence interval of [0.75, 3.05]. Omitting industry from the covariates changed the estimate little (1.83, 95% CI [0.71, 2.95]), and the estimate from multiple imputation (2.04, 95% CI [0.99, 3.08], *n* = 300) did not differ materially from the complete case estimate.
+Table 8 reports the sensitivity analyses. In every analysis that retained the stigma index as a single term, the coefficient was positive, ranged from 1.56 to 2.04 compared with 1.85 in the main specification, and had a confidence interval that excluded zero. The one exception was the analysis that separated any exposure from intensity among exposed participants, in which both components were positive but neither could be distinguished from zero on its own (any exposure: 0.95, 95% CI [−0.32, 2.22]; intensity: 1.24, 95% CI [−0.24, 2.72]). The restricted cubic spline provided no evidence of nonlinearity (*p* = .335). The fractional logit model (1.71, 95% CI [0.90, 2.53]) and the model without industry (1.83, 95% CI [0.71, 2.95]) gave estimates close to the main estimate, and the restricted wild bootstrap gave a 95% confidence interval of [0.75, 3.05]. The estimate from multiple imputation (2.04, 95% CI [0.99, 3.08], *n* = 300) did not differ materially from the complete case estimate.
 
 **Table 8** *Sensitivity analyses for the association between the stigma index and PHQ-4 scores*
 
-| Analysis | *n* | η | 95% CI | *p* |
+| Analysis | *n* | η^a^ | 95% CI | *p* |
 |---|---|---|---|---|
 | Main specification | 235 | 1.85 | [0.71, 2.99] | .002 |
 | 1. Adding job characteristics (Xᴶ) | 206 | 1.95 | [0.52, 3.37] | .008 |
@@ -318,16 +352,22 @@ Table 8 reports the sensitivity analyses. In every analysis that retained the st
 | 3a. Any exposure (indicator) | 235 | 0.95 | [−0.32, 2.22] | .141 |
 | 3b. Intensity among exposed, same model | 235 | 1.24 | [−0.24, 2.72] | .099 |
 | 3c. Restricted cubic spline, test of nonlinearity | 235 | | | .335 |
-| 4. Fractional logit, AME × 12 | 235 | 1.71 | [0.90, 2.53] | < .001 |
-| 5. Multiple imputation (*m* = 20) | 300 | 2.04 | [0.99, 3.08] | < .001 |
+| 4. Fractional logit, AME × 12^b^ | 235 | 1.71 | [0.90, 2.53] | < .001 |
+| 5. Multiple imputation (*m* = 20)^c^ | 300 | 2.04 | [0.99, 3.08] | < .001 |
 | 6. Excluding flagged responses | 223 | 1.89 | [0.70, 3.07] | .002 |
 | 7. Excluding Cook's distance > 4/*n* | 216 | 1.56 | [0.66, 2.46] | < .001 |
-| 8. Restricted wild bootstrap (Webb, 9,999) | 235 | 1.85 | [0.75, 3.05] | .001 |
+| 8. Restricted wild bootstrap (Webb, 9,999)^d^ | 235 | 1.85 | [0.75, 3.05] | .001 |
 | 9. Covariates without industry | 235 | 1.83 | [0.71, 2.95] | .002 |
 
-*Note.* All models adjust for pre-exposure characteristics and use HC3 standard errors unless stated otherwise. AME denotes the average marginal effect. Analysis 5 combines estimates with Rubin's rules, and analyses 4 and 8 report *z*-based and bootstrap intervals, respectively.
+^a^ All models adjust for pre-exposure characteristics and use HC3 standard errors unless stated otherwise.
 
-The diagnostics of the main model (Table S2) indicated heteroskedasticity (Breusch-Pagan χ²(1) = 11.94, *p* < .001), which the HC3 standard errors address, and no clear misspecification (RESET *F*(3, 206) = 2.34, *p* = .075). Collinearity was low, as all values of GVIF^1/(2df) were 1.24 or lower except for sex assigned at birth (1.72), which overlaps with sexual orientation group.
+^b^ AME denotes the average marginal effect, and the confidence interval is *z*-based.
+
+^c^ Estimates were combined with Rubin's rules.
+
+^d^ The confidence interval and *p* value are from the bootstrap.
+
+The diagnostics of the main model (Table S2) indicated heteroskedasticity (Breusch-Pagan χ²(1) = 11.94, *p* < .001), which the HC3 standard errors address, and no clear misspecification (RESET *F*(3, 206) = 2.34, *p* = .075). Collinearity was low, as all generalized variance inflation factors (Fox & Monette, 1992), expressed as GVIF^1/(2df)^, were 1.24 or lower except for sex assigned at birth (1.72), which overlaps with sexual orientation group.
 
 All 32 specifications of the specification curve produced positive estimates (Figure 2; Table S5). Expressed per standard deviation of the respective index, the estimates ranged from 0.81 to 1.23 PHQ-4 points, compared with 0.86 in the main specification, and the 95% confidence interval excluded zero in 28 specifications. Each of the four exceptions combined two choices, namely restricting the index to participants who answered all eight situations and adding job characteristics, which together reduced the sample to between 85 and 96 participants. No other choice changed the inferential conclusion, and the index based on situations 1 to 7 gave estimates close to those of the main index.
 
@@ -385,27 +425,35 @@ Fourth, the measures have limitations, because the stigma situations have not be
 
 Fifth, the covariates did not capture minority stress outside work, such as rejection by family. Relationship status may partly reflect symptoms, and region of work and industry may reflect moves to places or sectors that are perceived as more accepting, although omitting industry, or relationship status and region, changed the estimate little. The models adjusted for eight groups of covariates in a sample of 235 participants, which required sparse categories to be merged, and the sensitivity analysis indicates how strong an omitted confounder would need to be, but it cannot show that none exists. Finally, the group of transgender and nonbinary participants was too small to be analyzed separately, and the barriers related to gender identity that these workers face may differ in kind from the stigma that cisgender LGBT workers encounter. Replication in a new and larger sample, with targeted recruitment of transgender and nonbinary workers, would provide a stronger test of the associations reported here.
 
-### Conclusions
+## Conclusions
 
 Overall, the current study documents that more than half of the LGBT workers in this Vietnamese sample experienced stigma at work during the previous 12 months, most often in the form of unwanted personal questions and offensive jokes. Workers who encountered stigma more often reported more symptoms of anxiety and depression, and this association remained similar across a wide range of analytic choices. In exploratory analyses, the association was clear for interpersonal stigma, whereas the results for career-related and gender expression stigma were inconclusive. A gradient of this kind within the group is predicted by minority stress theory and not by an account that treats sexual or gender minority identity as the source of distress. Although the cross-sectional design leaves the direction of the association open, the findings direct attention away from LGBT identity and toward the treatment of LGBT workers, including the everyday interpersonal behavior that current Vietnamese labor law does not address.
 
 ---
 
-**Acknowledgements** We thank the participants and the community organizations that circulated the questionnaire. [Authors: add the project supervisor and the experts consulted on the questionnaire. Add the sentence acknowledging support from the Banking Academy of Vietnam, worded as agreed with the Banking Research Institute; do not cite a grant number unless one has been issued.]
+## Declarations
 
-**Author Contributions** [Authors: complete using the CRediT taxonomy, for example conceptualization, methodology, formal analysis, writing of the original draft, review and editing, and supervision.]
+**Funding** Removed for masked review. The funding statement is provided on the separate title page.
 
-**Funding** [Authors: state the support from the Banking Academy of Vietnam in the wording agreed with the Banking Research Institute, consistent with the Acknowledgements.]
+**Conflicts of Interest/Competing Interests** The authors have no relevant financial or non-financial interests to disclose.
 
-**Data Availability** The data contain sensitive personal data on sexual orientation, gender identity, and health under Vietnam's Law on Personal Data Protection (Law No. 91/2025/QH15) and Decree No. 356/2025/ND-CP, and they cannot be shared publicly. The analysis code and aggregate results, with cells of fewer than 10 participants suppressed, are available from the corresponding author on reasonable request.
+**Availability of Data and Material** The data contain sensitive personal data on sexual orientation, gender identity, and health under Vietnam's Law on Personal Data Protection (Law No. 91/2025/QH15) and Decree No. 356/2025/ND-CP, and they cannot be shared publicly. Aggregate results, with cells of fewer than 10 participants suppressed, are available from the corresponding author on reasonable request.
 
-### Declarations
+**Code Availability** All analyses were conducted in Stata 17 and replicated independently in Python. The analysis code is available from the corresponding author on reasonable request.
 
-**Ethics Approval** [Authors: name of the ethics committee, approval number, and date.]
+**Authors' Contributions** Removed for masked review. The statement of contributions is provided on the separate title page.
 
-**Consent to Participate** Participants read an information page that described the study, warned of sensitive questions, and explained their right to skip any question or stop at any time, and they indicated consent by continuing to the questionnaire. No identifying information was collected.
+## Compliance with Ethical Standards
 
-**Competing Interests** The authors declare no competing interests.
+**Disclosure of Potential Conflicts of Interest** The authors declare that they have no conflict of interest.
+
+**Research Involving Human Participants** [Authors: insert the statement of ethics approval or exemption, with the reference number and date, and a statement on the Declaration of Helsinki. In this masked manuscript, the name of the committee should read "masked for review".]
+
+**Informed Consent** Before answering, participants read an information page that described the study, warned that the questionnaire contained sensitive questions, and explained that they could skip any question or stop at any time. Participants gave informed consent by continuing to the questionnaire, and no identifying information was collected.
+
+## Acknowledgments
+
+We thank the participants and the community organizations that circulated the questionnaire. Further acknowledgments have been removed for masked review.
 
 ---
 
@@ -539,11 +587,17 @@ World Health Organization. (2019). *International statistical classification of 
 
 ## Supplementary Material
 
+References cited in this supplement are listed in the main article.
+
 ### Supplementary Methods
 
 **S1. Merging sparse covariate categories.** In each estimation sample, a covariate category with fewer than five participants was merged before estimation. For ordered variables (age group, education, work experience, organization size, and working hours), the category was merged with the adjacent category nearer the median. For nominal variables, it was merged into a pooled "other" category. A sparse "prefer not to answer" category was merged into the pooled category if one existed and otherwise into the largest category. The rule uses counts only. In the main sample, the "prefer not to answer" category of age group was merged into the 25–34 category, and the corresponding category of sexual orientation group was merged into the group of other or questioning orientations. Among the job characteristics, sparse categories of work experience, position, employment relationship, organization type, social insurance coverage, and working hours were merged.
 
-**S2. Approaches not used.** Instrumental variables were not used, because no available variable plausibly affects stigma without also affecting symptoms directly. Propensity score matching rests on the same assumption of selection on observed variables as regression adjustment and is poorly suited to a continuous exposure. A Heckman selection model requires data on nonparticipants, which do not exist for this survey. Harman's single factor test cannot detect common method variance (Podsakoff et al., 2003), and the coefficient stability approach of Oster (2019) rests on an assumption of proportional selection that is difficult to justify for a self-reported psychological outcome.
+**S2. Sensitivity analyses and specification curve.** The sensitivity analyses in Table 8 (1) added job characteristics; (2) treated "prefer not to answer" as missing; (3) separated any exposure from intensity among exposed participants and fitted a restricted cubic spline with knots at the 10th, 50th, and 90th percentiles of *S* among exposed participants; (4) estimated a fractional logit model for PHQ-4 scores divided by 12 and reported the average marginal effect multiplied by 12 (Papke & Wooldridge, 1996); (5) used multiple imputation by chained equations with 20 imputed datasets among the 300 LGBT participants, imputing PHQ-4 scores, *S*, and missing covariates (White et al., 2011); (6) excluded flagged responses; (7) excluded observations with a Cook's distance above 4/*n*; (8) used a restricted wild bootstrap with Webb weights and 9,999 replications (Davidson & Flachaire, 2008; Roodman et al., 2019); and (9) omitted industry from the covariates. The specification curve (Simonsohn et al., 2020; Table S5) combined four constructions of the stigma index (the eight-situation mean, the mean of situations 1 to 7 with at least four answered, the number of situations experienced, and the eight-situation mean among participants who answered all eight situations), two sets of covariates (Xᴰ alone, or Xᴰ together with Xᴶ), two definitions of the LGBT group (self-identification alone, or self-identification together with a non-heterosexual orientation or a minority gender identity), and the inclusion or exclusion of transgender and nonbinary participants.
+
+**S3. Unmeasured confounding and diagnostics.** The omitted variable bias framework of Cinelli and Hazlett (2020) reports the partial *R*² of *S* with PHQ-4 scores and the robustness values at which an omitted confounder would reduce η to zero or make its 95% confidence interval include zero (Table S3). These values were compared with the explanatory power of sex assigned at birth and of education, each entered as a group of dummy variables, at one, two, and three times their observed strength. The diagnostics of the main model comprised the Breusch-Pagan test, generalized variance inflation factors (Fox & Monette, 1992), Ramsey's RESET test, Cook's distance, and leverage (Table S2). They were descriptive and did not change the estimator, because HC3 standard errors had been chosen before estimation.
+
+**S4. Approaches not used.** Instrumental variables were not used, because no available variable plausibly affects stigma without also affecting symptoms directly. Propensity score matching rests on the same assumption of selection on observed variables as regression adjustment and is poorly suited to a continuous exposure. A Heckman selection model requires data on nonparticipants, which do not exist for this survey. Harman's single factor test cannot detect common method variance (Podsakoff et al., 2003), and the coefficient stability approach of Oster (2019) rests on an assumption of proportional selection that is difficult to justify for a self-reported psychological outcome.
 
 ### Supplementary Tables
 
@@ -584,7 +638,7 @@ World Health Organization. (2019). *International statistical classification of 
 |---|---|
 | Breusch-Pagan test (fitted values) | χ²(1) = 11.94, *p* < .001 |
 | Ramsey RESET test | *F*(3, 206) = 2.34, *p* = .075 |
-| GVIF^(1/(2df)): stigma index; age; education; sex at birth; gender minority status; sexual orientation group; relationship status; region; industry | 1.064; 1.081; 1.066; 1.724; 1.112; 1.239; 1.066; 1.057; 1.042 |
+| GVIF^1/(2df)^: stigma index; age; education; sex at birth; gender minority status; sexual orientation group; relationship status; region; industry | 1.064; 1.081; 1.066; 1.724; 1.112; 1.239; 1.066; 1.057; 1.042 |
 | Observations with Cook's distance > 4/*n* | 19 |
 | Observations with leverage > 2*k*/*n* | 15 |
 | Largest leverage | 0.29 |
