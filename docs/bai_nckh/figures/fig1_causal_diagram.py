@@ -4,6 +4,7 @@ import os
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
+plt.rcParams['font.family'] = 'Liberation Serif'
 from matplotlib.patches import FancyBboxPatch, FancyArrowPatch
 
 GREY, BLUE, RED = '#4d4d4d', '#2b6cb0', '#a8323a'
@@ -28,9 +29,9 @@ def arrow(p, q, color=GREY, rad=0.0, dashed=False, lw=1.6):
                                  shrinkA=0, shrinkB=0))
 
 
-box(50, 49, 62, 8, 'Pre-exposure characteristics ($X^D$)\nage, sex assigned at birth, education, relationship status, region of work')
+box(50, 49, 80, 9, 'Pre-exposure characteristics ($X^D$)\nage group, education, sex assigned at birth, gender minority status, sexual orientation group,\nrelationship status, region of work, industry')
 box(15, 28, 25, 8, 'Workplace stigma ($S$)\nself-reported, previous 12 months')
-box(50, 28, 28, 8, 'Job characteristics ($X^J$)\nindustry, position, organization size,\nsocial insurance, working hours')
+box(50, 28, 28, 9, 'Job characteristics ($X^J$)\nexperience, position, employment type,\norganization type and size,\nsocial insurance, working hours')
 box(85, 28, 23, 8, 'PHQ-4\nself-reported, previous 2 weeks', edge=BLUE, face='#eaf2fb')
 box(50, 6, 40, 7, '$U$: unobserved factors\nstress outside work, personality', dashed=True)
 
