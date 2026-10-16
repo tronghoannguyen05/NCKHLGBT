@@ -48,6 +48,8 @@ Bảng đầy đủ ánh xạ sheet với bảng của bài nằm trong `README.
 
 - 16/10/2026: định vị lại theo giảng viên hướng dẫn: bài xoay quanh H1 và các hình thức kỳ thị. Bỏ H2 và H3 khỏi mã (phương án B của tác giả); thêm Bảng 4 (các hình thức kỳ thị đã gặp, số tình huống đã gặp), Bảng 5 (PHQ-4 theo từng hình thức, mô tả) và bốn mức PHQ-4 ở Bảng 3; bảng H1, RQ1 nay là Bảng 6, Bảng 7. Ghi chép ở `docs/deviations.md`. Bản Python: 59/59 dòng tất định khớp lần chạy 13/10 (lần 2). **Cần chạy lại một lần.** Số dự kiến ở mục dưới. Kiểm tra bằng `tests/python_replication/compare.py` (so cả các bảng mô tả mới).
 
+- 16/10/2026 (chạy lúc 20:58): tác giả chạy bản trên, không lỗi. Luồng mẫu khớp cả 8 bước; 59/59 dòng tất định khớp bản Python (sai khác lớn nhất 1·10⁻⁶); bốn bảng mô tả mới (`Table3_Severity`, `Table4`, `Table4_Number`, `Table5`) khớp từng ô. So với lần chạy 13/10 (lần 2), 60/61 dòng chung giống hệt; chỉ gán giá trị đa lần đổi từ 2,02 thành 2,04 [0,99; 3,08], đúng dự kiến vì mô hình gán bỏ C và Q. Kết quả tổng hợp lưu ở `output/tables/stata/` (sensemakr không đổi).
+
 ## Số dự kiến cho lần chạy 16/10/2026
 
 | Sheet | Dòng | Số dự kiến |
