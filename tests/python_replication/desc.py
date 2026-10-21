@@ -1,6 +1,6 @@
 # Descriptive statistics of the article (section 4 of phan_tich.do). Aggregate
 # figures only; cells with fewer than 10 respondents are suppressed.
-# Run: LGBT_DATA=/path/to/export.xlsx python3 tests/python_replication/desc.py
+# Run: python3 tests/python_replication/desc.py (export in data/raw/, or LGBT_DATA set)
 import os
 import warnings
 warnings.filterwarnings('ignore')

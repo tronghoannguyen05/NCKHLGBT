@@ -1,6 +1,6 @@
 # Replication package
 
-**Pathology or Prejudice? A Within-Group Test of Workplace Stigma and Anxiety and Depressive Symptoms among LGBT Workers in Vietnam**
+**Pathology or Prejudice? Workplace Stigma and Mental Health among LGBT Workers in Vietnam**
 
 This repository contains the code that produces every table and figure of the article. Hướng dẫn chạy bằng tiếng Việt: `docs/huong_dan_chay_stata.md`.
 
@@ -16,14 +16,17 @@ The analysis uses a cross-sectional survey of workers in Vietnam (850 responses)
 
 ## Instructions
 
-1. Open `phan_tich.do` and set two paths in Section 0: `DATA` (the survey export, .xlsx, as downloaded and unedited) and `OUT` (an output folder).
-2. Run the whole file. A full run takes a few minutes; most of the time is spent on the wild bootstrap and the multiple imputation.
+1. Put `phan_tich.do` and the survey export (.xlsx, as downloaded and unedited, any file name) in one project folder, with the export either in `data/raw/` or in the folder itself.
+2. Open Stata by double-clicking `phan_tich.do`, or set the working directory to the project folder (File > Change Working Directory).
+3. Run the whole file. A full run takes a few minutes; most of the time is spent on the wild bootstrap and the multiple imputation.
+
+No path needs to be edited. The file searches the working directory and up to three folders above it, in each folder first `data/raw/`, then `data/`, then the folder itself, and accepts the first workbook that contains the variables of the survey export, so other workbooks are ignored. If no export is found in an interactive session, a dialog asks for the file. Results are written to `output/results/` in the project folder. To use other locations, set `DATA` and `OUT` by hand in Section 0 (two commented example lines).
 
 After import the file keeps only the variables used in the analysis. It checks the sample flow against the counts reported in Table 1 and stops if they differ.
 
 ## Output
 
-All output is written to `OUT`.
+All output is written to `output/results/` in the project folder (or to `OUT` if set by hand).
 
 | File or sheet | Article |
 |---|---|
@@ -49,7 +52,7 @@ All output is written to `OUT`.
 
 | Section | Content |
 |---|---|
-| 0 | Paths and parameters |
+| 0 | Settings and location of the data |
 | 1 | Import and coding of the survey export |
 | 2 | Indices, sample indicators, response-quality flags |
 | 3 | Sample flow |
@@ -67,5 +70,5 @@ All output is written to `OUT`.
 ## Other material
 
 - `docs/codebook.md`: variables and coding rules.
-- `tests/python_replication/`: an independent Python replication used to check the Stata results. It reproduces every estimate that does not depend on random draws. Run `prep.py`, `desc.py` and `models.py` with the environment variable `LGBT_DATA` set to the survey export, then `compare.py` with `STATA_RESULTS` set to `results.xlsx`.
+- `tests/python_replication/`: an independent Python replication used to check the Stata results. It reproduces every estimate that does not depend on random draws. Run `desc.py` and `models.py`; they find the survey export in the same way as `phan_tich.do` (or use the environment variable `LGBT_DATA` if it is set). Then run `compare.py` with `STATA_RESULTS` set to `results.xlsx`.
 - `tests/check_no_data.sh`: refuses commits that contain individual-level data.

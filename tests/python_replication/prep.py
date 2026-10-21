@@ -1,11 +1,37 @@
 # Replicates sections 1-5 of phan_tich.do (import, coding, samples, merging of
 # sparse categories). Prints aggregate figures only.
-# Path to the survey export: environment variable LGBT_DATA.
+# The survey export is found as in phan_tich.do: data/raw/, data/ or the
+# repository root, first workbook that contains the variables of the export.
+# The environment variable LGBT_DATA, if set, takes precedence.
 import os
 import numpy as np
 import pandas as pd
 
-RAW = os.environ.get('LGBT_DATA', '')
+ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+REQUIRED = ['s1_age18', 's2_has_job', 'c17_lgbt_self_id', 'c19_1', 'c21_1']
+
+
+def find_data(root=ROOT):
+    if os.environ.get('LGBT_DATA'):
+        return os.environ['LGBT_DATA']
+    for sub in ('data/raw', 'data', '.'):
+        folder = os.path.join(root, sub)
+        if not os.path.isdir(folder):
+            continue
+        for name in sorted(os.listdir(folder)):
+            if not name.lower().endswith('.xlsx') or name.startswith('~'):
+                continue
+            path = os.path.join(folder, name)
+            try:
+                cols = pd.read_excel(path, nrows=0).columns
+            except Exception:
+                continue
+            if all(c in cols for c in REQUIRED):
+                return path
+    return ''
+
+
+RAW = find_data()
 
 XD = ['agegrp', 'educ', 'sex_birth', 'gmin', 'orientg', 'relstat', 'region', 'industry']
 XJ = ['exper', 'position', 'emptype', 'orgtype', 'orgsize', 'socins', 'hours']
@@ -110,7 +136,7 @@ def collapse_sparse(d, v, touse, kind, log, special=(9, 97), pooled=98, mn=MIN_L
 
 def load():
     if not os.path.isfile(RAW):
-        raise SystemExit('Set the environment variable LGBT_DATA to the survey export (.xlsx)')
+        raise SystemExit('Survey export not found: put it in data/raw/ or set LGBT_DATA to its path')
     r = pd.read_excel(RAW, dtype=str, keep_default_na=False)
     r = r.apply(lambda c: c.str.strip())
     d = pd.DataFrame(index=r.index)

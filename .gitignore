@@ -19,6 +19,7 @@ data/**
 
 # --- Generated output ---
 output/logs/**
+output/results/**
 !output/**/.gitkeep
 
 # --- Temporary files ---

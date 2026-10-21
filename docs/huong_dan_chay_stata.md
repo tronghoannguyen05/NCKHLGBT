@@ -4,13 +4,18 @@ Toàn bộ phân tích nằm trong một tệp: **`phan_tich.do`** ở thư mụ
 
 ## Cách chạy
 
-1. Mở `phan_tich.do` trong Stata 17 trở lên.
-2. Đặt **bản xuất gốc từ Kobo** (tệp giữ nguyên mã phiếu, chưa chỉnh sửa) ở đường dẫn `DATA`, hoặc sửa `DATA` cho đúng tên tệp. Kiểm tra hai dòng đường dẫn ở mục 0:
+Không cần sửa đường dẫn nào. Mã tự tìm tệp dữ liệu, nên chép sang máy khác vẫn chạy được.
+
+1. Đặt `phan_tich.do` và **bản xuất gốc từ Kobo** (tệp giữ nguyên mã phiếu, chưa chỉnh sửa, tên tệp gì cũng được) vào cùng một thư mục dự án. Tệp dữ liệu có thể nằm ngay trong thư mục đó hoặc trong `data/raw/`. Ví dụ:
    ```
-   global DATA "D:/NCKH chủ đề LGBT/Kỳ_thị_tại_nơi_làm_việc_và_bất_lợi_thu_nhập_-_Khảo_sát_người_lao_động_tại_Việt_Nam_n850.xlsx"
-   global OUT  "D:/NCKH chủ đề LGBT/ket_qua"
+   D:/NCKH chủ đề LGBT/
+       phan_tich.do
+       Kỳ_thị_..._n850.xlsx        (hoặc data/raw/Kỳ_thị_..._n850.xlsx)
    ```
+2. Mở Stata bằng cách **bấm đúp vào `phan_tich.do`**. Stata sẽ lấy thư mục chứa tệp làm thư mục làm việc. Nếu Stata đang mở sẵn, chọn File > Change Working Directory và trỏ tới thư mục dự án.
 3. Bấm **Do** (Ctrl+D).
+
+Cách mã tìm dữ liệu: xét thư mục làm việc và tối đa ba thư mục phía trên; ở mỗi thư mục tìm lần lượt trong `data/raw/`, `data/` và chính thư mục đó. Mã chỉ nhận tệp .xlsx có đúng các biến của bản xuất khảo sát, nên các tệp Excel khác trong thư mục bị bỏ qua. Nếu không tìm thấy, Stata mở hộp thoại để chọn tệp. Muốn tự đặt đường dẫn, bỏ dấu `*` ở hai dòng ví dụ `global DATA` và `global OUT` trong mục 0.
 
 Lần chạy đầu cần Internet để cài `sensemakr` và `boottest`. Nếu đang mở `results.xlsx` trong Excel, hãy đóng lại trước khi chạy.
 
@@ -18,7 +23,7 @@ Mặc định `RUN_MODELS 1`: chạy toàn bộ. Đặt `global RUN_MODELS 0` n�
 
 ## Kết quả
 
-Trong thư mục `OUT`:
+Trong thư mục `output/results/` bên trong thư mục dự án (Stata in đường dẫn đầy đủ ở đầu `analysis.log`):
 - `results.xlsx`: mỗi bảng của bài một sheet (`Table1` đến `Table8`, kèm `Table3_Severity` và `Table4_Number`; `TableS1`, `TableS2`, `TableS4` đến `TableS6`). Sheet `AllResults` chứa mọi hệ số, kèm p hiệu chỉnh BH, cột `paper_table` cho biết hệ số thuộc bảng nào.
 - `figure2.png`: Hình 2 (đường cong đặc tả).
 - `analysis.log`: nhật ký đầy đủ. Bảng S3 (sensemakr) được in ở mục "Table S3".
@@ -49,6 +54,8 @@ Bảng đầy đủ ánh xạ sheet với bảng của bài nằm trong `README.
 - 16/10/2026: định vị lại theo giảng viên hướng dẫn: bài xoay quanh H1 và các hình thức kỳ thị. Bỏ H2 và H3 khỏi mã (phương án B của tác giả); thêm Bảng 4 (các hình thức kỳ thị đã gặp, số tình huống đã gặp), Bảng 5 (PHQ-4 theo từng hình thức, mô tả) và bốn mức PHQ-4 ở Bảng 3; bảng H1, RQ1 nay là Bảng 6, Bảng 7. Ghi chép ở `docs/deviations.md`. Bản Python: 59/59 dòng tất định khớp lần chạy 13/10 (lần 2). **Cần chạy lại một lần.** Số dự kiến ở mục dưới. Kiểm tra bằng `tests/python_replication/compare.py` (so cả các bảng mô tả mới).
 
 - 16/10/2026 (chạy lúc 20:58): tác giả chạy bản trên, không lỗi. Luồng mẫu khớp cả 8 bước; 59/59 dòng tất định khớp bản Python (sai khác lớn nhất 1·10⁻⁶); bốn bảng mô tả mới (`Table3_Severity`, `Table4`, `Table4_Number`, `Table5`) khớp từng ô. So với lần chạy 13/10 (lần 2), 60/61 dòng chung giống hệt; chỉ gán giá trị đa lần đổi từ 2,02 thành 2,04 [0,99; 3,08], đúng dự kiến vì mô hình gán bỏ C và Q. Kết quả tổng hợp lưu ở `output/tables/stata/` (sensemakr không đổi).
+
+- 21/10/2026: mã tự tìm thư mục dữ liệu, không còn đường dẫn ổ D trong mục 0; kết quả ghi vào `output/results/`. Đổi tên các biến phụ của phân tích hậu kiểm (`exper_s7`, `disclose_s7` thành `exper_ph`, `disclose_ph`), nên sheet `MergedCategories` hiện tên mới. Phân tích không đổi. **Cần chạy lại một lần** để xác nhận: mọi con số phải giống hệt lần chạy 16/10/2026 (20:58).
 
 ## Số dự kiến cho lần chạy 16/10/2026
 

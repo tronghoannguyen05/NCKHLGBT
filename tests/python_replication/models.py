@@ -1,5 +1,5 @@
 # Replicates sections 5-13 of phan_tich.do. Writes aggregate results only.
-# Run: LGBT_DATA=/path/to/export.xlsx python3 tests/python_replication/models.py
+# Run: python3 tests/python_replication/models.py (export in data/raw/, or LGBT_DATA set)
 import warnings
 warnings.filterwarnings('ignore')
 import numpy as np

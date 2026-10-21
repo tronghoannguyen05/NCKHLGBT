@@ -1,18 +1,25 @@
 * =============================================================================
-* Pathology or Prejudice? A Within-Group Test of Workplace Stigma and Anxiety
-* and Depressive Symptoms among LGBT Workers in Vietnam
+* Pathology or Prejudice? Workplace Stigma and Mental Health among LGBT Workers
+* in Vietnam
 *
 * Replication code for all tables and figures of the article.
 *
 * Requirements  Stata 17 or later. User-written packages sensemakr and boottest
 *               (installed from SSC on the first run if missing).
-* Input         Survey export (.xlsx) as downloaded from the survey platform.
-*               Set its path in DATA below. The data contain sensitive personal
-*               information and are not public. Only the variables used in the
-*               analysis are kept after import.
-* Output (OUT)  results.xlsx   one sheet per table of the article
+* Input         Survey export (.xlsx), unedited. The data contain sensitive
+*               personal information and are not public. Only the variables
+*               used in the analysis are kept after import.
+* Output        results.xlsx   one sheet per table of the article
 *               figure2.png    specification curve (Figure 2)
 *               analysis.log   full log; Table S3 (sensemakr) is printed here
+*
+* How to run    1. Put this file and the survey export in one project folder,
+*                  with the export either in the folder itself or in data/raw/.
+*               2. Open Stata by double-clicking this file, or set the working
+*                  directory to the project folder (File > Change Working
+*                  Directory), and run the whole file.
+*               No path needs to be edited. Results are written to
+*               output/results/ in the project folder.
 * =============================================================================
 
 version 17
@@ -24,8 +31,14 @@ set linesize 120
 * -----------------------------------------------------------------------------
 * 0. Settings
 * -----------------------------------------------------------------------------
-global DATA "D:/NCKH chủ đề LGBT/Kỳ_thị_tại_nơi_làm_việc_và_bất_lợi_thu_nhập_-_Khảo_sát_người_lao_động_tại_Việt_Nam_n850.xlsx"
-global OUT  "D:/NCKH chủ đề LGBT/ket_qua"
+* Locations of the input and output. Left empty, they are found automatically
+* (see "Locating the data" below). To set them by hand, remove the asterisks
+* from the two example lines and edit the paths.
+global ROOT ""
+global DATA ""
+global OUT  ""
+* global DATA "D:/project/data/raw/survey_export.xlsx"
+* global OUT  "D:/project/output/results"
 
 * 1 = full analysis; 0 = data preparation, sample flow and descriptive tables
 global RUN_MODELS 1
@@ -52,12 +65,86 @@ global RQ1     "S_int S_car S_gen"
 global CONC    "conc1 conc2 conc3 conc4"
 global DEI     "dei1 dei2 dei3 dei4"
 
-capture mkdir "$OUT"
-capture log close _all
-log using "$OUT/analysis.log", replace text name(main)
-display "Stata " c(stata_version) ", " c(current_date) " " c(current_time)
+* -----------------------------------------------------------------------------
+* Locating the data
+* -----------------------------------------------------------------------------
+* The working directory and up to three folders above it are searched, in each
+* folder first data/raw/, then data/, then the folder itself. A workbook is
+* accepted only if it contains the variables of the survey export, so other
+* .xlsx files are ignored. The folder in which the search succeeds is the
+* project folder (ROOT). If nothing is found in an interactive session, a
+* dialog asks for the file.
+if `"$DATA"' == "" {
+    local dir `"`c(pwd)'"'
+    local dir : subinstr local dir "\" "/", all
+    local found 0
+    forvalues up = 0/3 {
+        foreach sub in "data/raw" "data" "." {
+            local folder = cond("`sub'" == ".", `"`dir'"', `"`dir'/`sub'"')
+            local files
+            capture local files : dir `"`folder'"' files "*.xlsx", respectcase
+            foreach f of local files {
+                if substr(`"`f'"', 1, 1) == "~" continue
+                capture import excel using `"`folder'/`f'"', firstrow allstring clear
+                if _rc continue
+                capture confirm variable s1_age18 s2_has_job c17_lgbt_self_id c19_1 c21_1
+                if !_rc {
+                    global DATA `"`folder'/`f'"'
+                    global ROOT `"`dir'"'
+                    local found 1
+                    continue, break
+                }
+            }
+            if `found' continue, break
+        }
+        if `found' continue, break
+        local cut = strrpos(`"`dir'"', "/")
+        if `cut' <= 1 continue, break
+        local dir = substr(`"`dir'"', 1, `cut' - 1)
+    }
+    clear
+}
+if `"$DATA"' == "" & c(mode) != "batch" {
+    capture window fopen DATA "Select the survey export (.xlsx)" "Excel workbook (*.xlsx)|*.xlsx" xlsx
+}
+if `"$DATA"' == "" {
+    display as error "Survey export not found. Put the .xlsx export in the project folder or in its"
+    display as error "data/raw/ folder, open Stata by double-clicking phan_tich.do (or set the working"
+    display as error "directory to the project folder), and run the file again."
+    exit 601
+}
+global DATA : subinstr global DATA "\" "/", all
+confirm file `"$DATA"'
+if `"$ROOT"' == "" {
+    * Data located by hand or in the dialog: the project folder is the folder
+    * of the data file, or the folder above data/raw/ or data/
+    local cut = strrpos(`"$DATA"', "/")
+    if `cut' > 0 local dir = substr(`"$DATA"', 1, `cut' - 1)
+    else local dir `"`c(pwd)'"'
+    local dir : subinstr local dir "\" "/", all
+    if substr(`"`dir'"', -9, .) == "/data/raw" local dir = substr(`"`dir'"', 1, strlen(`"`dir'"') - 9)
+    else if substr(`"`dir'"', -5, .) == "/data" local dir = substr(`"`dir'"', 1, strlen(`"`dir'"') - 5)
+    global ROOT `"`dir'"'
+}
+if `"$OUT"' == "" global OUT `"$ROOT/output/results"'
+global OUT : subinstr global OUT "\" "/", all
+local cut = strrpos(`"$OUT"', "/")
+if `cut' > 1 {
+    local parent = substr(`"$OUT"', 1, `cut' - 1)
+    capture mkdir `"`parent'"'
+}
+capture mkdir `"$OUT"'
+mata: st_local("out_ok", strofreal(direxists(st_global("OUT"))))
+if !`out_ok' {
+    display as error `"Cannot create the output folder $OUT"'
+    exit 603
+}
 
-confirm file "$DATA"
+capture log close _all
+log using `"$OUT/analysis.log"', replace text name(main)
+display "Stata " c(stata_version) ", " c(current_date) " " c(current_time)
+display `"Data:   $DATA"'
+display `"Output: $OUT"'
 
 foreach p in sensemakr boottest {
     capture which `p'
@@ -65,8 +152,8 @@ foreach p in sensemakr boottest {
     capture noisily which `p'
 }
 
-capture erase "$OUT/results.xlsx"
-capture confirm file "$OUT/results.xlsx"
+capture erase `"$OUT/results.xlsx"'
+capture confirm file `"$OUT/results.xlsx"'
 if !_rc {
     display as error "Close results.xlsx in Excel and run again."
     exit 608
@@ -104,12 +191,12 @@ end
 capture program drop xl_out
 program define xl_out
     args sheet
-    capture confirm file "$OUT/results.xlsx"
+    capture confirm file `"$OUT/results.xlsx"'
     if _rc {
-        export excel using "$OUT/results.xlsx", sheet("`sheet'") firstrow(variables) replace
+        export excel using `"$OUT/results.xlsx"', sheet("`sheet'") firstrow(variables) replace
     }
     else {
-        export excel using "$OUT/results.xlsx", sheet("`sheet'") firstrow(variables) sheetreplace
+        export excel using `"$OUT/results.xlsx"', sheet("`sheet'") firstrow(variables) sheetreplace
     }
 end
 
@@ -413,7 +500,7 @@ end
 * -----------------------------------------------------------------------------
 * 1. Import and coding
 * -----------------------------------------------------------------------------
-import excel using "$DATA", firstrow allstring clear
+import excel using `"$DATA"', firstrow allstring clear
 foreach v of varlist _all {
     quietly replace `v' = strtrim(`v')
 }
@@ -864,8 +951,8 @@ tempfile lvfile
 postfile lv str24 variable double(old_code new_code) str8 n using "`lvfile'", replace
 
 * Copies for the post hoc sensitivity analyses (Table S6), merged in their own samples
-clonevar exper_s7 = exper
-clonevar disclose_s7 = disclose
+clonevar exper_ph = exper
+clonevar disclose_ph = disclose
 local ordered $ORDERED
 foreach v of global XD {
     local isord : list v in ordered
@@ -883,10 +970,10 @@ foreach v of global XJ {
     local kind = cond(`isord', "ordered", "nominal")
     collapse_sparse `v', touse(in_xj) min($MIN_LEVEL) kind(`kind') special(9 97) pooled(98)
 }
-gen byte s7_exper = in_xd_main & !missing(exper_s7)
-gen byte s7_disc  = in_xd_main & !missing(disclose_s7)
-collapse_sparse exper_s7,    touse(s7_exper) min($MIN_LEVEL) kind(ordered) special(9 97) pooled(98)
-collapse_sparse disclose_s7, touse(s7_disc)  min($MIN_LEVEL) kind(ordered) special(9 97) pooled(98)
+gen byte in_ph_exper = in_xd_main & !missing(exper_ph)
+gen byte in_ph_disc  = in_xd_main & !missing(disclose_ph)
+collapse_sparse exper_ph,    touse(in_ph_exper) min($MIN_LEVEL) kind(ordered) special(9 97) pooled(98)
+collapse_sparse disclose_ph, touse(in_ph_disc)  min($MIN_LEVEL) kind(ordered) special(9 97) pooled(98)
 postclose lv
 preserve
 use "`lvfile'", clear
@@ -927,7 +1014,7 @@ if $RUN_MODELS == 0 {
     use "`resfile'", clear
     xl_out "TableS1"
     restore
-    display as result "Data preparation and descriptive tables finished: $OUT/results.xlsx"
+    display as result `"Data preparation and descriptive tables finished: $OUT/results.xlsx"'
     log close main
     exit
 }
@@ -1217,10 +1304,10 @@ restore
 regress phq4 S if in_xd_main, vce(hc3)
 post_coef, part("PostHoc") outcome("phq4") spec("unadjusted") coef(S)
 
-regress phq4 S i.($XD) i.disclose_s7 if s7_disc, vce(hc3)
+regress phq4 S i.($XD) i.disclose_ph if in_ph_disc, vce(hc3)
 post_coef, part("PostHoc") outcome("phq4") spec("adding disclosure at work") coef(S)
 
-regress phq4 S i.($XD) i.exper_s7 if s7_exper, vce(hc3)
+regress phq4 S i.($XD) i.exper_ph if in_ph_exper, vce(hc3)
 post_coef, part("PostHoc") outcome("phq4") spec("adding work experience") coef(S)
 
 local rel_reg relstat region
@@ -1312,7 +1399,7 @@ twoway (rcap lb_sd ub_sd rank, lcolor(gs10)) ///
        title("PHQ-4 difference per SD of the stigma index (95% CI)", size(medsmall) position(11) span) ///
        legend(order(2 "Other specifications" 3 "Main specification") position(6) rows(1) region(lstyle(none))) ///
        graphregion(color(white)) xsize(10) ysize(7)
-graph export "$OUT/figure2.png", replace width(2400)
+graph export `"$OUT/figure2.png"', replace width(2400)
 drop y1-y7 choice1-choice4 rank main
 xl_out "TableS5"
 restore
@@ -1355,5 +1442,5 @@ foreach t in "Table 6" "Table 7" "Table 8" "Table S1" "Table S4" "Table S6" {
 }
 restore
 
-display as result "Finished: $OUT/results.xlsx, $OUT/figure2.png, $OUT/analysis.log"
+display as result `"Finished: $OUT/results.xlsx, $OUT/figure2.png, $OUT/analysis.log"'
 log close main
