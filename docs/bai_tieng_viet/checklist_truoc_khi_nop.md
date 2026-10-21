@@ -4,7 +4,7 @@ Tạp chí: *Tạp chí Nghiên cứu Con người, Gia đình và Giới* (p-IS
 
 ## Bắt buộc trước khi nộp
 
-- [ ] **Chạy `phan_tich_bai_tieng_viet.do` một lần trên máy tác giả**, rồi đối chiếu với bản Python: `STATA_RESULTS=.../ket_qua.xlsx python3 tests/python_replication_vi/compare_vi.py`. Nếu có dòng lệch, gửi `nhat_ky.log` để kiểm tra; số trong bài hiện lấy từ bản Python.
+- [x] **Chạy `phan_tich_bai_tieng_viet.do` trên máy tác giả** (21/10/2026, 21:41): không lỗi; 62/62 dòng kết quả và mọi bảng mô tả khớp bản Python. Số trong bài là số Stata (`output/tables/stata_vi/`).
 - [ ] **Trùng dữ liệu với bài SRSP.** Báo cho ban biên tập của cả hai tạp chí rằng hai bài dùng chung bộ dữ liệu, chung phần mô tả các hình thức kỳ thị (Bảng 3) và nhắc lại kết quả liên hệ tổng thể. Sau khi báo, xóa dòng "[Tác giả xác nhận sau khi đã thông báo.]" trong mục Tuyên bố. Theo thể lệ, không gửi một bài đồng thời cho nhiều tạp chí; hai bài phải có đóng góp khác nhau.
 - [ ] **Phê duyệt đạo đức** (mục 3.5): tên hội đồng, số và ngày quyết định.
 - [ ] **Thông tin tác giả** theo mục 9 của thể lệ: họ tên, học hàm, học vị, chức danh; địa chỉ nơi công tác, số điện thoại, email; phân ngành hoặc liên ngành theo Hội đồng Giáo sư nhà nước (bài đang gợi ý Xã hội học); bài phục vụ đề tài nào.

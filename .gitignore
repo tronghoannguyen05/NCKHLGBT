@@ -15,6 +15,7 @@ data/**
 !output/tables/python_replication/*.csv
 !output/tables/stata/*.csv
 !output/tables/python_replication_vi/*.csv
+!output/tables/stata_vi/*.csv
 # SYNTHETIC data (record IDs SYN...), checked by tests/check_no_data.sh
 !tests/synthetic_kobo.csv
 

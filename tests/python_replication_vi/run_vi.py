@@ -17,6 +17,12 @@ from models_helpers import R  # noqa: E402  (from tests/python_replication)
 from reg import lincom  # noqa: E402
 
 MIN_CELL = 10
+
+
+def pct(x, digits=1):
+    # half away from zero, as Stata's string(x, "%5.1f")
+    from decimal import Decimal, ROUND_HALF_UP
+    return str(Decimal(repr(x)).quantize(Decimal(1).scaleb(-digits), rounding=ROUND_HALF_UP))
 OUT = os.path.join(HERE, '..', '..', 'output', 'tables', 'python_replication_vi')
 os.makedirs(OUT, exist_ok=True)
 
@@ -35,7 +41,7 @@ def cell_str(k, tot, f):
         return f'<{MIN_CELL}' if k < MIN_CELL else 'không báo cáo'
     if tot == 0:
         return '0'
-    return f'{k} ({100 * k / tot:.1f})'
+    return f'{k} ({pct(100 * k / tot)})'
 
 
 def freq_table(d, v, touse, codes, labels, title):
@@ -53,7 +59,7 @@ def cell_fmt(k, tot, other):
         return f'<{MIN_CELL}', ''
     if 0 < other < MIN_CELL:
         return 'không báo cáo', ''
-    return str(k), f'{100 * k / tot:.1f}'
+    return str(k), pct(100 * k / tot)
 
 
 def save(rows, name, cols):
@@ -75,7 +81,8 @@ flow = [('Phiếu nhận được', len(d), 850), ('Có công việc chính tạ
         ('Mẫu chính: đủ tám nhóm biến kiểm soát', int(m.sum()), 235),
         ('Mẫu chính có chỉ số thực thi Q hợp lệ (mẫu H3)', int(d.in_h3.sum()), 223),
         ('Mẫu chính, làm việc trong một tổ chức', int((m & d.in_org).sum()), np.nan),
-        ('Mẫu DEI', int(dei.sum()), np.nan), ('Mẫu DEI toàn bộ', int(d.in_dei_all.sum()), np.nan)]
+        ('Mẫu DEI: thêm đủ năm câu chính sách, Q hợp lệ, loại hình và quy mô tổ chức', int(dei.sum()), np.nan),
+        ('Mẫu DEI toàn bộ (giữ cả tự doanh và freelancer)', int(d.in_dei_all.sum()), np.nan)]
 fl = save(flow, 'luong_mau', ['buoc', 'n', 'ky_vong'])
 assert all(r.n == r.ky_vong for r in fl.itertuples() if not pd.isna(r.ky_vong))
 k25 = int((d.in_lgbt & d.c25_any).sum())
@@ -175,7 +182,7 @@ for pj, dk, lab in [(1, 0, 'Kênh khiếu nại bảo mật → an toàn khi ph�
         elif 0 < na < MIN_CELL or 0 < nd < MIN_CELL:
             out.append('không báo cáo')
         else:
-            out.append(f'{100 * na / nv:.1f}')
+            out.append(pct(100 * na / nv))
     rows.append(tuple(out))
 save(rows, 'cap_tuong_ung', ['cap', 'co', 'khong', 'khong_biet'])
 
@@ -193,7 +200,7 @@ for c, k, f in zip(ocodes, counts, fl_):
     g = dei & (d.orgtype == c)
     a = int((g & (d.npol_co >= 1)).sum())
     b = k - a
-    s1 = 'không báo cáo' if (0 < a < MIN_CELL or 0 < b < MIN_CELL) else f'{100 * a / k:.1f}'
+    s1 = 'không báo cáo' if (0 < a < MIN_CELL or 0 < b < MIN_CELL) else pct(100 * a / k)
     rows.append((OLAB[c], str(k), d.npol_co[g].mean(), d.npol_co[g].std(), s1, d.npol_kb[g].mean(), d.Q[g].mean()))
 save(rows, 'theo_loai_hinh', ['loai_hinh', 'n', 'tb_so_chinh_sach', 'dlc_so_chinh_sach', 'pct_co_it_nhat_1',
                               'tb_so_khong_biet', 'tb_Q'])

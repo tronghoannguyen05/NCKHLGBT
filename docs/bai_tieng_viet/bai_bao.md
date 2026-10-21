@@ -217,14 +217,14 @@ Bảng 4 cho biết ai gây ảnh hưởng nghiêm trọng nhất. Trong 134 ng�
 
 ### 4.3. Chính sách DEI và mức thực thi được cảm nhận
 
-Bảng 5 cho thấy chính sách DEI hiếm gặp. Kênh khiếu nại bảo mật là chính sách được báo cáo nhiều nhất (31,2%). Các chính sách dành riêng cho người LGBT rất ít: 8,5% cho biết có chính sách bằng văn bản chống phân biệt đối xử dựa trên xu hướng tính dục và bản dạng giới, 10,2% có đào tạo về DEI, 6,8% có biện pháp hỗ trợ người chuyển giới, và dưới 10 người có phúc lợi cho bạn đời cùng giới. Hơn một nửa (52,3%) không nêu chính sách nào là có. Mức "không biết" cao: ở mỗi chính sách, từ 25,0% đến 28,4% người trả lời không biết nơi làm việc có hay không. Chỉ 24,4% trả lời có hoặc không cho cả năm chính sách.
+Bảng 5 cho thấy chính sách DEI hiếm gặp. Kênh khiếu nại bảo mật là chính sách được báo cáo nhiều nhất (31,3%). Các chính sách dành riêng cho người LGBT rất ít: 8,5% cho biết có chính sách bằng văn bản chống phân biệt đối xử dựa trên xu hướng tính dục và bản dạng giới, 10,2% có đào tạo về DEI, 6,8% có biện pháp hỗ trợ người chuyển giới, và dưới 10 người có phúc lợi cho bạn đời cùng giới. Hơn một nửa (52,3%) không nêu chính sách nào là có. Mức "không biết" cao: ở mỗi chính sách, từ 25,0% đến 28,4% người trả lời không biết nơi làm việc có hay không. Chỉ 24,4% trả lời có hoặc không cho cả năm chính sách.
 
 **Bảng 5. Chính sách DEI tại nơi làm việc theo cho biết của người lao động LGBT (mẫu DEI, n = 176)**
 
 | Chính sách | Có | Không | Không biết |
 |---|---|---|---|
 | 1. Chính sách bằng văn bản chống phân biệt đối xử dựa trên SOGIE | 15 (8,5) | 117 (66,5) | 44 (25,0) |
-| 2. Kênh hoặc quy trình khiếu nại bảo mật | 55 (31,2) | 75 (42,6) | 46 (26,1) |
+| 2. Kênh hoặc quy trình khiếu nại bảo mật | 55 (31,3) | 75 (42,6) | 46 (26,1) |
 | 3. Đào tạo về DEI cho quản lý hoặc nhân viên | 18 (10,2) | 111 (63,1) | 47 (26,7) |
 | 4. Phúc lợi cho bạn đời cùng giới hoặc người phụ thuộc | <10 | 121 (68,8) | – |
 | 5. Hỗ trợ người chuyển giới về tên gọi, đại từ, trang phục, nhà vệ sinh | 12 (6,8) | 114 (64,8) | 50 (28,4) |
