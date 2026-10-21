@@ -52,6 +52,15 @@ Chỉ số con của RQ1: `S_int` (tình huống 1–3, cần ít nhất 2 câu 
 
 `conc1`–`conc4` (che giấu danh tính, chỉ hỏi người LGBT) và `dei1`–`dei4` (thực thi DEI được cảm nhận; mã 9 chuyển thành khuyết). Từ 16/10/2026, hai thang này chỉ được đọc để dựng cờ `flag_straight`; không có chỉ số hay mô hình nào dùng chúng.
 
+**Riêng bài tiếng Việt (`phan_tich_bai_tieng_viet.do`, từ 21/10/2026):**
+
+- `Q`: trung bình `dei1`–`dei4`, tính khi có ít nhất 3 câu hợp lệ (định nghĩa cũ, không đổi).
+- `pol1`–`pol5` (Câu 23, `c23_1`–`c23_5`): chính sách bằng văn bản chống phân biệt đối xử dựa trên SOGIE; kênh khiếu nại bảo mật; đào tạo DEI; phúc lợi cho bạn đời cùng giới; hỗ trợ người chuyển giới. Mã: `co` 1, `khong` 0, `khong_biet` 8. "Không biết" là nhóm riêng, không gán thành "không".
+- `npol_co`, `npol_kb`: số câu "có" và số câu "không biết" (0–5), chỉ tính khi đủ năm câu. `npol_lo` = `npol_co`; `npol_hi` = `npol_co` + `npol_kb` (hai cận của độ nhạy).
+- `src20` (Câu 20, `c20_source`): người gây ảnh hưởng nghiêm trọng nhất. `ql_truc_tiep` 1, `dong_nghiep` 2, `khach_hang` 3, `nhan_su` 4, `khac` 5, `kmtl` 9. Câu trả lời tự do `c20_source_other` không được đọc.
+- `c25_any`: có viết câu trả lời ở Câu 25 hay không. Văn bản bị bỏ ngay sau khi đọc.
+- `in_org`: loại hình nơi làm việc không phải tự doanh, hộ kinh doanh và quan hệ việc làm không phải freelancer. `in_dei`: mẫu chính, `in_org`, đủ năm câu Câu 23, `Q` hợp lệ, không trống loại hình và quy mô tổ chức (176). `in_dei_all`: như `in_dei` nhưng không yêu cầu `in_org` (218).
+
 ## Biến kiểm soát
 
 | Khối | Tên chuẩn | Ghi chú |

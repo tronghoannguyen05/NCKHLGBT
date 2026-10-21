@@ -85,23 +85,24 @@ save([('Người LGBT có viết câu trả lời ở Câu 25', f'<{MIN_CELL}' i
 # section 4: descriptive tables
 d['orient_t2'] = d.orient.where(d.orient.isin([2, 3, 4, 5]), 0)
 d['ind_t2'] = d.industry.where(~d.industry.isin([4, 10]), 11)
-rows = [('n', '', str(int(dei.sum())))]
-rows += freq_table(d, 'agegrp', dei, [1, 2, 3, 4, 9], ['18–24', '25–34', '35–44', 'Từ 45 trở lên', 'Không muốn trả lời'], 'Nhóm tuổi')
-rows += freq_table(d, 'sex_birth', dei, [1, 2, 9], ['Nam', 'Nữ', 'Không muốn trả lời'], 'Giới tính khi sinh')
-rows += freq_table(d, 'educ', dei, [1, 2, 3, 4, 9], ['THPT trở xuống', 'Cao đẳng', 'Đại học', 'Sau đại học', 'Không muốn trả lời'], 'Học vấn')
-rows += freq_table(d, 'relstat', dei, [1, 2, 3, 9], ['Không có bạn đời', 'Có bạn đời', 'Ly thân, ly hôn hoặc góa', 'Không muốn trả lời'], 'Tình trạng quan hệ')
-rows += freq_table(d, 'region', dei, [1, 2, 3, 4, 9], ['Hà Nội', 'TP. Hồ Chí Minh', 'Đà Nẵng', 'Nơi khác', 'Không muốn trả lời'], 'Địa bàn làm việc')
-rows += freq_table(d, 'orient_t2', dei, [2, 3, 4, 5, 0], ['Đồng tính nam', 'Đồng tính nữ', 'Song tính', 'Toàn tính', 'Khác, đang tự xác định hoặc không nêu'], 'Xu hướng tính dục')
-rows += freq_table(d, 'ind_t2', dei, [1, 2, 3, 5, 6, 7, 11, 9],
+rows = [('n', '', str(int(m.sum())))]
+rows += freq_table(d, 'agegrp_orig', m, [1, 2, 3, 4, 9], ['18–24', '25–34', '35–44', 'Từ 45 trở lên', 'Không muốn trả lời'], 'Nhóm tuổi')
+rows += freq_table(d, 'sex_birth_orig', m, [1, 2, 9], ['Nam', 'Nữ', 'Không muốn trả lời'], 'Giới tính khi sinh')
+rows += freq_table(d, 'educ_orig', m, [1, 2, 3, 4, 9], ['THPT trở xuống', 'Cao đẳng', 'Đại học', 'Sau đại học', 'Không muốn trả lời'], 'Học vấn')
+rows += freq_table(d, 'relstat_orig', m, [1, 2, 3, 9], ['Không có bạn đời', 'Có bạn đời', 'Ly thân, ly hôn hoặc góa', 'Không muốn trả lời'], 'Tình trạng quan hệ')
+rows += freq_table(d, 'region_orig', m, [1, 2, 3, 4, 9], ['Hà Nội', 'TP. Hồ Chí Minh', 'Đà Nẵng', 'Nơi khác', 'Không muốn trả lời'], 'Địa bàn làm việc')
+rows += freq_table(d, 'orient_t2', m, [2, 3, 4, 5, 0], ['Đồng tính nam', 'Đồng tính nữ', 'Song tính', 'Toàn tính', 'Khác, đang tự xác định hoặc không nêu'], 'Xu hướng tính dục')
+rows += freq_table(d, 'ind_t2', m, [1, 2, 3, 5, 6, 7, 11, 9],
                    ['Tài chính, ngân hàng', 'Công nghệ thông tin', 'Giáo dục', 'Thương mại, dịch vụ', 'Sản xuất',
                     'Truyền thông, marketing', 'Y tế, du lịch hoặc khác', 'Không muốn trả lời'], 'Ngành')
-rows += freq_table(d, 'orgtype', dei, [1, 2, 3, 4, 6, 9],
+rows += freq_table(d, 'orgtype', m, [1, 2, 3, 4, 5, 6, 9],
                    ['Cơ quan, doanh nghiệp nhà nước', 'Doanh nghiệp tư nhân trong nước', 'Doanh nghiệp FDI',
-                    'NGO, tổ chức phi lợi nhuận', 'Khác', 'Không muốn trả lời'], 'Loại hình nơi làm việc')
-rows += freq_table(d, 'orgsize', dei, [1, 2, 3, 4, 97, 9],
+                    'NGO, tổ chức phi lợi nhuận', 'Tự doanh, hộ kinh doanh', 'Khác', 'Không muốn trả lời'],
+                   'Loại hình nơi làm việc')
+rows += freq_table(d, 'orgsize', m, [1, 2, 3, 4, 97, 9],
                    ['Dưới 50 người', '50–199 người', '200–499 người', 'Từ 500 người trở lên',
                     'Không áp dụng hoặc không rõ', 'Không muốn trả lời'], 'Quy mô nơi làm việc')
-save(rows, 'dac_diem_mau', ['dac_diem', 'nhom', 'mau_dei'])
+save(rows, 'dac_diem_mau', ['dac_diem', 'nhom', 'mau_chinh'])
 
 PLAB = ['Chính sách bằng văn bản chống phân biệt đối xử dựa trên SOGIE', 'Kênh hoặc quy trình khiếu nại bảo mật',
         'Đào tạo về DEI cho quản lý hoặc nhân viên', 'Phúc lợi cho bạn đời cùng giới hoặc người phụ thuộc',
@@ -174,7 +175,7 @@ for pj, dk, lab in [(1, 0, 'Kênh khiếu nại bảo mật → an toàn khi ph�
         elif 0 < na < MIN_CELL or 0 < nd < MIN_CELL:
             out.append('không báo cáo')
         else:
-            out.append(f'{100 * na / nv:.1f} (n = {nv})')
+            out.append(f'{100 * na / nv:.1f}')
     rows.append(tuple(out))
 save(rows, 'cap_tuong_ung', ['cap', 'co', 'khong', 'khong_biet'])
 
@@ -229,8 +230,7 @@ save(freq_table(d, 'S_count8_c', m, [0, 1, 2, 3], ['0', '1', '2', 'Từ 3 trở 
 scodes = [1, 2, 3, 4, 5, 9, 0]
 slabs = ['Quản lý trực tiếp', 'Đồng nghiệp', 'Khách hàng, đối tác', 'Bộ phận nhân sự', 'Người khác',
          'Không muốn trả lời', 'Không trả lời']
-groups = {'all': m & (d.ever_exposed == 1), 'int': m & (d.int_any == 1), 'car': m & (d.car_any == 1),
-          'gen': m & (d.gen_any == 1)}
+groups = {'all': m & (d.ever_exposed == 1), 'car': m & (d.car_any == 1), 'gen': m & (d.gen_any == 1)}
 cols = {}
 for g, gg in groups.items():
     cnt = [int((gg & (d.src20c == c)).sum()) for c in scodes]
@@ -238,7 +238,7 @@ for g, gg in groups.items():
 rows = [('n',) + tuple(str(cols[g][0]) for g in groups)]
 for i, lab in enumerate(slabs):
     rows.append((lab,) + tuple(cell_str(cols[g][1][i], cols[g][0], cols[g][2][i]) for g in groups))
-save(rows, 'nguon_ky_thi', ['nguon', 'tat_ca', 'giao_tiep', 'nghe_nghiep', 'the_hien_gioi'])
+save(rows, 'nguon_ky_thi', ['nguon', 'tat_ca', 'nghe_nghiep', 'the_hien_gioi'])
 print('Câu 20 answered by unexposed respondents (main sample):', int((m & (d.ever_exposed == 0) & d.src20.notna()).sum()))
 
 rows = []

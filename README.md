@@ -72,3 +72,4 @@ All output is written to `output/results/` in the project folder (or to `OUT` if
 - `docs/codebook.md`: variables and coding rules.
 - `tests/python_replication/`: an independent Python replication used to check the Stata results. It reproduces every estimate that does not depend on random draws. Run `desc.py` and `models.py`; they find the survey export in the same way as `phan_tich.do` (or use the environment variable `LGBT_DATA` if it is set). Then run `compare.py` with `STATA_RESULTS` set to `results.xlsx`.
 - `tests/check_no_data.sh`: refuses commits that contain individual-level data.
+- `phan_tich_bai_tieng_viet.do`: a separate do-file for a Vietnamese-language article that uses the same data (DEI policies, sources of stigma, legal analysis). It is not part of this replication package for the English article; see `docs/bai_tieng_viet/`.

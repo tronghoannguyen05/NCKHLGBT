@@ -113,7 +113,10 @@ def load():
     d['in_dei_all'] = d.in_xd_main & (d.pol_n == 5) & d.Q.notna() & d.orgtype.notna() & d.orgsize.notna()
     d['in_dei'] = d.in_dei_all & d.in_org
 
-    # section 5: merging sparse categories; copies for the DEI samples come from the original codes
+    # section 5: merging sparse categories; copies for the DEI samples and for the
+    # descriptive tables (section 4 of the do-file runs before the merge) keep the original codes
+    for v in XD:
+        d[v + '_orig'] = d[v].copy()
     for v in XD + ORG:
         d[v + '_d'] = d[v].copy()
         d[v + '_a'] = d[v].copy()

@@ -37,6 +37,16 @@ Bảng đầy đủ ánh xạ sheet với bảng của bài nằm trong `README.
 - **Có người trong mẫu không qua câu sàng lọc tuổi:** Stata dừng (lệnh `assert`).
 - **Bảng 2, bảng số tình huống đã gặp hoặc bảng mức PHQ-4 có đúng một ô bị ẩn (có thể suy ngược từ tổng):** Stata dừng.
 
+## Do-file của bài tiếng Việt
+
+Bài gửi *Tạp chí Nghiên cứu Con người, Gia đình và Giới* có do-file riêng: **`phan_tich_bai_tieng_viet.do`** (từ 21/10/2026). Hai do-file chỉ dùng chung dữ liệu; tệp này không gọi `phan_tich.do`.
+
+- Cách chạy giống hệt `phan_tich.do`: để tệp cạnh bản xuất khảo sát (hoặc bản xuất trong `data/raw/`), bấm đúp để mở Stata, bấm Do. Không cần gói cài thêm.
+- Kết quả ghi vào `output/results_vi/`: `ket_qua.xlsx` (mỗi bảng một sheet: `LuongMau`, `DacDiemMau`, `HinhThucKyThi`, `SoTinhHuong`, `NguonKyThi`, `ChinhSach`, `SoChinhSach`, `ThucThi`, `KhoangCach`, `CapTuongUng`, `TheoLoaiHinh`, `MoTa`, `TinCay`, `GopMuc`, `Cau25`, `KetQua`, `HoA`, `HoB`, `HoC`, `DoNhay`, `BoiCanh`) và `nhat_ky.log`.
+- Mã dừng nếu luồng mẫu khác các con số đã ghi (850 → 734 → 719 → 300 → 272 → 235; mẫu H3 223).
+- Kiểm tra sau khi chạy: `STATA_RESULTS=.../ket_qua.xlsx python3 tests/python_replication_vi/compare_vi.py`. Mọi dòng của sheet `KetQua` phải khớp bản Python (`output/tables/python_replication_vi/ket_qua.csv`). Hai dòng đã biết để tự kiểm: H1 trên mẫu chính 1,8469; tích S × Q (mẫu H3) −1,3110, KTC 95% [−3,0445; 0,4225].
+- Kế hoạch phân tích: `docs/bai_tieng_viet/ke_hoach_phan_tich.md`.
+
 ## Lịch sử chạy
 
 - 5/10/2026: chạy đủ hai lần trên máy tác giả, không lỗi; kết quả tổng hợp lưu ở `output/tables/stata/`. Mọi ước lượng không phụ thuộc số ngẫu nhiên khớp bản tái lập Python (`tests/python_replication/`) đến 10⁻⁹.

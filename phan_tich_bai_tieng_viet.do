@@ -510,7 +510,8 @@ program define gap_row
 end
 
 * Một dòng của bảng cặp tương ứng: tỷ lệ đồng ý với một phát biểu thực thi ở
-* nhóm có, không, không biết của một chính sách
+* nhóm có, không, không biết của một chính sách. Số người trả lời hợp lệ không được
+* in, để không suy ra được số người bỏ trống trong từng nhóm.
 capture program drop pair_row
 program define pair_row
     syntax, POL(varname) DEI(varname) Touse(varname) LABel(string)
@@ -534,7 +535,7 @@ program define pair_row
         if `f' local s`i' = cond(`k' < $MIN_CELL, "<$MIN_CELL", "không báo cáo")
         else if `nv' == 0 local s`i' ""
         else if (`na' > 0 & `na' < $MIN_CELL) | (`nd' > 0 & `nd' < $MIN_CELL) local s`i' "không báo cáo"
-        else local s`i' = strtrim(string(100 * `na' / `nv', "%5.1f")) + " (n = " + string(`nv') + ")"
+        else local s`i' = strtrim(string(100 * `na' / `nv', "%5.1f"))
     }
     post pr (`"`label'"') ("`s1'") ("`s2'") ("`s3'")
 end
@@ -856,30 +857,32 @@ replace orient_t2 = 0 if missing(orient_t2)
 gen byte ind_t2 = industry
 replace ind_t2 = 11 if inlist(industry, 4, 10)
 
-* Đặc điểm của mẫu DEI. Bản dạng giới không được trình bày.
+* Đặc điểm của mẫu chính, kèm loại hình và quy mô nơi làm việc. Mẫu DEI chỉ được
+* mô tả qua cỡ mẫu, để không suy ra được nhóm nhỏ bằng phép trừ giữa hai mẫu.
+* Bản dạng giới không được trình bày.
 tempfile dcfile
-postfile dc str80 dac_diem str100 nhom str24 mau_dei using "`dcfile'", replace
-quietly count if in_dei
+postfile dc str80 dac_diem str100 nhom str24 mau_chinh using "`dcfile'", replace
+quietly count if in_xd_main
 post dc ("n") ("") ("`r(N)'")
-freq_table agegrp,    touse(in_dei) handle(dc) title("Nhóm tuổi") codes(1 2 3 4 9) ///
+freq_table agegrp,    touse(in_xd_main) handle(dc) title("Nhóm tuổi") codes(1 2 3 4 9) ///
     labels("18–24" "25–34" "35–44" "Từ 45 trở lên" "Không muốn trả lời")
-freq_table sex_birth, touse(in_dei) handle(dc) title("Giới tính khi sinh") codes(1 2 9) ///
+freq_table sex_birth, touse(in_xd_main) handle(dc) title("Giới tính khi sinh") codes(1 2 9) ///
     labels("Nam" "Nữ" "Không muốn trả lời")
-freq_table educ,      touse(in_dei) handle(dc) title("Học vấn") codes(1 2 3 4 9) ///
+freq_table educ,      touse(in_xd_main) handle(dc) title("Học vấn") codes(1 2 3 4 9) ///
     labels("THPT trở xuống" "Cao đẳng" "Đại học" "Sau đại học" "Không muốn trả lời")
-freq_table relstat,   touse(in_dei) handle(dc) title("Tình trạng quan hệ") codes(1 2 3 9) ///
+freq_table relstat,   touse(in_xd_main) handle(dc) title("Tình trạng quan hệ") codes(1 2 3 9) ///
     labels("Không có bạn đời" "Có bạn đời" "Ly thân, ly hôn hoặc góa" "Không muốn trả lời")
-freq_table region,    touse(in_dei) handle(dc) title("Địa bàn làm việc") codes(1 2 3 4 9) ///
+freq_table region,    touse(in_xd_main) handle(dc) title("Địa bàn làm việc") codes(1 2 3 4 9) ///
     labels("Hà Nội" "TP. Hồ Chí Minh" "Đà Nẵng" "Nơi khác" "Không muốn trả lời")
-freq_table orient_t2, touse(in_dei) handle(dc) title("Xu hướng tính dục") codes(2 3 4 5 0) ///
+freq_table orient_t2, touse(in_xd_main) handle(dc) title("Xu hướng tính dục") codes(2 3 4 5 0) ///
     labels("Đồng tính nam" "Đồng tính nữ" "Song tính" "Toàn tính" "Khác, đang tự xác định hoặc không nêu")
-freq_table ind_t2,    touse(in_dei) handle(dc) title("Ngành") codes(1 2 3 5 6 7 11 9) ///
+freq_table ind_t2,    touse(in_xd_main) handle(dc) title("Ngành") codes(1 2 3 5 6 7 11 9) ///
     labels("Tài chính, ngân hàng" "Công nghệ thông tin" "Giáo dục" "Thương mại, dịch vụ" "Sản xuất" ///
     "Truyền thông, marketing" "Y tế, du lịch hoặc khác" "Không muốn trả lời")
-freq_table orgtype,   touse(in_dei) handle(dc) title("Loại hình nơi làm việc") codes(1 2 3 4 6 9) ///
+freq_table orgtype,   touse(in_xd_main) handle(dc) title("Loại hình nơi làm việc") codes(1 2 3 4 5 6 9) ///
     labels("Cơ quan, doanh nghiệp nhà nước" "Doanh nghiệp tư nhân trong nước" "Doanh nghiệp FDI" ///
-    "NGO, tổ chức phi lợi nhuận" "Khác" "Không muốn trả lời")
-freq_table orgsize,   touse(in_dei) handle(dc) title("Quy mô nơi làm việc") codes(1 2 3 4 97 9) ///
+    "NGO, tổ chức phi lợi nhuận" "Tự doanh, hộ kinh doanh" "Khác" "Không muốn trả lời")
+freq_table orgsize,   touse(in_xd_main) handle(dc) title("Quy mô nơi làm việc") codes(1 2 3 4 97 9) ///
     labels("Dưới 50 người" "50–199 người" "200–499 người" "Từ 500 người trở lên" ///
     "Không áp dụng hoặc không rõ" "Không muốn trả lời")
 postclose dc
@@ -1034,14 +1037,15 @@ xl_out "SoTinhHuong"
 restore
 
 * Câu 20: người gây ảnh hưởng nghiêm trọng nhất, trong số người đã gặp ít nhất một
-* tình huống (mẫu chính) và trong số người đã gặp từng nhóm hình thức
+* tình huống (mẫu chính) và trong số người đã gặp kỳ thị nghề nghiệp, kỳ thị về thể
+* hiện giới. Nhóm giao tiếp không được trình bày vì gần trùng với cột đầu, nên phép
+* trừ giữa hai cột sẽ cho ra các ô nhỏ.
 local scodes 1 2 3 4 5 9 0
 local slabs `""Quản lý trực tiếp" "Đồng nghiệp" "Khách hàng, đối tác" "Bộ phận nhân sự" "Người khác" "Không muốn trả lời" "Không trả lời""'
 gen byte grp_all = in_xd_main & ever_exposed == 1
-gen byte grp_int = in_xd_main & int_any == 1
 gen byte grp_car = in_xd_main & car_any == 1
 gen byte grp_gen = in_xd_main & gen_any == 1
-foreach g in all int car gen {
+foreach g in all car gen {
     quietly count if grp_`g'
     local tot_`g' = r(N)
     local cnt_`g'
@@ -1053,19 +1057,19 @@ foreach g in all int car gen {
     local flg_`g' `r(flags)'
 }
 tempfile srcfile
-postfile sr str60 nguon str24(tat_ca giao_tiep nghe_nghiep the_hien_gioi) using "`srcfile'", replace
-post sr ("n") ("`tot_all'") ("`tot_int'") ("`tot_car'") ("`tot_gen'")
+postfile sr str60 nguon str24(tat_ca nghe_nghiep the_hien_gioi) using "`srcfile'", replace
+post sr ("n") ("`tot_all'") ("`tot_car'") ("`tot_gen'")
 local i 0
 foreach c of local scodes {
     local ++i
     local lab : word `i' of `slabs'
-    foreach g in all int car gen {
+    foreach g in all car gen {
         local k : word `i' of `cnt_`g''
         local f : word `i' of `flg_`g''
         cell_str `k' `tot_`g'' `f'
         local s_`g' "`r(s)'"
     }
-    post sr ("`lab'") ("`s_all'") ("`s_int'") ("`s_car'") ("`s_gen'")
+    post sr ("`lab'") ("`s_all'") ("`s_car'") ("`s_gen'")
 }
 postclose sr
 preserve
