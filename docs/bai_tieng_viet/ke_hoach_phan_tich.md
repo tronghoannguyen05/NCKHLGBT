@@ -97,6 +97,8 @@ OLS, sai số chuẩn HC3. Hệ số của một nhóm phân loại chỉ đư�
 
 ## 7. Câu 25: góp ý của người lao động
 
+> **Đã bỏ ngày 21/10/2026** (mục 9): chỉ 7 trong 300 người LGBT trả lời câu hỏi mở. Phần dưới đây giữ lại để ghi nhận kế hoạch ban đầu.
+
 - Mẫu: 300 người của mẫu LGBT. Phân tích nội dung không cần đủ biến kiểm soát.
 - Câu trả lời có nội dung: không trống và không chỉ là "không", "không có", "chưa", "không ý kiến" hoặc dấu câu.
 - Cách mã hóa: phân tích nội dung có hướng dẫn (directed content analysis; Hsieh và Shannon, 2005). Bộ mã ban đầu lấy từ năm chính sách của Câu 23, bốn phát biểu của Câu 24 và các hình thức kỳ thị. Bộ mã được bổ sung từ tần suất cụm từ, trong đó chỉ xem các cụm xuất hiện từ 10 lần trở lên. Mỗi câu trả lời có thể thuộc nhiều chủ đề.
@@ -113,3 +115,4 @@ OLS, sai số chuẩn HC3. Hệ số của một nhóm phân loại chỉ đư�
 
 | Ngày | Phần | Thay đổi | Lý do | Đã xem kết quả liên quan chưa |
 |---|---|---|---|---|
+| 21/10/2026 | Câu 25 (mục 7) | Bỏ phân tích nội dung. Bài chỉ nêu số người đã trả lời câu hỏi mở | Bước đầu tiên của mục 7 (đếm số câu trả lời, không đọc nội dung) cho thấy chỉ 7 trong 300 người LGBT viết câu trả lời (27 trong 850 phiếu). Mọi chủ đề sẽ dưới 10 câu trả lời, nên theo quy tắc ẩn ô không báo cáo được chủ đề nào; 7 câu trả lời cũng quá ít để phân tích nội dung mà không có nguy cơ nhận diện | Chỉ xem số câu trả lời không trống. Không đọc câu trả lời nào |
