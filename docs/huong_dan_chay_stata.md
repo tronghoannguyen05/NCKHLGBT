@@ -55,7 +55,7 @@ Bảng đầy đủ ánh xạ sheet với bảng của bài nằm trong `README.
 
 - 16/10/2026 (chạy lúc 20:58): tác giả chạy bản trên, không lỗi. Luồng mẫu khớp cả 8 bước; 59/59 dòng tất định khớp bản Python (sai khác lớn nhất 1·10⁻⁶); bốn bảng mô tả mới (`Table3_Severity`, `Table4`, `Table4_Number`, `Table5`) khớp từng ô. So với lần chạy 13/10 (lần 2), 60/61 dòng chung giống hệt; chỉ gán giá trị đa lần đổi từ 2,02 thành 2,04 [0,99; 3,08], đúng dự kiến vì mô hình gán bỏ C và Q. Kết quả tổng hợp lưu ở `output/tables/stata/` (sensemakr không đổi).
 
-- 21/10/2026: mã tự tìm thư mục dữ liệu, không còn đường dẫn ổ D trong mục 0; kết quả ghi vào `output/results/`. Đổi tên các biến phụ của phân tích hậu kiểm (`exper_s7`, `disclose_s7` thành `exper_ph`, `disclose_ph`), nên sheet `MergedCategories` hiện tên mới. Phân tích không đổi. **Cần chạy lại một lần** để xác nhận: mọi con số phải giống hệt lần chạy 16/10/2026 (20:58).
+- 21/10/2026: mã tự tìm thư mục dữ liệu, không còn đường dẫn ổ D trong mục 0; kết quả ghi vào `output/results/`. Đổi tên các biến phụ của phân tích hậu kiểm (`exper_s7`, `disclose_s7` thành `exper_ph`, `disclose_ph`), nên sheet `MergedCategories` hiện tên mới. Phân tích không đổi. Tác giả chạy lại cùng ngày (16:08), không lỗi: mã tự tìm được bản xuất đặt ngay trong thư mục chứa do-file (đường dẫn có dấu cách và dấu tiếng Việt), ghi kết quả vào `output/results/` cạnh đó. So với lần chạy 16/10/2026 (20:58), 2.743/2.743 ô của `results.xlsx` (21 sheet) giống hệt, trừ một ô tên biến `exper_ph` trong `MergedCategories`, đúng dự kiến.
 
 ## Số dự kiến cho lần chạy 16/10/2026
 

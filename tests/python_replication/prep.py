@@ -243,8 +243,8 @@ def load():
     # section 5: merging sparse covariate categories
     for v in XD:
         d[v + '_orig'] = d[v].copy()
-    d['exper_s7'] = d.exper.copy()
-    d['disclose_s7'] = d.disclose.copy()
+    d['exper_ph'] = d.exper.copy()
+    d['disclose_ph'] = d.disclose.copy()
     log = []
     for v in XD:
         collapse_sparse(d, v, d.in_xd_main, 'ordered' if v in ORDERED else 'nominal', log)
@@ -252,10 +252,10 @@ def load():
         collapse_sparse(d, v + '_alt', d.in_xd_alt, 'ordered' if v in ORDERED else 'nominal', log)
     for v in XJ:
         collapse_sparse(d, v, d.in_xj, 'ordered' if v in ORDERED else 'nominal', log)
-    d['s7_exper'] = d.in_xd_main & d.exper_s7.notna()
-    d['s7_disc'] = d.in_xd_main & d.disclose_s7.notna()
-    collapse_sparse(d, 'exper_s7', d.s7_exper, 'ordered', log)
-    collapse_sparse(d, 'disclose_s7', d.s7_disc, 'ordered', log)
+    d['in_ph_exper'] = d.in_xd_main & d.exper_ph.notna()
+    d['in_ph_disc'] = d.in_xd_main & d.disclose_ph.notna()
+    collapse_sparse(d, 'exper_ph', d.in_ph_exper, 'ordered', log)
+    collapse_sparse(d, 'disclose_ph', d.in_ph_disc, 'ordered', log)
     d.attrs['collapse_log'] = log
     d.attrs['S_med_exposed'] = med
     return d
